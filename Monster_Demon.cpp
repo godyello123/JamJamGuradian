@@ -32,7 +32,7 @@ AMonster_Demon::AMonster_Demon()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(10, 10, 10, 100, 100);
 }
 
 void AMonster_Demon::Die()
