@@ -19,7 +19,7 @@ public:
 	AMonster_DeathWorm();
 
 private:
-	class UAnim_DeathKnight* Animation;
+	class UAnim_DeathWorm* Animation;
 
 	bool bDie;
 	float fDistance;

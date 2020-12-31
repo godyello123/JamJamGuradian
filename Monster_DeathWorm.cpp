@@ -46,14 +46,19 @@ bool AMonster_DeathWorm::IsDie()
 
 void AMonster_DeathWorm::BeginPlay()
 {
+	Super::BeginPlay();
+
+	Animation = Cast<UAnim_DeathWorm>(GetMesh()->GetAnimInstance());
 }
 
 void AMonster_DeathWorm::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 }
 
 void AMonster_DeathWorm::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
 float AMonster_DeathWorm::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -63,6 +68,8 @@ float AMonster_DeathWorm::TakeDamage(float DamageAmount, FDamageEvent const& Dam
 
 void AMonster_DeathWorm::ChangeAnim(EMonsterAnimType eType)
 {
+	if (Animation)
+		Animation->ChangeAnimType(eType);
 }
 
 void AMonster_DeathWorm::Attack()
