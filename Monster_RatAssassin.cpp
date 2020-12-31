@@ -15,7 +15,7 @@ AMonster_RatAssassin::AMonster_RatAssassin()
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
-	GetClassAsset(UAnim_RatAssassin, AnimAsset, "AnimBlueprint'/Game/02Monster/08RatAssassin/RatAssassin_Anim.RatAssassin_Anim_C'");
+	GetClassAsset(UAnim_RatAssassin, AnimAsset, "AnimBlueprint'/Game/02Monster/08RatAssassin/Rat_Anim.Rat_Anim_C'");
 
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);

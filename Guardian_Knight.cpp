@@ -15,7 +15,7 @@ AGuardian_Knight::AGuardian_Knight()
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
 
-	GetClassAsset(UAnim_Knight, AnimData, "AnimBlueprint'/Game/01Guardian/Knight_Anim.Knight_Anim_C'");
+	GetClassAsset(UAnim_Knight, AnimData, "AnimBlueprint'/Game/01Guardian/01Knight/Knight_Anim.Knight_Anim_C'");
 
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
@@ -30,7 +30,7 @@ AGuardian_Knight::AGuardian_Knight()
 	bAttack = false;
 	bTarget = false;
 
-	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -70.f));
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 }
 

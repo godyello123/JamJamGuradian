@@ -158,7 +158,6 @@ void AMonster_WereWolf::Move()
 	{
 		NextMovePoint();
 	}
-
 }
 
 void AMonster_WereWolf::Skill()

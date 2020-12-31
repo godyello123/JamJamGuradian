@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AnimBase.h"
-#include "Anim_Priest.generated.h"
+#include "Guardian.h"
+#include "Guardian_Warrior.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MPSG_API UAnim_Priest : public UAnimBase
+class MPSG_API AGuardian_Warrior : public AGuardian
 {
 	GENERATED_BODY()
 	

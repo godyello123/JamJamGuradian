@@ -17,6 +17,18 @@ class MPSG_API AGuardian_Mage : public AGuardian
 public:
 	AGuardian_Mage();
 
+protected:
+	class UAnim_Mage* Animation;
+
+	AActor* Target;
+	bool bTarget;
+
+	bool bAttack;
+
+public:
+	void AttackEnable(bool bEnable);
+	bool IsAttack() const;
+
 public:
 	virtual void LevelUP(ELevelUpType eType);
 
@@ -32,6 +44,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
+private:
+	void Attack();
+	void SearchTarget();
+
+public:
+	void CheckDistance();
+
+public:
+	void  AttackToTarget();
 
 	
 };
