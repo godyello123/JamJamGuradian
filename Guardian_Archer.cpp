@@ -10,6 +10,15 @@ AGuardian_Archer::AGuardian_Archer()
 }
 
 
+void AGuardian_Archer::AttackEnable(bool bEnable)
+{
+}
+
+bool AGuardian_Archer::IsAttack() const
+{
+	return false;
+}
+
 void AGuardian_Archer::LevelUP(ELevelUpType eType)
 {
 	switch (eType)
@@ -45,4 +54,20 @@ float AGuardian_Archer::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	return 0.0f;
+}
+
+void AGuardian_Archer::Attack()
+{
+}
+
+void AGuardian_Archer::SearchTarget()
+{
+}
+
+void AGuardian_Archer::CheckDistance()
+{
+}
+
+void AGuardian_Archer::AttackToTarget()
+{
 }
