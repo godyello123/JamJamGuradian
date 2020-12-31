@@ -39,40 +39,86 @@ AMonster_DeathKnight::AMonster_DeathKnight()
 
 void AMonster_DeathKnight::Die()
 {
+	bDie = true;
+	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
 }
 
 bool AMonster_DeathKnight::IsDie()
 {
-    return false;
+    return bDie;
 }
 
 void AMonster_DeathKnight::BeginPlay()
 {
+	Super::BeginPlay();
+
+	Animation = Cast<UAnim_DeathKnight>(GetMesh()->GetAnimInstance());
 }
 
 void AMonster_DeathKnight::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 }
 
 void AMonster_DeathKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
 float AMonster_DeathKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	State.iHP -= DamageAmount;
+	if (State.iHP <= 0)
+	{
+		//Á×ÀÌ±â
+		if (Animation)
+		{
+			Die();
+		}
+	}
+
     return 0.0f;
 }
 
 void AMonster_DeathKnight::ChangeAnim(EMonsterAnimType eType)
 {
+	if (Animation)
+		Animation->ChangeAnimType(eType);
 }
 
 void AMonster_DeathKnight::Attack()
 {
+	if (Target)
+	{
+		AController* Ai = GetController<AController>();
+		FDamageEvent DmgEvent;
+		Target->TakeDamage(State.Damage, DmgEvent, Ai, this);
+	}
 }
 
 void AMonster_DeathKnight::Move()
 {
+	if (iMovePoint >= RoadArray.Num())
+		return;
+
+	AAIController* pAI = GetController<AAIController>();
+	FVector vMoveLoc = RoadArray[iMovePoint]->GetActorLocation();
+	FVector vMyLoc = GetActorLocation();
+
+	vMoveLoc.Z = vMyLoc.Z;
+	pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
+
+	ChangeAnim(EMonsterAnimType::MAT_Move);
+
+	vMoveLoc.Z = 0.f;
+	vMyLoc.Z = 0.f;
+
+	float fDist = FVector::Distance(vMoveLoc, vMyLoc);
+
+	if (fDist < 5.f)
+	{
+		NextMovePoint();
+	}
 }
 
 void AMonster_DeathKnight::Skill()
