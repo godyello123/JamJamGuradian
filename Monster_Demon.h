@@ -18,7 +18,7 @@ public:
 	AMonster_Demon();
 
 private:
-	class UAnim_DeathKnight* Animation;
+	class UAnim_Demon* Animation;
 
 	bool bDie;
 	float fDistance;

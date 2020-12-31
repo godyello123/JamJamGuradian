@@ -7,7 +7,7 @@
 
 UAnim_Beholder::UAnim_Beholder()
 {
-
+	AnimType = (uint8)EMonsterAnimType::MAT_Idle;
 }
 
 void UAnim_Beholder::ChangeAnimType(EMonsterAnimType eType)

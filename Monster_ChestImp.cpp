@@ -41,13 +41,10 @@ void AMonster_ChestImp::Die()
 {
 	bDie = true;
 	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-	//PrintViewport(10.f, FColor::Red, TEXT("Die_Beholder"));
 }
 
 void AMonster_ChestImp::Attack()
 {
-	//PrintViewport(10.f, FColor::Red, TEXT("Attack_Beholder"));
-
 	if (Target)
 	{
 		AController* Ai = GetController<AController>();
@@ -126,7 +123,7 @@ float AMonster_ChestImp::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 		}
 	}
 
-	return 0.0f;
+	return State.iHP;
 }
 
 void AMonster_ChestImp::ChangeAnim(EMonsterAnimType eType)

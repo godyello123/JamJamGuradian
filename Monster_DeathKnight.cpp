@@ -58,6 +58,42 @@ void AMonster_DeathKnight::BeginPlay()
 void AMonster_DeathKnight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	if (!bDie)
+	{
+		if (State.iMP < State.iMPMax)
+		{
+			fMPRecovery += DeltaTime;
+
+			if (fMPRecovery > 1.f)
+			{
+				fMPRecovery = 0;
+				State.iMP++;
+			}
+		}
+
+
+		bool bCheck = CheckTargetDistance();
+
+		if (bCheck)
+		{
+			//if (State.iMP >= State.iMPMax)
+			//{
+			//	//스테이지가 높으면 -> 스테이지가 어떤 난이도인지에 따라서 스킬 발동 유무
+			//	//Skill();
+			//}
+			//else
+			//{
+			//	Attack();
+			//}
+			ChangeAnim(EMonsterAnimType::MAT_Attack);
+		}
+		else
+		{
+			Move();
+		}
+	}
 }
 
 void AMonster_DeathKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -77,7 +113,7 @@ float AMonster_DeathKnight::TakeDamage(float DamageAmount, FDamageEvent const& D
 		}
 	}
 
-    return 0.0f;
+	return State.iHP;
 }
 
 void AMonster_DeathKnight::ChangeAnim(EMonsterAnimType eType)
@@ -115,6 +151,7 @@ void AMonster_DeathKnight::Move()
 
 	float fDist = FVector::Distance(vMoveLoc, vMyLoc);
 
+	//'5' 나중에 상수 빼고 몬스터들마다 변수로 처리 해야댐
 	if (fDist < 5.f)
 	{
 		NextMovePoint();
@@ -127,5 +164,29 @@ void AMonster_DeathKnight::Skill()
 
 bool AMonster_DeathKnight::CheckTargetDistance()
 {
-    return false;
+	//'6' 상수 빼고 나중에 변수로 처리 해야함.
+
+	if (iMovePoint > 6)
+	{
+		if (Target)
+		{
+			FVector vTargetLoc = Target->GetActorLocation();
+			FVector vMyLoc = GetActorLocation();
+
+			vTargetLoc.Z = 0.f;
+			vMyLoc.Z = 0.f;
+
+			float fDist = FVector::Distance(vTargetLoc, vMyLoc);
+
+			if (fDist <= fDistance)
+				return true;
+			else
+				return false;
+
+		}
+
+		return false;
+	}
+
+	return false;
 }

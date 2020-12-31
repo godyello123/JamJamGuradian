@@ -14,7 +14,7 @@ class MPSG_API AGuardian_Archer : public AGuardian
 	GENERATED_BODY()
 
 public:
-	AGuardian_Knight();
+	AGuardian_Archer();
 
 protected:
 	class UAnim_Archer* Animation;

@@ -4,6 +4,7 @@
 #include "Monster_DeathWorm.h"
 #include "Anim_DeathWorm.h"
 #include "AIController.h"
+#include "DemonGate.h"
 
 
 AMonster_DeathWorm::AMonster_DeathWorm()
@@ -37,11 +38,12 @@ AMonster_DeathWorm::AMonster_DeathWorm()
 
 void AMonster_DeathWorm::Die()
 {
+	bDie = true;
 }
 
 bool AMonster_DeathWorm::IsDie()
 {
-	return false;
+	return bDie;
 }
 
 void AMonster_DeathWorm::BeginPlay()
@@ -63,7 +65,17 @@ void AMonster_DeathWorm::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 float AMonster_DeathWorm::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	return 0.0f;
+	State.iHP -= DamageAmount;
+	if (State.iHP <= 0)
+	{
+		//죽이기
+		if (Animation)
+		{
+			Die();
+		}
+	}
+
+	return State.iHP;
 }
 
 void AMonster_DeathWorm::ChangeAnim(EMonsterAnimType eType)
@@ -74,10 +86,38 @@ void AMonster_DeathWorm::ChangeAnim(EMonsterAnimType eType)
 
 void AMonster_DeathWorm::Attack()
 {
+	if (Target)
+	{
+		AController* Ai = GetController<AController>();
+		FDamageEvent DmgEvent;
+		Target->TakeDamage(State.Damage, DmgEvent, Ai, this);
+	}
 }
 
 void AMonster_DeathWorm::Move()
 {
+	if (iMovePoint >= RoadArray.Num())
+		return;
+
+	AAIController* pAI = GetController<AAIController>();
+	FVector vMoveLoc = RoadArray[iMovePoint]->GetActorLocation();
+	FVector vMyLoc = GetActorLocation();
+
+	vMoveLoc.Z = vMyLoc.Z;
+	pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
+
+	ChangeAnim(EMonsterAnimType::MAT_Move);
+
+	vMoveLoc.Z = 0.f;
+	vMyLoc.Z = 0.f;
+
+	float fDist = FVector::Distance(vMoveLoc, vMyLoc);
+
+	//'5' 나중에 상수 빼고 몬스터들마다 변수로 처리 해야댐
+	if (fDist < 5.f)
+	{
+		NextMovePoint();
+	}
 }
 
 void AMonster_DeathWorm::Skill()
@@ -86,5 +126,29 @@ void AMonster_DeathWorm::Skill()
 
 bool AMonster_DeathWorm::CheckTargetDistance()
 {
+	//'6' 상수 빼고 나중에 변수로 처리 해야함.
+
+	if (iMovePoint > 6)
+	{
+		if (Target)
+		{
+			FVector vTargetLoc = Target->GetActorLocation();
+			FVector vMyLoc = GetActorLocation();
+
+			vTargetLoc.Z = 0.f;
+			vMyLoc.Z = 0.f;
+
+			float fDist = FVector::Distance(vTargetLoc, vMyLoc);
+
+			if (fDist <= fDistance)
+				return true;
+			else
+				return false;
+
+		}
+
+		return false;
+	}
+
 	return false;
 }

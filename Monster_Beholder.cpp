@@ -41,13 +41,10 @@ void AMonster_Beholder::Die()
 {
 	bDie = true;
 	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-	//PrintViewport(10.f, FColor::Red, TEXT("Die_Beholder"));
 }
 
 void AMonster_Beholder::Attack()
 {
-	//PrintViewport(10.f, FColor::Red, TEXT("Attack_Beholder"));
-
 	if (Target)
 	{
 		AController* Ai =GetController<AController>();

@@ -17,6 +17,21 @@ class MPSG_API UAnim_WereWolf : public UAnimBase
 public:
 	UAnim_WereWolf();
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true", Bitmask, BitmaskEnum = "EMonsterAnimType"))
+		uint8	AnimType;
 
-	
+public:
+	void ChangeAnimType(EMonsterAnimType eType);
+
+public:
+	virtual void Victory();
+	virtual void Defeat();
+
+
+
+public:
+	virtual void NativeInitializeAnimation();
+	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
 };
