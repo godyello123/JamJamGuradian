@@ -56,7 +56,7 @@ void ASummoner::BeginPlay()
 
 	FRotator r = GetActorRotation();
 
-	FRotator r2 = FRotator(r.Roll + FreeCamRotationOffsetRoll, r.Yaw + FreeCamRotationOffsetYaw, r.Pitch + FreeCamRotationOffsecPitch);
+	FRotator r2 = FRotator(FreeCamRotationOffsecPitch, FreeCamRotationOffsetYaw, FreeCamRotationOffsetRoll);
 
 	FreeCam = GetWorld()->SpawnActor<AFreeCam>(v2, r2);
 

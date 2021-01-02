@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#define CamSpeed 600.f
 
 #include "FreeCam.h"
 #include "Summoner.h"
@@ -20,7 +20,7 @@ AFreeCam::AFreeCam()
 	Camera->SetupAttachment(Arm);
 	
 
-	bChasePlayer = true;
+	bChasePlayer = false;
 	CamDir = EFreeCamDir::None;
 
 	Summoner = nullptr;
@@ -41,22 +41,30 @@ void AFreeCam::BeginPlay()
 	if (OurPlayerController)
 	{
 		OurPlayerController->SetViewTarget(this);
-		PrintViewport(-1, FColor::Red, TEXT("FreeCam : On"));
+		//PrintViewport(-1, FColor::Red, TEXT("FreeCam : On"));
 	}
+
 }
 
 // Called every frame
 void AFreeCam::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CamDir = EFreeCamDir::Up;
+	FVector vLoc = GetActorLocation();
 
 	if (!bChasePlayer)
 	{
 		switch (CamDir)
 		{
 		case EFreeCamDir::None:
+			SetActorLocation(vLoc);
 			break;
 		case EFreeCamDir::Up:
+		{
+			//vLoc.X =vLoc.X+ (100.f * DeltaTime);
+			//SetActorLocation(vLoc);
+		}
 			break;
 		case EFreeCamDir::Down:
 			break;
@@ -76,10 +84,11 @@ void AFreeCam::Tick(float DeltaTime)
 	}
 	else
 	{
-		AAIController* pAI = GetController<AAIController>();
+		/*AAIController* pAI = GetController<AAIController>();
 
 		if(IsValid(pAI))
-			pAI->MoveToLocation(Summoner->GetActorLocation());
+			pAI->MoveToLocation(Summoner->GetActorLocation());*/
+		
 	}
 }
 
@@ -91,229 +100,36 @@ void AFreeCam::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AFreeCam::MoveHorizontal(float fScale)
 {
-	if (fScale > 0.f)
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		}
+	FVector vLoc = GetActorLocation();
+	float fTime = GetWorld()->GetDeltaSeconds();
 
+	if (fScale < 0.f)
+	{
+		vLoc.Y =vLoc.Y+ fScale * fTime* CamSpeed;
+		SetActorLocation(vLoc);
+	}
+	else if (fScale > 0.f)
+	{
+		vLoc.Y =vLoc.Y+ fScale * fTime * CamSpeed;
+		SetActorLocation(vLoc);
+	}
 	
-	}
-	else if (fScale < 0.f)
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::Left;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::UpLeft;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::Left;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::Left;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::UpLeft;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::UpLeft;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		}
-
-		
-	}
-	else
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::Down;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::Down;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::Down;
-			break;
-		}
-	}
-
-	if (CamDir == EFreeCamDir::None)
-	{
-		bChasePlayer = true;
-	}
-	else
-	{
-		bChasePlayer = false;
-	}
 }
 
 void AFreeCam::MoveVertical(float fScale)
 {
-	if (fScale > 0.f)
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::Up;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::UpLeft;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::UpRight;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		}
-	}
-	else if (fScale < 0.f)
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::Down;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::Down;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::Down;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::DownRight;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::DownLeft;
-			break;
-		}
-	}
-	else
-	{
-		switch (CamDir)
-		{
-		case EFreeCamDir::None:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::Up:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::Down:
-			CamDir = EFreeCamDir::None;
-			break;
-		case EFreeCamDir::Right:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::Left:
-			CamDir = EFreeCamDir::Left;
-			break;
-		case EFreeCamDir::UpRight:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::UpLeft:
-			CamDir = EFreeCamDir::Left;
-			break;
-		case EFreeCamDir::DownRight:
-			CamDir = EFreeCamDir::Right;
-			break;
-		case EFreeCamDir::DownLeft:
-			CamDir = EFreeCamDir::Left;
-			break;
-		}
-	}
+	FVector vLoc = GetActorLocation();
+	float fTime = GetWorld()->GetDeltaSeconds();
 
-	if (CamDir == EFreeCamDir::None)
+	if (fScale < 0.f)
 	{
-		bChasePlayer = true;
+		vLoc.X = vLoc.X + fScale * fTime * CamSpeed;
+		SetActorLocation(vLoc);
 	}
-	else
+	else if (fScale > 0.f)
 	{
-		bChasePlayer = false;
+		vLoc.X = vLoc.X + fScale * fTime * CamSpeed;
+		SetActorLocation(vLoc);
 	}
 }
 

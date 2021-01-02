@@ -6,7 +6,7 @@
 
 UAnim_Mage::UAnim_Mage()
 {
-
+	AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 }
 
 void UAnim_Mage::ChangeAnimType(EGuardianAnimType eType)
