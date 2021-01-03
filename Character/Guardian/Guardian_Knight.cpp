@@ -3,6 +3,7 @@
 
 #include "Guardian_Knight.h"
 #include "Summoner.h"
+#include "../Monster/Monster.h"
 #include "../../Animation/Guardian/Anim_Knight.h"
 
 
@@ -84,7 +85,10 @@ void AGuardian_Knight::Tick(float DeltaTime)
 	}
 	else
 	{
-		Attack();
+		if (IsValid(Target)&&!Target->IsDead())
+		{
+			Attack();
+		}
 	}
 	
 
@@ -119,6 +123,8 @@ void AGuardian_Knight::Attack()
 
 void AGuardian_Knight::SearchTarget()
 {
+	Target = nullptr;
+
 	FVector StartLoc = GetActorLocation();
 
 	FVector TargetLoc = FVector(StartLoc.X + fAttackDist, StartLoc.Y + fAttackDist, StartLoc.Z + fAttackDist);
@@ -138,7 +144,8 @@ void AGuardian_Knight::SearchTarget()
 		{
 			if (HitRetArray[i].Component.Get()->GetCollisionProfileName() == TEXT("Monster"))
 			{
-				Target = HitRetArray[0].Actor.Get();
+				AActor* pTarget = HitRetArray[0].Actor.Get();
+				Target = (AMonster*)pTarget;
 				bTarget = true;
 				return;
 			}

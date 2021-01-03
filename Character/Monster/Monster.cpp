@@ -11,7 +11,17 @@ AMonster::AMonster()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
+	bDead = false;
+}
 
+bool AMonster::IsDead()
+{
+	return bDead;
+}
+
+void AMonster::Dead()
+{
+	bDead = true;
 }
 
 void AMonster::SetTarget(AActor* pTarget)

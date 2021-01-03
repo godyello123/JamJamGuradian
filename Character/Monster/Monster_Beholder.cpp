@@ -29,18 +29,11 @@ AMonster_Beholder::AMonster_Beholder()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
 	SetMonsterState(5, 5, 5, 100, 100);
 
-}
-
-void AMonster_Beholder::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
 }
 
 void AMonster_Beholder::Attack()
@@ -51,11 +44,6 @@ void AMonster_Beholder::Attack()
 		FDamageEvent DmgEvent;
 		Target->TakeDamage(State.Damage, DmgEvent, Ai, this);
 	}
-}
-
-bool AMonster_Beholder::IsDie()
-{
-	return bDie;
 }
 
 void AMonster_Beholder::BeginPlay()
@@ -69,8 +57,16 @@ void AMonster_Beholder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!bDie)
+	if (!IsDead())
 	{
+		/*if (State.iHP <= 0)
+		{
+			if (Animation)
+			{
+				Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			}
+		}*/
+
 		if (State.iMP < State.iMPMax)
 		{
 			fMPRecovery += DeltaTime;
@@ -103,6 +99,12 @@ void AMonster_Beholder::Tick(float DeltaTime)
 			Move();
 		}
 	}
+
+	if (State.iHP <= 0)
+	{
+		if (Animation)
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+	}
 }
 
 void AMonster_Beholder::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -112,18 +114,18 @@ void AMonster_Beholder::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 float AMonster_Beholder::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
 		}
 	}
 
-	return 0.0f;
+	return State.iHP;
 }
 
 void AMonster_Beholder::ChangeAnim(EMonsterAnimType eType)

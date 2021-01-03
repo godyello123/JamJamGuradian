@@ -53,6 +53,14 @@ protected:
 		FMonsterState		State;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		AActor* Target;
+	
+protected:
+	bool bDead;
+
+public:
+	bool IsDead();
+	void Dead();
+
 
 protected:
 	int32 iMovePoint;

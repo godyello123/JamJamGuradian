@@ -28,15 +28,16 @@ void UAnim_Beholder::Defeat()
 void UAnim_Beholder::AnimNotify_Beholder_Die_Start()
 {
 	AMonster_Beholder* Beholder = Cast<AMonster_Beholder>(TryGetPawnOwner());
-	PrintViewport(1.f, FColor::Red, TEXT("Beholder_Die_Start"));
+	Beholder->Dead();
+	//PrintViewport(1.f, FColor::Red, TEXT("Beholder_Die_Start"));
 }
 
 void UAnim_Beholder::AnimNotify_Beholder_Die_End()
 {
 	AMonster_Beholder* Beholder = Cast<AMonster_Beholder>(TryGetPawnOwner());
 
-	PrintViewport(1.f, FColor::Red, TEXT("Beholder_Die_End"));
-	if (Beholder)
+	//PrintViewport(1.f, FColor::Red, TEXT("Beholder_Die_End"));
+	if (Beholder->IsDead())
 	{
 		Beholder->Destroy();
 	}

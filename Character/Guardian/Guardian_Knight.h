@@ -19,7 +19,7 @@ public:
 protected:
 	class UAnim_Knight* Animation;
 
-	AActor* Target;
+	class AMonster* Target;
 	bool bTarget;
 
 	bool bAttack;
