@@ -8,14 +8,6 @@
 /**
  * 
  */
-UENUM(BlueprintType, Meta = (Bitflags))
-enum class EKngihtAI : uint8
-{
-	Knight_Idle,
-	Knight_Attack,
-	Knight_Groggy,
-	Skill
-};
 
 
 UCLASS()
@@ -36,8 +28,7 @@ protected:
 		bool bTarget;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bAttack;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EKngihtAI		eAI;
+
 
 public:
 	void AttackEnable(bool bEnable);

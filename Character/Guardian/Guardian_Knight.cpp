@@ -35,7 +35,6 @@ AGuardian_Knight::AGuardian_Knight()
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
-	eAI = EKngihtAI::Knight_Idle;
 }
 
 void AGuardian_Knight::AttackEnable(bool bEnable)
