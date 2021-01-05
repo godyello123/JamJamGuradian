@@ -19,6 +19,8 @@ public:
 protected:
 	class UAnim_Archer* Animation;
 
+
+
 	AActor* Target;
 	bool bTarget;
 

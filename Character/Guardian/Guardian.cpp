@@ -17,9 +17,11 @@ AGuardian::AGuardian()
 
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-
+	MPFillTime = 0.f;
+	MPFillTimeMax = 1.f;
 	DetectTime = 0.f;
 	DetectTimeMax = 0.5f;
+
 }
 
 void AGuardian::SetState(int32 iDmg, int32 HP, int32 MP, float Speed)
@@ -28,7 +30,7 @@ void AGuardian::SetState(int32 iDmg, int32 HP, int32 MP, float Speed)
 	State.iHPMax = HP;
 	State.iHP = State.iHPMax;
 	State.iMPMax = MP;
-	State.iMP = State.iMPMax;
+	State.iMP = 0;
 	State.AttackSpeed = Speed;
 }
 
@@ -75,6 +77,17 @@ bool AGuardian::IsSummoner()
 	return false;
 }
 
+void AGuardian::FillUpMP(int32 iValue, float fTime)
+{
+	MPFillTime += fTime;
+
+	if (MPFillTime >= MPFillTimeMax)
+	{
+		State.iMP += iValue;
+		MPFillTime = 0.f;
+	}
+}
+
 void AGuardian::LevelUP(ELevelUpType eType)
 {
 
@@ -84,16 +97,12 @@ void AGuardian::LevelUP(ELevelUpType eType)
 void AGuardian::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AGuardian::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-
-
 }
 
 // Called to bind functionality to input

@@ -44,6 +44,8 @@ void AFreeCam::BeginPlay()
 		//PrintViewport(-1, FColor::Red, TEXT("FreeCam : On"));
 	}
 
+
+	//Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
 }
 
 // Called every frame

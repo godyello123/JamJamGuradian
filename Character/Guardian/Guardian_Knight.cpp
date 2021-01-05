@@ -34,6 +34,8 @@ AGuardian_Knight::AGuardian_Knight()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	eAI = EKngihtAI::Knight_Idle;
 }
 
 void AGuardian_Knight::AttackEnable(bool bEnable)
@@ -71,27 +73,35 @@ void AGuardian_Knight::BeginPlay()
 void AGuardian_Knight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//몬스터가 영역 안에 들어왔는지 탐지
-	if (!bTarget)
+
+	if (!Target && !bTarget)
 	{
-		Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
 		DetectTime += DeltaTime;
 
 		if (DetectTime >= DetectTimeMax)
 		{
-			DetectTime -= DetectTimeMax;
 			SearchTarget();
+			DetectTime = 0.f;
 		}
 	}
-	else
+	else if (Target!=nullptr&&!bTarget)
 	{
-		if (IsValid(Target)&&!Target->IsDead())
+		CheckDistance();
+	}
+	else if (!Target && bTarget)
+	{
+		bTarget = false;
+	}
+
+	if (Target && bTarget)
+	{
+		bool bCheck = CheckDistance();
+		if (bCheck)
 		{
 			Attack();
 		}
-	}
-	
 
+	}
 }
 
 void AGuardian_Knight::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -125,6 +135,8 @@ void AGuardian_Knight::SearchTarget()
 {
 	Target = nullptr;
 
+	Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
+
 	FVector StartLoc = GetActorLocation();
 
 	FVector TargetLoc = FVector(StartLoc.X + fAttackDist, StartLoc.Y + fAttackDist, StartLoc.Z + fAttackDist);
@@ -145,8 +157,15 @@ void AGuardian_Knight::SearchTarget()
 			if (HitRetArray[i].Component.Get()->GetCollisionProfileName() == TEXT("Monster"))
 			{
 				AActor* pTarget = HitRetArray[0].Actor.Get();
-				Target = (AMonster*)pTarget;
-				bTarget = true;
+
+				AMonster* Mon= (AMonster*)pTarget;
+
+				if (!Mon->IsDead())
+				{
+					Target = pTarget;
+					bTarget = true;
+				}
+				
 				return;
 			}
 		}
@@ -154,7 +173,7 @@ void AGuardian_Knight::SearchTarget()
 
 }
 
-void AGuardian_Knight::CheckDistance()
+bool AGuardian_Knight::CheckDistance()
 {
 	FVector TargetLoc = Target->GetActorLocation();
 	TargetLoc.Z = 0.f;
@@ -168,7 +187,22 @@ void AGuardian_Knight::CheckDistance()
 		Target = nullptr;
 		bTarget = false;
 		Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
+
+		return false;
 	}
+	else
+	{
+		bTarget = true;
+
+		FVector vDir = TargetLoc - MyLoc;
+		vDir.Normalize();
+
+		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
+
+		return true;
+	}
+
+	return false;
 }
 
 void AGuardian_Knight::AttackToTarget()
@@ -179,7 +213,14 @@ void AGuardian_Knight::AttackToTarget()
 
 		FDamageEvent DmgEvent;
 
-		Target->TakeDamage(State.Damage, DmgEvent, AI,this);
+		float fHp=Target->TakeDamage(State.Damage, DmgEvent, AI,this);
+
+		if (fHp <= 0.f)
+		{
+			Target = nullptr;
+			bTarget = false;
+		}
+
 		PrintViewport(1.f, FColor::Red, TEXT("TakeDamage"));
 	}
 }

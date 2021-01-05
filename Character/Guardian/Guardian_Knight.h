@@ -8,6 +8,16 @@
 /**
  * 
  */
+UENUM(BlueprintType, Meta = (Bitflags))
+enum class EKngihtAI : uint8
+{
+	Knight_Idle,
+	Knight_Attack,
+	Knight_Groggy,
+	Skill
+};
+
+
 UCLASS()
 class MPSG_API AGuardian_Knight : public AGuardian
 {
@@ -19,10 +29,15 @@ public:
 protected:
 	class UAnim_Knight* Animation;
 
-	class AMonster* Target;
-	bool bTarget;
-
-	bool bAttack;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EKngihtAI		eAI;
 
 public:
 	void AttackEnable(bool bEnable);
@@ -48,7 +63,7 @@ private:
 	void SearchTarget();
 
 public:
-	void CheckDistance();
+	bool CheckDistance();
 
 public:
 	void  AttackToTarget();

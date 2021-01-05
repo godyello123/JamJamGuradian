@@ -32,7 +32,6 @@ void UAnim_Knight::AnimNotify_Knight_AT_End()
 	if (IsValid(Knight))
 	{
 		Knight->AttackEnable(false);
-		Knight->CheckDistance();
 		PrintViewport(1.f, FColor::Red, TEXT("AT_End_Anim"));
 	}
 }
@@ -66,7 +65,6 @@ void UAnim_Knight::AnimNotify_C_Knight_AT_End()
 	if (IsValid(Knight))
 	{
 		Knight->AttackEnable(false);
-		Knight->CheckDistance();
 		PrintViewport(1.f, FColor::Red, TEXT("AT_End_Anim"));
 	}
 }

@@ -55,8 +55,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float	fAttackDist;
 
+protected:
 	float DetectTime;
 	float DetectTimeMax;
+	float MPFillTime;
+	float MPFillTimeMax;
 
 public:
 	void SetState(int32 iDmg, int32 HP, int32 MP, float Speed);
@@ -71,14 +74,15 @@ public:
 	void AddCriticalChance();
 	void AddCriticalRatio();
 
-
-
 protected:
 	class ASummoner* Summoner;
 
 public:
 	void SetSummoner(class ASummoner* Sum);
 	bool IsSummoner();
+
+protected:
+	void FillUpMP(int32 iValue,float fTime);
 
 
 public:
