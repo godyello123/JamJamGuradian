@@ -28,7 +28,10 @@ protected:
 		bool bTarget;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bAttack;
-
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Sword;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Shield;
 
 public:
 	void AttackEnable(bool bEnable);
@@ -41,6 +44,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+protected:
+	void LoadSword(const FString& strSocket, const FString& strMeshPath);
+	void LoadShield(const FString& strSocket, const FString& strMeshPath);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -51,6 +57,7 @@ public:
 
 private:
 	void Attack();
+	void SwordStrike();
 	void SearchTarget();
 
 public:

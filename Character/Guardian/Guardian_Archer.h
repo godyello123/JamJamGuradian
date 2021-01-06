@@ -19,12 +19,17 @@ public:
 protected:
 	class UAnim_Archer* Animation;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Bow;
 
 
-	AActor* Target;
-	bool bTarget;
-
-	bool bAttack;
 
 public:
 	void AttackEnable(bool bEnable);
@@ -36,6 +41,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+protected:
+	void LoadBow(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	// Called every frame
@@ -50,7 +58,7 @@ private:
 	void SearchTarget();
 
 public:
-	void CheckDistance();
+	bool CheckDistance();
 
 public:
 	void  AttackToTarget();

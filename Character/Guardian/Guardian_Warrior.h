@@ -18,12 +18,19 @@ public:
 	AGuardian_Warrior();
 
 protected:
-	class UAnim_Mage* Animation;
+	class UAnim_Warrior* Animation;
 
-	AActor* Target;
-	bool bTarget;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* TwoHandSword;
 
-	bool bAttack;
+
 
 public:
 	void AttackEnable(bool bEnable);
@@ -35,6 +42,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+protected:
+	void LoadTwohandSword(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	// Called every frame
@@ -49,7 +59,7 @@ private:
 	void SearchTarget();
 
 public:
-	void CheckDistance();
+	bool CheckDistance();
 
 public:
 	void  AttackToTarget();

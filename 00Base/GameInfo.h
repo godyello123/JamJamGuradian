@@ -101,4 +101,4 @@ void PrintViewport(float fTime, const FColor& Color,
 
 #define FreeCamRotationOffsetRoll 0.f
 #define FreeCamRotationOffsetYaw 0.f
-#define FreeCamRotationOffsecPitch -80.f
+#define FreeCamRotationOffsecPitch -60.f

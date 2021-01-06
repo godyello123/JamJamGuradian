@@ -136,27 +136,31 @@ void AMonster_Beholder::ChangeAnim(EMonsterAnimType eType)
 
 void AMonster_Beholder::Move()
 {
-	if (iMovePoint >= RoadArray.Num())
-		return;
+	//if (iMovePoint >= RoadArray.Num())
+	//	return;
 
 	AAIController* pAI = GetController<AAIController>();
-	FVector vMoveLoc = RoadArray[iMovePoint]->GetActorLocation();
+	FVector vMoveLoc = Target->GetActorLocation();
 	FVector vMyLoc = GetActorLocation();
 
-	vMoveLoc.Z = vMyLoc.Z;
-	pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
+	//vMoveLoc.Z = vMyLoc.Z;
+	//pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
+
+	//ChangeAnim(EMonsterAnimType::MAT_Move);
+
+	//vMoveLoc.Z = 0.f;
+	//vMyLoc.Z = 0.f;
+
+	//float fDist = FVector::Distance(vMoveLoc, vMyLoc);
+
+	//if (fDist < 5.f)
+	//{
+	//	NextMovePoint();
+	//}
+	pAI->MoveToActor(Target, -1, false, true);
 
 	ChangeAnim(EMonsterAnimType::MAT_Move);
 
-	vMoveLoc.Z = 0.f;
-	vMyLoc.Z = 0.f;
-
-	float fDist = FVector::Distance(vMoveLoc, vMyLoc);
-
-	if (fDist < 5.f)
-	{
-		NextMovePoint();
-	}
 }
 
 void AMonster_Beholder::Skill()

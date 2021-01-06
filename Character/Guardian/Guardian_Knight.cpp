@@ -4,6 +4,7 @@
 #include "Guardian_Knight.h"
 #include "Summoner.h"
 #include "../Monster/Monster.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Knight.h"
 
 
@@ -34,6 +35,12 @@ AGuardian_Knight::AGuardian_Knight()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	Sword = nullptr;
+	Shield = nullptr;
+	/*LoadSword(TEXT("index_03_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+	Sword->SetActorRotation(FRotator(0.f, 0.f, -90.f));
+	LoadShield(TEXT("hand_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));*/
 
 }
 
@@ -67,6 +74,41 @@ void AGuardian_Knight::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Knight>(GetMesh()->GetAnimInstance());
+
+	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+	//Sword->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	LoadShield(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));
+	Shield->SetActorRotation(FRotator(0.f, -20.f, 0.f));
+}
+
+void AGuardian_Knight::LoadSword(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride=
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Sword = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Sword->LoadMesh(strMeshPath);
+}
+
+void AGuardian_Knight::LoadShield(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Shield = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Shield->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Knight::Tick(float DeltaTime)
@@ -97,7 +139,14 @@ void AGuardian_Knight::Tick(float DeltaTime)
 		bool bCheck = CheckDistance();
 		if (bCheck)
 		{
-			Attack();
+			if (State.iMP >= State.iMPMax)
+			{
+				SwordStrike();
+			}
+			else
+			{
+				Attack();
+			}
 		}
 
 	}
@@ -130,6 +179,10 @@ void AGuardian_Knight::Attack()
 	}
 }
 
+void AGuardian_Knight::SwordStrike()
+{
+}
+
 void AGuardian_Knight::SearchTarget()
 {
 	Target = nullptr;
@@ -145,7 +198,7 @@ void AGuardian_Knight::SearchTarget()
 
 	TArray<FHitResult> HitRetArray;
 
-	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, 200.f, TEXT("BlockAll"), false, IgnoreActors,
+	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, fAttackDist, TEXT("BlockAll"), false, IgnoreActors,
 		EDrawDebugTrace::Type::ForOneFrame, HitRetArray, true);
 
 	if (isHit)

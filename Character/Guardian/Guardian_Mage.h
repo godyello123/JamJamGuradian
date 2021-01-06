@@ -20,10 +20,17 @@ public:
 protected:
 	class UAnim_Mage* Animation;
 
-	AActor* Target;
-	bool bTarget;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Wand;
 
-	bool bAttack;
+
 
 public:
 	void AttackEnable(bool bEnable);
@@ -35,6 +42,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+protected:
+	void LoadWand(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	// Called every frame
@@ -49,7 +59,7 @@ private:
 	void SearchTarget();
 
 public:
-	void CheckDistance();
+	bool CheckDistance();
 
 public:
 	void  AttackToTarget();

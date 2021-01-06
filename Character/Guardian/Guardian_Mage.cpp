@@ -3,13 +3,15 @@
 
 #include "Guardian_Mage.h"
 #include "Summoner.h"
+#include "../Monster/Monster.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Mage.h"
 
 AGuardian_Mage::AGuardian_Mage()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/MageSK.MageSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/WizardSK.WizardSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
@@ -31,6 +33,8 @@ AGuardian_Mage::AGuardian_Mage()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	Wand = nullptr;
 }
 
 void AGuardian_Mage::AttackEnable(bool bEnable)
@@ -60,6 +64,23 @@ void AGuardian_Mage::LevelUP(ELevelUpType eType)
 void AGuardian_Mage::BeginPlay()
 {
 	Super::BeginPlay();
+
+	LoadWand(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Wand01SM.Wand01SM'"));
+}
+
+void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Wand = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Wand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Wand->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Mage::Tick(float DeltaTime)
@@ -86,10 +107,12 @@ void AGuardian_Mage::SearchTarget()
 {
 }
 
-void AGuardian_Mage::CheckDistance()
+bool AGuardian_Mage::CheckDistance()
 {
+	return false;
 }
 
 void AGuardian_Mage::AttackToTarget()
 {
 }
+
