@@ -16,7 +16,10 @@ AMonster::AMonster()
 
 bool AMonster::IsDead()
 {
-	return bDead;
+	if (State.iHP > 0)
+		return false;
+	else
+		return true;
 }
 
 void AMonster::Dead()

@@ -4,6 +4,7 @@
 #include "Guardian_Knight.h"
 #include "Summoner.h"
 #include "../Monster/Monster.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Knight.h"
 
 
@@ -34,6 +35,13 @@ AGuardian_Knight::AGuardian_Knight()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	Sword = nullptr;
+	Shield = nullptr;
+	/*LoadSword(TEXT("index_03_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+	Sword->SetActorRotation(FRotator(0.f, 0.f, -90.f));
+	LoadShield(TEXT("hand_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));*/
+
 }
 
 void AGuardian_Knight::AttackEnable(bool bEnable)
@@ -66,32 +74,82 @@ void AGuardian_Knight::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Knight>(GetMesh()->GetAnimInstance());
+
+	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+	//Sword->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	LoadShield(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));
+	Shield->SetActorRotation(FRotator(0.f, -20.f, 0.f));
+}
+
+void AGuardian_Knight::LoadSword(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride=
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Sword = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Sword->LoadMesh(strMeshPath);
+}
+
+void AGuardian_Knight::LoadShield(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Shield = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Shield->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Knight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//몬스터가 영역 안에 들어왔는지 탐지
-	if (!bTarget)
+
+	if (!Target && !bTarget)
 	{
-		Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
 		DetectTime += DeltaTime;
 
 		if (DetectTime >= DetectTimeMax)
 		{
-			DetectTime -= DetectTimeMax;
 			SearchTarget();
+			DetectTime = 0.f;
 		}
 	}
-	else
+	else if (Target!=nullptr&&!bTarget)
 	{
-		if (IsValid(Target)&&!Target->IsDead())
-		{
-			Attack();
-		}
+		CheckDistance();
 	}
-	
+	else if (!Target && bTarget)
+	{
+		bTarget = false;
+	}
 
+	if (Target && bTarget)
+	{
+		bool bCheck = CheckDistance();
+		if (bCheck)
+		{
+			if (State.iMP >= State.iMPMax)
+			{
+				SwordStrike();
+			}
+			else
+			{
+				Attack();
+			}
+		}
+
+	}
 }
 
 void AGuardian_Knight::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -121,9 +179,15 @@ void AGuardian_Knight::Attack()
 	}
 }
 
+void AGuardian_Knight::SwordStrike()
+{
+}
+
 void AGuardian_Knight::SearchTarget()
 {
 	Target = nullptr;
+
+	Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
 
 	FVector StartLoc = GetActorLocation();
 
@@ -134,7 +198,7 @@ void AGuardian_Knight::SearchTarget()
 
 	TArray<FHitResult> HitRetArray;
 
-	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, 200.f, TEXT("BlockAll"), false, IgnoreActors,
+	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, fAttackDist, TEXT("BlockAll"), false, IgnoreActors,
 		EDrawDebugTrace::Type::ForOneFrame, HitRetArray, true);
 
 	if (isHit)
@@ -145,8 +209,15 @@ void AGuardian_Knight::SearchTarget()
 			if (HitRetArray[i].Component.Get()->GetCollisionProfileName() == TEXT("Monster"))
 			{
 				AActor* pTarget = HitRetArray[0].Actor.Get();
-				Target = (AMonster*)pTarget;
-				bTarget = true;
+
+				AMonster* Mon= (AMonster*)pTarget;
+
+				if (!Mon->IsDead())
+				{
+					Target = pTarget;
+					bTarget = true;
+				}
+				
 				return;
 			}
 		}
@@ -154,7 +225,7 @@ void AGuardian_Knight::SearchTarget()
 
 }
 
-void AGuardian_Knight::CheckDistance()
+bool AGuardian_Knight::CheckDistance()
 {
 	FVector TargetLoc = Target->GetActorLocation();
 	TargetLoc.Z = 0.f;
@@ -168,7 +239,22 @@ void AGuardian_Knight::CheckDistance()
 		Target = nullptr;
 		bTarget = false;
 		Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
+
+		return false;
 	}
+	else
+	{
+		bTarget = true;
+
+		FVector vDir = TargetLoc - MyLoc;
+		vDir.Normalize();
+
+		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
+
+		return true;
+	}
+
+	return false;
 }
 
 void AGuardian_Knight::AttackToTarget()
@@ -179,7 +265,14 @@ void AGuardian_Knight::AttackToTarget()
 
 		FDamageEvent DmgEvent;
 
-		Target->TakeDamage(State.Damage, DmgEvent, AI,this);
+		float fHp=Target->TakeDamage(State.Damage, DmgEvent, AI,this);
+
+		if (fHp <= 0.f)
+		{
+			Target = nullptr;
+			bTarget = false;
+		}
+
 		PrintViewport(1.f, FColor::Red, TEXT("TakeDamage"));
 	}
 }

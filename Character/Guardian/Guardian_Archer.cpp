@@ -3,6 +3,8 @@
 
 #include "Guardian_Archer.h"
 #include "Summoner.h"
+#include "../Monster/Monster.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Archer.h"
 
 
@@ -33,6 +35,8 @@ AGuardian_Archer::AGuardian_Archer()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	Bow = nullptr;
 }
 
 
@@ -64,6 +68,26 @@ void AGuardian_Archer::LevelUP(ELevelUpType eType)
 void AGuardian_Archer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (IsValid(Animation))
+		Animation = Cast<UAnim_Archer>(GetMesh()->GetAnimInstance());
+
+	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
+}
+
+void AGuardian_Archer::LoadBow(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	Bow = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	Bow->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	Bow->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Archer::Tick(float DeltaTime)
@@ -88,11 +112,15 @@ void AGuardian_Archer::Attack()
 
 void AGuardian_Archer::SearchTarget()
 {
+
 }
 
-void AGuardian_Archer::CheckDistance()
+bool AGuardian_Archer::CheckDistance()
 {
+	return false;
 }
+
+
 
 void AGuardian_Archer::AttackToTarget()
 {

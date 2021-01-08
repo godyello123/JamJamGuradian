@@ -3,6 +3,8 @@
 
 #include "Guardian_Warrior.h"
 #include "Summoner.h"
+#include "../Monster/Monster.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Warrior.h"
 
 AGuardian_Warrior::AGuardian_Warrior()
@@ -31,6 +33,8 @@ AGuardian_Warrior::AGuardian_Warrior()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	TwoHandSword = nullptr;
 }
 
 void AGuardian_Warrior::AttackEnable(bool bEnable)
@@ -49,6 +53,24 @@ void AGuardian_Warrior::LevelUP(ELevelUpType eType)
 void AGuardian_Warrior::BeginPlay()
 {
 	Super::BeginPlay();
+	LoadTwohandSword(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+	//TwoHandSword->SetActorRelativeLocation(FVector(0.f, 10.f, 0.363824));
+	TwoHandSword->SetActorRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
+}
+
+void AGuardian_Warrior::LoadTwohandSword(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	TwoHandSword = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	TwoHandSword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	TwoHandSword->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Warrior::Tick(float DeltaTime)
@@ -74,10 +96,12 @@ void AGuardian_Warrior::SearchTarget()
 {
 }
 
-void AGuardian_Warrior::CheckDistance()
+bool AGuardian_Warrior::CheckDistance()
 {
+	return false;
 }
 
 void AGuardian_Warrior::AttackToTarget()
 {
 }
+

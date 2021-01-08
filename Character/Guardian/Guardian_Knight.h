@@ -8,6 +8,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class MPSG_API AGuardian_Knight : public AGuardian
 {
@@ -19,10 +21,17 @@ public:
 protected:
 	class UAnim_Knight* Animation;
 
-	class AMonster* Target;
-	bool bTarget;
-
-	bool bAttack;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Sword;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* Shield;
 
 public:
 	void AttackEnable(bool bEnable);
@@ -35,6 +44,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+protected:
+	void LoadSword(const FString& strSocket, const FString& strMeshPath);
+	void LoadShield(const FString& strSocket, const FString& strMeshPath);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,10 +57,11 @@ public:
 
 private:
 	void Attack();
+	void SwordStrike();
 	void SearchTarget();
 
 public:
-	void CheckDistance();
+	bool CheckDistance();
 
 public:
 	void  AttackToTarget();

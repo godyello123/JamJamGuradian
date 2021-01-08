@@ -105,6 +105,8 @@ void ASummonerController::MoveSummoner(float fDeltaTime)
 			Summoner->SetActorRotation(FRotator(0.f, v3.Rotation().Yaw, 0.f));
 
 			Summoner->ChangeAnim(ESummonerAnimType::SAT_Move);
+
+			
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, result.ImpactPoint);
 		}
 	}

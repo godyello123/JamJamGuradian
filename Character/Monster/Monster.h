@@ -61,7 +61,6 @@ public:
 	bool IsDead();
 	void Dead();
 
-
 protected:
 	int32 iMovePoint;
 
