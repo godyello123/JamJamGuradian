@@ -32,3 +32,11 @@ void UAnim_Mage::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
+
+void UAnim_Mage::AnimNotify_Mage_MagicMissile()
+{
+	AGuardian_Mage* Knight = Cast<AGuardian_Mage>(TryGetPawnOwner());
+
+	if (IsValid(Knight))
+		Knight->MagicMissaile();
+}

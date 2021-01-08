@@ -22,6 +22,7 @@ AMonster_Beholder::AMonster_Beholder()
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Monster"));
+
 	GetMesh()->SetCollisionProfileName(TEXT("Monster"));
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -70.f));

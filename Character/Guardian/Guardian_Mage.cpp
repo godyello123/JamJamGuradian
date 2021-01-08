@@ -21,6 +21,11 @@ AGuardian_Mage::AGuardian_Mage()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
+	GetClassAsset(ASpell_MagicMissile, SpellAsset, "Blueprint'/Game/05Spell/MagicMissile_BP.MagicMissile_BP_C'");
+
+	if (SpellAsset.Succeeded())
+		MagicMissile = SpellAsset.Class;
+
 	SetState(10, 10, 10, 1.f);
 
 	fAttackDist = 200.f;
@@ -35,6 +40,9 @@ AGuardian_Mage::AGuardian_Mage()
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
 	Wand = nullptr;
+
+	fRecoveryTime = 0.f;
+	fMaxRecoveryTime = 2.f;
 }
 
 void AGuardian_Mage::AttackEnable(bool bEnable)
@@ -66,13 +74,15 @@ void AGuardian_Mage::BeginPlay()
 	Super::BeginPlay();
 
 	LoadWand(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Wand01SM.Wand01SM'"));
+
+	Animation = Cast<UAnim_Mage>(GetMesh()->GetAnimInstance());
 }
 
 void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPath)
 {
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		ESpawnActorCollisionHandlingMethod::Undefined;
 
 	Wand = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
 		FRotator::ZeroRotator, params);
@@ -86,6 +96,15 @@ void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPa
 void AGuardian_Mage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	fRecoveryTime += DeltaTime;
+
+	if (fRecoveryTime >= fMaxRecoveryTime)
+	{
+		++State.iMP;
+	}
+
+	Motion();
 }
 
 void AGuardian_Mage::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -114,5 +133,31 @@ bool AGuardian_Mage::CheckDistance()
 
 void AGuardian_Mage::AttackToTarget()
 {
+}
+
+void AGuardian_Mage::MagicMissaile()
+{
+	//스킬 만들기
+	FVector vPos = GetActorLocation()+GetActorForwardVector()*200.f;
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+
+	ASpell_MagicMissile* Skile = GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
+		tParams);
+}
+
+void AGuardian_Mage::Motion()
+{
+	if (State.iMP >= State.iMPMax)
+	{
+		if (IsValid(Animation))
+			Animation->ChangeAnimType(EGuardianAnimType::GAT_Skill);
+
+		State.iMP = 0;
+	}
 }
 

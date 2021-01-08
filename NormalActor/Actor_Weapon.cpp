@@ -11,6 +11,9 @@ AActor_Weapon::AActor_Weapon()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 
+
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	SetRootComponent(Mesh);
 
 }
@@ -19,7 +22,7 @@ AActor_Weapon::AActor_Weapon()
 void AActor_Weapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame

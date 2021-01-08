@@ -4,7 +4,9 @@
 
 
 #include "Guardian.h"
+#include "../../Spell/Spell_MagicMissile.h"
 #include "Guardian_Mage.generated.h"
+
 
 /**
  * 
@@ -30,7 +32,11 @@ protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Wand;
 
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_MagicMissile> MagicMissile;
 
+	float fRecoveryTime;
+	float fMaxRecoveryTime;
 
 public:
 	void AttackEnable(bool bEnable);
@@ -63,6 +69,14 @@ public:
 
 public:
 	void  AttackToTarget();
+
+public:
+	void MagicMissaile();
+
+
+private:
+	void Motion();
+
 
 	
 };
