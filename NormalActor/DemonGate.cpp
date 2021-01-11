@@ -15,7 +15,7 @@ ADemonGate::ADemonGate()
 	Monster = nullptr;
 	SpawnTime = 5.f;
 	iMonsterCount = 0;
-	iMaxMonsterCount = 1;
+	iMaxMonsterCount = 10;
 	SpawnDuration = 0.f;
 
 	bSpawn = true;

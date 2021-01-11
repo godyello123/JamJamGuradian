@@ -10,6 +10,12 @@ AMagicMissile::AMagicMissile()
 	TICKON;
 
 	iDamage = 0;
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	SetRootComponent(Mesh);
+	particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
+
+	particle->SetupAttachment(Mesh);
 }
 
 void AMagicMissile::SetDamage(int32 iDmg)

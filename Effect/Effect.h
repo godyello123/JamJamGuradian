@@ -4,33 +4,20 @@
 
 #include "../00Base/GameInfo.h"
 #include "GameFramework/Actor.h"
-#include "Spell.generated.h"
+#include "Effect.generated.h"
 
 UCLASS()
-class MPSG_API ASpell : public AActor
+class MPSG_API AEffect : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpell();
+	AEffect();
 
 protected:
-	UPROPERTY(Category=Colliison,VisibleAnywhere,BlueprintReadOnly,meta=(AllowPrivateAccess="true"))
-		USphereComponent* Collision;
-	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* Mesh;
 	UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UParticleSystemComponent* particle;
-	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UProjectileMovementComponent* Movement;
-
-protected:
-	int32 iDamage;
-
-public:
-	void SetDamage(int32 iDmg);
-	int32 GetDamage() const;
 
 
 protected:

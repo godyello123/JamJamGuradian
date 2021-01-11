@@ -28,7 +28,7 @@ AGuardian_Mage::AGuardian_Mage()
 
 	SetState(10, 10, 10, 1.f);
 
-	fAttackDist = 200.f;
+	fAttackDist = 300.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
@@ -43,6 +43,8 @@ AGuardian_Mage::AGuardian_Mage()
 
 	fRecoveryTime = 0.f;
 	fMaxRecoveryTime = 2.f;
+
+	eAI = EMAGE_AI::Idle;
 }
 
 void AGuardian_Mage::AttackEnable(bool bEnable)
@@ -63,7 +65,7 @@ void AGuardian_Mage::LevelUP(ELevelUpType eType)
 	case ELevelUpType::TYPE2:
 		break;
 	case ELevelUpType::TYPE3:
-		break;
+break;
 	case ELevelUpType::TYPE4:
 		break;
 	}
@@ -101,7 +103,7 @@ void AGuardian_Mage::Tick(float DeltaTime)
 
 	if (fRecoveryTime >= fMaxRecoveryTime)
 	{
-		++State.iMP;
+
 	}
 
 	Motion();
@@ -118,16 +120,117 @@ float AGuardian_Mage::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return 0.0f;
 }
 
+void AGuardian_Mage::FillUpMP(float fValue)
+{
+	if (State.iMP < State.iMPMax)
+	{
+		State.iMP += fValue;
+
+		if (State.iMP >= State.iMPMax)
+			State.iMP = State.iMPMax;
+	}
+}
+
 void AGuardian_Mage::Attack()
 {
+	if (State.iMP >= State.iMPMax)
+		ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	else
+		ChangeAnimation(EGuardianAnimType::GAT_Attack);
+}
+
+void AGuardian_Mage::Groggy()
+{
+	ChangeAnimation(EGuardianAnimType::GAT_Groggy);
+}
+
+void AGuardian_Mage::Skill()
+{
+	
+}
+
+void AGuardian_Mage::Victory()
+{
+	ChangeAnimation(EGuardianAnimType::GAT_Victory);
 }
 
 void AGuardian_Mage::SearchTarget()
 {
+	if (Target || bTarget)
+		return;
+
+	Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
+
+	FVector StartLoc = GetActorLocation();
+
+	FVector TargetLoc = FVector(StartLoc.X + fAttackDist, StartLoc.Y + fAttackDist, StartLoc.Z + fAttackDist);
+
+	TArray<AActor*> IgnoreActors;
+	IgnoreActors.Add(this);
+
+	TArray<FHitResult> HitRetArray;
+
+	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, fAttackDist, TEXT("BlockAll"), false, IgnoreActors,
+		EDrawDebugTrace::Type::None, HitRetArray, true);
+
+	if (isHit)
+	{
+		int32 iSize = HitRetArray.Num();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			if (HitRetArray[i].Component.Get()->GetCollisionProfileName() == FName(TEXT("Monster")))
+			{
+				AActor* pTarget = HitRetArray[i].Actor.Get();
+
+				AMonster* Mon = (AMonster*)pTarget;
+
+				if (!Mon->IsDead())
+				{
+					Target = pTarget;
+					bTarget = true;
+					eAI = EMAGE_AI::Attack;
+				}
+
+				return;
+			}
+		}
+	}
 }
 
 bool AGuardian_Mage::CheckDistance()
 {
+	FVector TargetLoc = Target->GetActorLocation();
+	TargetLoc.Z = 0.f;
+	FVector MyLoc = GetActorLocation();
+	MyLoc.Z = 0.f;
+
+	float fDist = FVector::Distance(TargetLoc, MyLoc);
+
+	if (fDist > fAttackDist)
+	{
+		Target = nullptr;
+		bTarget = false;
+		eAI = EMAGE_AI::Idle;
+
+		return false;
+	}
+	else
+	{
+		if (bAttack)
+			return false;
+
+		bTarget = true;
+
+		FVector vDir = TargetLoc - MyLoc;
+		vDir.Normalize();
+		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
+
+		Attack();
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -138,7 +241,7 @@ void AGuardian_Mage::AttackToTarget()
 void AGuardian_Mage::MagicMissaile()
 {
 	//스킬 만들기
-	FVector vPos = GetActorLocation()+GetActorForwardVector()*200.f;
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
 
 	FActorSpawnParameters tParams;
 
@@ -150,14 +253,30 @@ void AGuardian_Mage::MagicMissaile()
 		tParams);
 }
 
+void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)
+{
+	if (IsValid(Animation))
+	{
+		Animation->ChangeAnimType(eType);
+	}
+}
+
 void AGuardian_Mage::Motion()
 {
-	if (State.iMP >= State.iMPMax)
+	switch (eAI)
 	{
-		if (IsValid(Animation))
-			Animation->ChangeAnimType(EGuardianAnimType::GAT_Skill);
-
-		State.iMP = 0;
+	case EMAGE_AI::Idle:
+		SearchTarget();
+		break;
+	case EMAGE_AI::Attack:
+		CheckDistance();
+		break;
+	case EMAGE_AI::Groggy:
+		Groggy();
+		break;
+	case EMAGE_AI::Victory:
+		Victory();
+		break;
 	}
 }
 

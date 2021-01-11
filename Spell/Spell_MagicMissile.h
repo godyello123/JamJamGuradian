@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Spell.h"
+#include "../Effect/Effect_MagicMissile.h"
 #include "Spell_MagicMissile.generated.h"
 
 /**
@@ -16,6 +17,14 @@ class MPSG_API ASpell_MagicMissile : public ASpell
 public:
 	ASpell_MagicMissile();
 
+protected:
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AEffect_MagicMissile> Effect;
+
+protected:
+	float fLifeTime;
+	float fLifeTimeMax;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,6 +36,16 @@ public:
 
 public:
 	void CreateEffect();
+
+public:
+	UFUNCTION()
+		void CollisionBeginOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
 
 	
 };
