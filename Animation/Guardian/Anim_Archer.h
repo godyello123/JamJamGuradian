@@ -32,4 +32,13 @@ public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 	
+
+public:
+	UFUNCTION()
+		void AnimNotify_Bow_Attack_Start();
+	UFUNCTION()
+		void AnimNotify_Bow_Attack();
+	UFUNCTION()
+		void AnimNotify_Bow_Attack_End();
+
 };

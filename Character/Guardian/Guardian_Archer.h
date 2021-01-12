@@ -46,6 +46,9 @@ public:
 protected:
 	void LoadBow(const FString& strSocket, const FString& strMeshPath);
 
+public:
+	void ChangeAnimation(EGuardianAnimType eType);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
