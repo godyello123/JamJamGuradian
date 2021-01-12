@@ -37,13 +37,13 @@ AGuardian_Warrior::AGuardian_Warrior()
 	TwoHandSword = nullptr;
 }
 
-void AGuardian_Warrior::AttackEnable(bool bEnable)
+
+void AGuardian_Warrior::Groggy()
 {
 }
 
-bool AGuardian_Warrior::IsAttack() const
+void AGuardian_Warrior::Victory()
 {
-	return false;
 }
 
 void AGuardian_Warrior::LevelUP(ELevelUpType eType)
@@ -56,6 +56,11 @@ void AGuardian_Warrior::BeginPlay()
 	LoadTwohandSword(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
 	//TwoHandSword->SetActorRelativeLocation(FVector(0.f, 10.f, 0.363824));
 	TwoHandSword->SetActorRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
+}
+
+void AGuardian_Warrior::SetAI(EWARRIOR_AI _eAI)
+{
+	eAI = _eAI;
 }
 
 void AGuardian_Warrior::LoadTwohandSword(const FString& strSocket, const FString& strMeshPath)
@@ -88,7 +93,15 @@ float AGuardian_Warrior::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	return 0.0f;
 }
 
+void AGuardian_Warrior::Motion()
+{
+}
+
 void AGuardian_Warrior::Attack()
+{
+}
+
+void AGuardian_Warrior::Skill()
 {
 }
 

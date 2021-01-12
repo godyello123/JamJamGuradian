@@ -33,17 +33,21 @@ AGuardian_Assassins::AGuardian_Assassins()
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 }
 
-void AGuardian_Assassins::AttackEnable(bool bEnable)
+void AGuardian_Assassins::Groggy()
 {
 }
 
-bool AGuardian_Assassins::IsAttack() const
+void AGuardian_Assassins::Victory()
 {
-	return false;
 }
 
 void AGuardian_Assassins::LevelUP(ELevelUpType eType)
 {
+}
+
+void AGuardian_Assassins::SetAI(EASSASSIN_AI _eAI)
+{
+	eAI = _eAI;
 }
 
 void AGuardian_Assassins::BeginPlay()
@@ -66,7 +70,16 @@ float AGuardian_Assassins::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	return 0.0f;
 }
 
+
+void AGuardian_Assassins::Motion()
+{
+}
+
 void AGuardian_Assassins::Attack()
+{
+}
+
+void AGuardian_Assassins::Skill()
 {
 }
 
@@ -74,8 +87,9 @@ void AGuardian_Assassins::SearchTarget()
 {
 }
 
-void AGuardian_Assassins::CheckDistance()
+bool AGuardian_Assassins::CheckDistance()
 {
+	return false;
 }
 
 void AGuardian_Assassins::AttackToTarget()

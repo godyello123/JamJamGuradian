@@ -53,13 +53,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		FGuardianState		State;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		float	fAttackDist;
+		float fAttackDist;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bAttack;
 
 protected:
-	float DetectTime;
-	float DetectTimeMax;
 	float MPFillTime;
 	float MPFillTimeMax;
+	int32 FillMP;
+
+protected:
+	class ASummoner* Summoner;
+
+public:
+	void SetFillMP(int32 iFill);
 
 public:
 	void SetState(int32 iDmg, int32 HP, int32 MP, float Speed);
@@ -74,19 +81,17 @@ public:
 	void AddCriticalChance();
 	void AddCriticalRatio();
 
-protected:
-	class ASummoner* Summoner;
-
 public:
 	void SetSummoner(class ASummoner* Sum);
 	bool IsSummoner();
 
+public:
+	void AttackEnable(bool bEnable);
+	bool IsAttack() const;
+
 protected:
 	void FillUpMP(int32 iValue,float fTime);
 
-
-public:
-	virtual void LevelUP(ELevelUpType eType);
 
 protected:
 	// Called when the game starts or when spawned
@@ -98,6 +103,18 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-  
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
+public:
+	virtual void Groggy();
+	virtual void Victory();
+	virtual void LevelUP(ELevelUpType eType);
+
+public:
+	virtual void Motion();
+	virtual void Attack();
+	virtual void Skill();
+	virtual void SearchTarget();
+
+ 
 };

@@ -19,9 +19,11 @@ AGuardian::AGuardian()
 	CriticalRatio = 1.5;
 	MPFillTime = 0.f;
 	MPFillTimeMax = 1.f;
-	DetectTime = 0.f;
-	DetectTimeMax = 0.5f;
+}
 
+void AGuardian::SetFillMP(int32 iFill)
+{
+	FillMP = iFill;
 }
 
 void AGuardian::SetState(int32 iDmg, int32 HP, int32 MP, float Speed)
@@ -88,6 +90,41 @@ void AGuardian::FillUpMP(int32 iValue, float fTime)
 	}
 }
 
+void AGuardian::Motion()
+{
+}
+
+void AGuardian::Attack()
+{
+}
+
+void AGuardian::Skill()
+{
+}
+
+void AGuardian::SearchTarget()
+{
+}
+
+void AGuardian::AttackEnable(bool bEnable)
+{
+	bAttack = bEnable;
+}
+
+bool AGuardian::IsAttack() const
+{
+	return bAttack;
+}
+
+void AGuardian::Groggy()
+{
+}
+
+void AGuardian::Victory()
+{
+}
+
+
 void AGuardian::LevelUP(ELevelUpType eType)
 {
 
@@ -103,6 +140,8 @@ void AGuardian::BeginPlay()
 void AGuardian::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FillUpMP(FillMP, DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -110,5 +149,10 @@ void AGuardian::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float AGuardian::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	return 0.0f;
 }
 

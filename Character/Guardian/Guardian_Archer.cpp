@@ -30,7 +30,6 @@ AGuardian_Archer::AGuardian_Archer()
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
 	Target = nullptr;
-	bAttack = false;
 	bTarget = false;
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
@@ -38,32 +37,6 @@ AGuardian_Archer::AGuardian_Archer()
 
 	Bow = nullptr;
 }
-
-
-void AGuardian_Archer::AttackEnable(bool bEnable)
-{
-}
-
-bool AGuardian_Archer::IsAttack() const
-{
-	return false;
-}
-
-void AGuardian_Archer::LevelUP(ELevelUpType eType)
-{
-	switch (eType)
-	{
-	case ELevelUpType::TYPE1:
-		break;
-	case ELevelUpType::TYPE2:
-		break;
-	case ELevelUpType::TYPE3:
-		break;
-	case ELevelUpType::TYPE4:
-		break;
-	}
-}
-
 
 void AGuardian_Archer::BeginPlay()
 {
@@ -73,6 +46,63 @@ void AGuardian_Archer::BeginPlay()
 		Animation = Cast<UAnim_Archer>(GetMesh()->GetAnimInstance());
 
 	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
+}
+
+void AGuardian_Archer::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void AGuardian_Archer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+float AGuardian_Archer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	return 0.0f;
+}
+
+void AGuardian_Archer::Groggy()
+{
+}
+
+void AGuardian_Archer::Victory()
+{
+}
+
+void AGuardian_Archer::LevelUP(ELevelUpType eType)
+{
+}
+
+void AGuardian_Archer::Motion()
+{
+}
+
+void AGuardian_Archer::Attack()
+{
+}
+
+void AGuardian_Archer::Skill()
+{
+}
+
+void AGuardian_Archer::SearchTarget()
+{
+}
+
+bool AGuardian_Archer::CheckDistance()
+{
+	return false;
+}
+
+void AGuardian_Archer::AttackToTarget()
+{
+}
+
+void AGuardian_Archer::SetAI(EARCHER_AI _eAI)
+{
+	eAI = _eAI;
 }
 
 void AGuardian_Archer::LoadBow(const FString& strSocket, const FString& strMeshPath)
@@ -88,40 +118,4 @@ void AGuardian_Archer::LoadBow(const FString& strSocket, const FString& strMeshP
 		*strSocket);
 
 	Bow->LoadMesh(strMeshPath);
-}
-
-void AGuardian_Archer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void AGuardian_Archer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-float AGuardian_Archer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	return 0.0f;
-}
-
-void AGuardian_Archer::Attack()
-{
-}
-
-void AGuardian_Archer::SearchTarget()
-{
-
-}
-
-bool AGuardian_Archer::CheckDistance()
-{
-	return false;
-}
-
-
-
-void AGuardian_Archer::AttackToTarget()
-{
 }

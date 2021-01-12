@@ -41,19 +41,7 @@ AGuardian_Mage::AGuardian_Mage()
 
 	Wand = nullptr;
 
-	fRecoveryTime = 0.f;
-	fMaxRecoveryTime = 2.f;
-
 	eAI = EMAGE_AI::Idle;
-}
-
-void AGuardian_Mage::AttackEnable(bool bEnable)
-{
-}
-
-bool AGuardian_Mage::IsAttack() const
-{
-	return false;
 }
 
 void AGuardian_Mage::LevelUP(ELevelUpType eType)
@@ -80,6 +68,11 @@ void AGuardian_Mage::BeginPlay()
 	Animation = Cast<UAnim_Mage>(GetMesh()->GetAnimInstance());
 }
 
+void AGuardian_Mage::SetAI(EMAGE_AI _eAI)
+{
+	eAI = _eAI;
+}
+
 void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPath)
 {
 	FActorSpawnParameters params;
@@ -99,13 +92,6 @@ void AGuardian_Mage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	fRecoveryTime += DeltaTime;
-
-	if (fRecoveryTime >= fMaxRecoveryTime)
-	{
-
-	}
-
 	Motion();
 }
 
@@ -120,16 +106,6 @@ float AGuardian_Mage::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return 0.0f;
 }
 
-void AGuardian_Mage::FillUpMP(float fValue)
-{
-	if (State.iMP < State.iMPMax)
-	{
-		State.iMP += fValue;
-
-		if (State.iMP >= State.iMPMax)
-			State.iMP = State.iMPMax;
-	}
-}
 
 void AGuardian_Mage::Attack()
 {
@@ -236,6 +212,7 @@ bool AGuardian_Mage::CheckDistance()
 
 void AGuardian_Mage::AttackToTarget()
 {
+
 }
 
 void AGuardian_Mage::MagicMissaile()

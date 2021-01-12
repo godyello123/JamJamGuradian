@@ -8,6 +8,16 @@
 /**
  * 
  */
+UENUM(BlueprintType, Meta = (Bitflags))
+enum class EARCHER_AI : uint8
+{
+	Idle,
+	Attack,
+	Groggy,
+	Victory
+};
+
+
 UCLASS()
 class MPSG_API AGuardian_Archer : public AGuardian
 {
@@ -24,26 +34,21 @@ protected:
 		AActor* Target;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bTarget;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bAttack;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Bow;
-
-
-
-public:
-	void AttackEnable(bool bEnable);
-	bool IsAttack() const;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EARCHER_AI		eAI;
 
 public:
-	virtual void LevelUP(ELevelUpType eType);
+	void SetAI(EARCHER_AI _eAI);
+
+
+protected:
+	void LoadBow(const FString& strSocket, const FString& strMeshPath);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-protected:
-	void LoadBow(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	// Called every frame
@@ -53,14 +58,19 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
-private:
-	void Attack();
-	void SearchTarget();
+public:
+	virtual void Groggy();
+	virtual void Victory();
+	virtual void LevelUP(ELevelUpType eType);
+
+public:
+	virtual void Motion();
+	virtual void Attack();
+	virtual void Skill();
+	virtual void SearchTarget();
 
 public:
 	bool CheckDistance();
-
-public:
-	void  AttackToTarget();
+	void AttackToTarget();
 
 };

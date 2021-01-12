@@ -8,6 +8,15 @@
 /**
  * 
  */
+UENUM(BlueprintType, Meta = (Bitflags))
+enum class EASSASSIN_AI : uint8
+{
+	Idle,
+	Attack,
+	Groggy,
+	Victory
+};
+
 UCLASS()
 class MPSG_API AGuardian_Assassins : public AGuardian
 {
@@ -19,17 +28,21 @@ public:
 protected:
 	class UAnim_Assassins* Animation;
 
-	AActor* Target;
-	bool bTarget;
-
-	bool bAttack;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* RightDagger;
+	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class AActor_Weapon* LeftDagger;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EASSASSIN_AI		eAI;
 
 public:
-	void AttackEnable(bool bEnable);
-	bool IsAttack() const;
+	void SetAI(EASSASSIN_AI _eAI);
 
-public:
-	virtual void LevelUP(ELevelUpType eType);
 
 protected:
 	// Called when the game starts or when spawned
@@ -43,13 +56,18 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
-private:
-	void Attack();
-	void SearchTarget();
+public:
+	virtual void Groggy();
+	virtual void Victory();
+	virtual void LevelUP(ELevelUpType eType);
+
+protected:
+	virtual void Motion();
+	virtual void Attack();
+	virtual void Skill();
+	virtual void SearchTarget();
 
 public:
-	void CheckDistance();
-
-public:
-	void  AttackToTarget();
+	bool CheckDistance();
+	void AttackToTarget();
 };

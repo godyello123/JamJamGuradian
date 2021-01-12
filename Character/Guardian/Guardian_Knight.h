@@ -8,6 +8,14 @@
 /**
  * 
  */
+UENUM(BlueprintType, Meta = (Bitflags))
+enum class EKNIGHT_AI : uint8
+{
+	Idle,
+	Attack,
+	Groggy,
+	Victory
+};
 
 
 UCLASS()
@@ -26,27 +34,24 @@ protected:
 		AActor* Target;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bTarget;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bAttack;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Sword;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Shield;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EKNIGHT_AI		eAI;
 
 public:
-	void AttackEnable(bool bEnable);
-	bool IsAttack() const;
+	void SetAI(EKNIGHT_AI eAI);
 
-public:
-	virtual void LevelUP(ELevelUpType eType);
+protected:
+	void LoadSword(const FString& strSocket, const FString& strMeshPath);
+	void LoadShield(const FString& strSocket, const FString& strMeshPath);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-protected:
-	void LoadSword(const FString& strSocket, const FString& strMeshPath);
-	void LoadShield(const FString& strSocket, const FString& strMeshPath);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -55,16 +60,22 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
-private:
-	void Attack();
-	void SwordStrike();
-	void SearchTarget();
+public:
+	virtual void LevelUP(ELevelUpType eType);
+
+protected:
+	virtual void Motion();
+	virtual void Attack();
+	virtual void Skill();
+	virtual void SearchTarget();
+
+public:
+	virtual void Groggy();
+	virtual void Victory();
 
 public:
 	bool CheckDistance();
-
-public:
-	void  AttackToTarget();
+	void AttackToTarget();
 
 	
 };

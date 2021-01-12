@@ -42,16 +42,13 @@ AGuardian_Knight::AGuardian_Knight()
 	Sword->SetActorRotation(FRotator(0.f, 0.f, -90.f));
 	LoadShield(TEXT("hand_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));*/
 
+	eAI = EKNIGHT_AI::Idle;
+
 }
 
-void AGuardian_Knight::AttackEnable(bool bEnable)
+void AGuardian_Knight::SetAI(EKNIGHT_AI _eAI)
 {
-	bAttack = bEnable;
-}
-
-bool AGuardian_Knight::IsAttack() const
-{
-	return bAttack;
+	eAI = _eAI;
 }
 
 void AGuardian_Knight::LevelUP(ELevelUpType eType)
@@ -115,41 +112,6 @@ void AGuardian_Knight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!Target && !bTarget)
-	{
-		DetectTime += DeltaTime;
-
-		if (DetectTime >= DetectTimeMax)
-		{
-			SearchTarget();
-			DetectTime = 0.f;
-		}
-	}
-	else if (Target!=nullptr&&!bTarget)
-	{
-		CheckDistance();
-	}
-	else if (!Target && bTarget)
-	{
-		bTarget = false;
-	}
-
-	if (Target && bTarget)
-	{
-		bool bCheck = CheckDistance();
-		if (bCheck)
-		{
-			if (State.iMP >= State.iMPMax)
-			{
-				SwordStrike();
-			}
-			else
-			{
-				Attack();
-			}
-		}
-
-	}
 }
 
 void AGuardian_Knight::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -161,6 +123,10 @@ float AGuardian_Knight::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	return 0.0f;
+}
+
+void AGuardian_Knight::Motion()
+{
 }
 
 void AGuardian_Knight::Attack()
@@ -179,8 +145,9 @@ void AGuardian_Knight::Attack()
 	}
 }
 
-void AGuardian_Knight::SwordStrike()
+void AGuardian_Knight::Skill()
 {
+
 }
 
 void AGuardian_Knight::SearchTarget()
@@ -208,8 +175,8 @@ void AGuardian_Knight::SearchTarget()
 		{
 			if (HitRetArray[i].Component.Get()->GetCollisionProfileName() == TEXT("Monster"))
 			{
-				AActor* pTarget = HitRetArray[0].Actor.Get();
-
+				AActor* pTarget = HitRetArray[i].Actor.Get();
+				 
 				AMonster* Mon= (AMonster*)pTarget;
 
 				if (!Mon->IsDead())
@@ -223,6 +190,14 @@ void AGuardian_Knight::SearchTarget()
 		}
 	}
 
+}
+
+void AGuardian_Knight::Groggy()
+{
+}
+
+void AGuardian_Knight::Victory()
+{
 }
 
 bool AGuardian_Knight::CheckDistance()

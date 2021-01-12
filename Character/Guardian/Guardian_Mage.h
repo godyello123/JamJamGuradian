@@ -36,33 +36,25 @@ protected:
 		AActor* Target;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bTarget;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bAttack;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Wand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EMAGE_AI		eAI;
-
-
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_MagicMissile> MagicMissile;
 
-	float fRecoveryTime;
-	float fMaxRecoveryTime;
+public:
+	void SetAI(EMAGE_AI eAI);
+
+protected:
+	void LoadWand(const FString& strSocket, const FString& strMeshPath);
 
 public:
-	void AttackEnable(bool bEnable);
-	bool IsAttack() const;
-
-public:
-	virtual void LevelUP(ELevelUpType eType);
+	void ChangeAnimation(EGuardianAnimType eType);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-protected:
-	void LoadWand(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	// Called every frame
@@ -72,28 +64,26 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
+public:
+	virtual void Groggy();
+	virtual void Victory();
+
+	virtual void LevelUP(ELevelUpType eType);
+
+protected:
+	virtual void Motion();
+	virtual void Attack();
+	virtual void Skill();
+	virtual void SearchTarget();
+
 private:
-	void FillUpMP(float fValue);
-
-
-public:
 	bool CheckDistance();
-
-public:
-	void  AttackToTarget();
+	void AttackToTarget();
 
 public:
 	void MagicMissaile();
 
-public:
-	void ChangeAnimation(EGuardianAnimType eType);
 
 
-private:
-	void Motion();
-	void Attack();
-	void Groggy();
-	void Skill();
-	void Victory();
-	void SearchTarget();
+
 };
