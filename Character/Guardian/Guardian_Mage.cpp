@@ -226,8 +226,10 @@ void AGuardian_Mage::MagicMissaile()
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 
-	ASpell_MagicMissile* Skile = GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
+	ASpell_MagicMissile* pMagic= GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
 		tParams);
+
+	pMagic->SetMage(this);
 }
 
 void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)

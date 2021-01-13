@@ -2,6 +2,7 @@
 
 
 #include "Spell_MagicMissile.h"
+#include "../Character/Guardian/Guardian_Mage.h"
 
 ASpell_MagicMissile::ASpell_MagicMissile()
 {
@@ -19,6 +20,11 @@ ASpell_MagicMissile::ASpell_MagicMissile()
 	fLifeTimeMax = 3.f;
 }
 
+
+void ASpell_MagicMissile::SetMage(AGuardian_Mage* pMage)
+{
+	Mage = pMage;
+}
 
 void ASpell_MagicMissile::BeginPlay()
 {
@@ -69,6 +75,9 @@ void ASpell_MagicMissile::CreateEffect()
 void ASpell_MagicMissile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//몬스터 데미지 주기
+	FDamageEvent DmgEvent;
+
+	//OtherActor->TakeDamage(GetDamage(), DmgEvent, Mage->GetController(), this);
 	CreateEffect();
 	Destroy();
 }

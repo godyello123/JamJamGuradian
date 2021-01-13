@@ -40,5 +40,10 @@ public:
 		void AnimNotify_Bow_Attack();
 	UFUNCTION()
 		void AnimNotify_Bow_Attack_End();
+	UFUNCTION()
+		void AnimNotify_Bow_Skill();
+	UFUNCTION()
+		void AnimNotify_Bow_Skill_End();
+
 
 };

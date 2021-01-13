@@ -3,33 +3,34 @@
 #pragma once
 
 #include "Spell.h"
-#include "../Effect/Effect_MagicMissile.h"
-#include "Spell_MagicMissile.generated.h"
+#include "../Effect/Effect_Multishot.h"
+#include "Spell_MultiShot.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MPSG_API ASpell_MagicMissile : public ASpell
+class MPSG_API ASpell_MultiShot : public ASpell
 {
 	GENERATED_BODY()
 
 public:
-	ASpell_MagicMissile();
+	ASpell_MultiShot();
 
 protected:
+protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AEffect_MagicMissile> Effect;
+		TSubclassOf<AEffect_Multishot> Effect;
 
 private:
-	class AGuardian_Mage* Mage;
-
-public:
-	void SetMage(class AGuardian_Mage* pMage);
+	class AGuardian_Archer* Archer;
 
 protected:
 	float fLifeTime;
 	float fLifeTimeMax;
+
+public:
+	void SetArcher(class AGuardian_Archer* pArcher);
 
 
 protected:
@@ -52,7 +53,5 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
-
-
 	
 };

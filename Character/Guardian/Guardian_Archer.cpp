@@ -23,6 +23,11 @@ AGuardian_Archer::AGuardian_Archer()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
+	GetClassAsset(ASpell_MultiShot, ArrowAsset, "Blueprint'/Game/05Spell/Multishot_BP.Multishot_BP_C'");
+
+	if (ArrowAsset.Succeeded())
+		Arrow = ArrowAsset.Class;
+
 	SetState(10, 10, 10, 1.f);
 
 	fAttackDist = 200.f;
@@ -47,6 +52,8 @@ void AGuardian_Archer::BeginPlay()
 	Animation = Cast<UAnim_Archer>(GetMesh()->GetAnimInstance());
 
 	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
+
+	State.iMP = State.iMPMax;
 }
 
 void AGuardian_Archer::Tick(float DeltaTime)
@@ -161,9 +168,6 @@ void AGuardian_Archer::SearchTarget()
 
 bool AGuardian_Archer::CheckDistance()
 {
-	//if (bAttack)
-	//	return false;
-
 	if (Target && bTarget)
 	{
 		FVector TargetLoc = Target->GetActorLocation();
@@ -184,7 +188,6 @@ bool AGuardian_Archer::CheckDistance()
 	else
 	{
 		eAI = EARCHER_AI::Idle;
-		//bAttack = false;
 		return false;
 	}
 
@@ -229,6 +232,37 @@ void AGuardian_Archer::AttackToTarget()
 
 		//PrintViewport(1.f, FColor::Red, TEXT("TakeDamage"));
 	}
+}
+
+void AGuardian_Archer::MultiShot()
+{
+	//¸ÖÆ¼¼¦ ¸¸µé±ë
+	PrintViewport(3.f, FColor::Yellow, TEXT("MULTISHOT"));
+
+	//FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	//FActorSpawnParameters tParams;
+
+	//tParams.SpawnCollisionHandlingOverride =
+	//	ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	//ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, GetActorRotation(),
+	//	tParams);
+
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+
+	ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, GetActorRotation(),
+		tParams);
+
+	pArrow->SetArcher(this);
+
+	State.iMP = 0;
 }
 
 void AGuardian_Archer::SetAI(EARCHER_AI _eAI)

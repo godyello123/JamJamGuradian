@@ -67,3 +67,25 @@ void UAnim_Archer::AnimNotify_Bow_Attack_End()
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }
+
+void UAnim_Archer::AnimNotify_Bow_Skill()
+{
+	//스킬 발사!
+	AGuardian_Archer* Archer = Cast<AGuardian_Archer>(TryGetPawnOwner());
+
+	if (IsValid(Archer))
+	{
+		Archer->MultiShot();
+	}
+}
+
+void UAnim_Archer::AnimNotify_Bow_Skill_End()
+{
+	AGuardian_Archer* Archer = Cast<AGuardian_Archer>(TryGetPawnOwner());
+
+	if (IsValid(Archer))
+	{
+		Archer->SetAI(EARCHER_AI::Idle);
+		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
+	}
+}

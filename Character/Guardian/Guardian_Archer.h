@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Guardian.h"
+#include "../../Spell/Spell_MultiShot.h"
 #include "Guardian_Archer.generated.h"
 
 /**
@@ -38,10 +39,11 @@ protected:
 		class AActor_Weapon* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EARCHER_AI		eAI;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_MultiShot> Arrow;
 
 public:
 	void SetAI(EARCHER_AI _eAI);
-
 
 protected:
 	void LoadBow(const FString& strSocket, const FString& strMeshPath);
@@ -75,5 +77,5 @@ public:
 public:
 	bool CheckDistance();
 	void AttackToTarget();
-
+	void MultiShot();
 };
