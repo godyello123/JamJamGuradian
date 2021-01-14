@@ -21,8 +21,8 @@ protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AEffect_MagicMissile> Effect;
 
-private:
-	class AGuardian_Mage* Mage;
+//private:
+	//class AGuardian_Mage* Mage;
 
 public:
 	void SetMage(class AGuardian_Mage* pMage);

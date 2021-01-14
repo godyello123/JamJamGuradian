@@ -3,6 +3,7 @@
 
 #include "Guardian_Assassins.h"
 #include "Summoner.h"
+#include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Assassins.h"
 
 AGuardian_Assassins::AGuardian_Assassins()
@@ -29,6 +30,9 @@ AGuardian_Assassins::AGuardian_Assassins()
 	bAttack = false;
 	bTarget = false;
 
+	LeftDagger = nullptr;
+	RightDagger = nullptr;
+
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 }
@@ -50,9 +54,45 @@ void AGuardian_Assassins::SetAI(EASSASSIN_AI _eAI)
 	eAI = _eAI;
 }
 
+void AGuardian_Assassins::LoadRightDagger(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	RightDagger = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	RightDagger->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	RightDagger->LoadMesh(strMeshPath);
+}
+
+void AGuardian_Assassins::LoadLeftDagger(const FString& strSocket, const FString& strMeshPath)
+{
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	LeftDagger = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+		FRotator::ZeroRotator, params);
+
+	LeftDagger->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+		*strSocket);
+
+	LeftDagger->LoadMesh(strMeshPath);
+}
+
 void AGuardian_Assassins::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Animation = Cast<UAnim_Assassins>(GetMesh()->GetAnimInstance());
+
+	//LoadRightDagger(TEXT(""), TEXT(""));
+	//LoadLeftDagger(TEXT(""), TEXT(""));
+
 }
 
 void AGuardian_Assassins::Tick(float DeltaTime)
@@ -65,7 +105,8 @@ void AGuardian_Assassins::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-float AGuardian_Assassins::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float AGuardian_Assassins::TakeDamage
+(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	return 0.0f;
 }

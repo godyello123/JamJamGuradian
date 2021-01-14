@@ -33,6 +33,13 @@ public:
 
 public:
 	UFUNCTION()
-	void AnimNotify_Mage_MagicMissile();
+		void AnimNotify_Mage_Skill();
+	UFUNCTION()
+		void AnimNotify_Mage_Skill_End();
+	UFUNCTION()
+		void AnimNotify_Mage_Attack();
+	UFUNCTION()
+		void AnimNotify_Mage_Attack_End();
+
 	
 };

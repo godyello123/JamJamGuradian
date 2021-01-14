@@ -28,9 +28,9 @@ AGuardian_Archer::AGuardian_Archer()
 	if (ArrowAsset.Succeeded())
 		Arrow = ArrowAsset.Class;
 
-	SetState(10, 10, 10, 1.f);
+	SetState(5, 10, 10, 1.f);
 
-	fAttackDist = 200.f;
+	fAttackDist = 400.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
@@ -52,8 +52,8 @@ void AGuardian_Archer::BeginPlay()
 	Animation = Cast<UAnim_Archer>(GetMesh()->GetAnimInstance());
 
 	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
-
-	State.iMP = State.iMPMax;
+	
+	SetFillMP(0.5);
 }
 
 void AGuardian_Archer::Tick(float DeltaTime)
@@ -108,10 +108,12 @@ void AGuardian_Archer::Motion()
 
 void AGuardian_Archer::Attack()
 {
-	if (State.iMP >= State.iMPMax)
-		ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	else
-		ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	//if (State.iMP >= State.iMPMax)
+	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	//else
+	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+
+	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Archer::Skill()
@@ -125,8 +127,6 @@ void AGuardian_Archer::SearchTarget()
 		eAI = EARCHER_AI::Attack;
 		return;
 	} 
-
-	//Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
 
 	FVector StartLoc = GetActorLocation();
 
@@ -177,13 +177,10 @@ bool AGuardian_Archer::CheckDistance()
 
 		FVector vDir = TargetLoc - MyLoc;
 		vDir.Normalize();
+		
 		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
 
 		Attack();
-
-		//이거 다른곳으로 빼야함 -> 해당 함수가 종료 되고 
-		//공격을 일단 한번 하고 재야할듯
-
 	}
 	else
 	{
@@ -198,8 +195,6 @@ void AGuardian_Archer::AttackToTarget()
 {
 	if (bTarget&&Target)
 	{
-		//화살 생성 따로 해야할까나?
-
 		AController* AI = GetController<AController>();
 
 		FDamageEvent DmgEvent;
@@ -229,40 +224,36 @@ void AGuardian_Archer::AttackToTarget()
 			Target = nullptr;
 			bTarget = false;
 		}
-
-		//PrintViewport(1.f, FColor::Red, TEXT("TakeDamage"));
 	}
 }
 
 void AGuardian_Archer::MultiShot()
 {
-	//멀티샷 만들깅
-	PrintViewport(3.f, FColor::Yellow, TEXT("MULTISHOT"));
+	for (int32 i = -1; i < 2; ++i)
+	{
+		FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
 
-	//FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+		FRotator vRot = GetActorRotation();
 
-	//FActorSpawnParameters tParams;
+		vRot.Yaw += i * 30.f;
 
-	//tParams.SpawnCollisionHandlingOverride =
-	//	ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		FActorSpawnParameters tParams;
 
-	//ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, GetActorRotation(),
-	//	tParams);
+		tParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		tParams.Owner = this;
 
-	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
-
-	FActorSpawnParameters tParams;
-
-	tParams.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-
-	ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, GetActorRotation(),
-		tParams);
-
-	pArrow->SetArcher(this);
+		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
+			tParams);
+	}
+	
 
 	State.iMP = 0;
+}
+
+void AGuardian_Archer::Test()
+{
+	PrintViewport(2.f, FColor::Blue, TEXT("ok"));
 }
 
 void AGuardian_Archer::SetAI(EARCHER_AI _eAI)

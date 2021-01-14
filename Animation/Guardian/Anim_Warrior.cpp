@@ -2,6 +2,8 @@
 
 
 #include "Anim_Warrior.h"
+#include "../../Character/Guardian/Guardian_Warrior.h"
+
 
 UAnim_Warrior::UAnim_Warrior()
 {
@@ -29,4 +31,46 @@ void UAnim_Warrior::NativeInitializeAnimation()
 void UAnim_Warrior::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
+}
+
+void UAnim_Warrior::AnimNotify_Warrior_Attack()
+{
+	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->AttackToTarget();
+	}
+}
+
+void UAnim_Warrior::AnimNotify_Warrior_Attack_End()
+{
+	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->SetAI(EWARRIOR_AI::Idle);
+		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
+	}
+}
+
+void UAnim_Warrior::AnimNotify_Warrior_Skill()
+{
+	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->CrushAttack();
+	}
+}
+
+void UAnim_Warrior::AnimNotify_Warrior_Skill_End()
+{
+	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->SetAI(EWARRIOR_AI::Idle);
+		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
+	}
 }

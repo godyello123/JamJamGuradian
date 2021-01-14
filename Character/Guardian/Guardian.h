@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		int32 iHPMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		int32 iMP;
+		float iMP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		int32 iMPMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -60,13 +60,13 @@ protected:
 protected:
 	float MPFillTime;
 	float MPFillTimeMax;
-	int32 FillMP;
+	float FillMP;
 
 protected:
 	class ASummoner* Summoner;
 
 public:
-	void SetFillMP(int32 iFill);
+	void SetFillMP(float iFill);
 
 public:
 	void SetState(int32 iDmg, int32 HP, int32 MP, float Speed);
@@ -90,7 +90,7 @@ public:
 	bool IsAttack() const;
 
 protected:
-	void FillUpMP(int32 iValue,float fTime);
+	void FillUpMP(float iValue,float fTime);
 
 
 protected:

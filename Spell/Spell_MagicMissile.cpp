@@ -6,7 +6,7 @@
 
 ASpell_MagicMissile::ASpell_MagicMissile()
 {
-	SetDamage(20.f);
+	SetDamage(30.f);
 
 	Mesh->SetEnableGravity(false);
 
@@ -23,7 +23,7 @@ ASpell_MagicMissile::ASpell_MagicMissile()
 
 void ASpell_MagicMissile::SetMage(AGuardian_Mage* pMage)
 {
-	Mage = pMage;
+	//Mage = pMage;
 }
 
 void ASpell_MagicMissile::BeginPlay()
@@ -77,7 +77,9 @@ void ASpell_MagicMissile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedC
 	//몬스터 데미지 주기
 	FDamageEvent DmgEvent;
 
-	//OtherActor->TakeDamage(GetDamage(), DmgEvent, Mage->GetController(), this);
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(GetOwner());
+
+	OtherActor->TakeDamage(GetDamage(), DmgEvent, pOwner->GetController(), this);
 	CreateEffect();
 	Destroy();
 }

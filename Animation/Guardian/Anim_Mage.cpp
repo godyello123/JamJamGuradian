@@ -33,10 +33,43 @@ void UAnim_Mage::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
 
-void UAnim_Mage::AnimNotify_Mage_MagicMissile()
+void UAnim_Mage::AnimNotify_Mage_Skill()
 {
-	AGuardian_Mage* Knight = Cast<AGuardian_Mage>(TryGetPawnOwner());
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(TryGetPawnOwner());
 
-	if (IsValid(Knight))
-		Knight->MagicMissaile();
+	if (IsValid(pOwner))
+		pOwner->MagicMissaile();
 }
+
+void UAnim_Mage::AnimNotify_Mage_Skill_End()
+{
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->SetAI(EMAGE_AI::Idle);
+		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
+	}
+}
+
+void UAnim_Mage::AnimNotify_Mage_Attack()
+{
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->AttackToTarget();
+	}
+}
+
+void UAnim_Mage::AnimNotify_Mage_Attack_End()
+{
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(TryGetPawnOwner());
+
+	if (IsValid(pOwner))
+	{
+		pOwner->SetAI(EMAGE_AI::Idle);
+		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
+	}
+}
+

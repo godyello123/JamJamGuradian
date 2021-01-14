@@ -11,7 +11,7 @@ AGuardian_Mage::AGuardian_Mage()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/WizardSK.WizardSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/MageSK.MageSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
@@ -26,7 +26,7 @@ AGuardian_Mage::AGuardian_Mage()
 	if (SpellAsset.Succeeded())
 		MagicMissile = SpellAsset.Class;
 
-	SetState(10, 10, 10, 1.f);
+	SetState(5, 10, 10, 1.f);
 
 	fAttackDist = 300.f;
 	bCritical = false;
@@ -109,10 +109,12 @@ float AGuardian_Mage::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 void AGuardian_Mage::Attack()
 {
-	if (State.iMP >= State.iMPMax)
-		ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	else
-		ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	//if (State.iMP >= State.iMPMax)
+	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	//else
+	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+
+	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Mage::Groggy()
@@ -176,35 +178,26 @@ void AGuardian_Mage::SearchTarget()
 
 bool AGuardian_Mage::CheckDistance()
 {
-	FVector TargetLoc = Target->GetActorLocation();
-	TargetLoc.Z = 0.f;
-	FVector MyLoc = GetActorLocation();
-	MyLoc.Z = 0.f;
-
-	float fDist = FVector::Distance(TargetLoc, MyLoc);
-
-	if (fDist > fAttackDist)
+	if (Target && bTarget)
 	{
-		Target = nullptr;
-		bTarget = false;
-		eAI = EMAGE_AI::Idle;
-
-		return false;
-	}
-	else
-	{
-		if (bAttack)
-			return false;
-
-		bTarget = true;
+		FVector TargetLoc = Target->GetActorLocation();
+		TargetLoc.Z = 0.f;
+		FVector MyLoc = GetActorLocation();
+		MyLoc.Z = 0.f;
 
 		FVector vDir = TargetLoc - MyLoc;
 		vDir.Normalize();
+
 		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
 
 		Attack();
 
 		return true;
+	}
+	else
+	{
+		eAI = EMAGE_AI::Idle;
+		return false;
 	}
 
 	return false;
@@ -212,7 +205,38 @@ bool AGuardian_Mage::CheckDistance()
 
 void AGuardian_Mage::AttackToTarget()
 {
+	if (bTarget && Target)
+	{
+		AController* AI = GetController<AController>();
 
+		FDamageEvent DmgEvent;
+
+		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
+
+		FVector TargetLoc = Target->GetActorLocation();
+		TargetLoc.Z = 0.f;
+		FVector MyLoc = GetActorLocation();
+
+		float fDist = FVector::Distance(TargetLoc, MyLoc);
+
+		if (fDist > fAttackDist)
+		{
+			Target = nullptr;
+			bTarget = false;
+			//bAttack = false;
+			eAI = EMAGE_AI::Idle;
+		}
+		else
+		{
+			bTarget = true;
+		}
+
+		if (fHp <= 0.f)
+		{
+			Target = nullptr;
+			bTarget = false;
+		}
+	}
 }
 
 void AGuardian_Mage::MagicMissaile()
@@ -229,7 +253,7 @@ void AGuardian_Mage::MagicMissaile()
 	ASpell_MagicMissile* pMagic= GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
 		tParams);
 
-	pMagic->SetMage(this);
+	//pMagic->SetMage(this);
 }
 
 void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)

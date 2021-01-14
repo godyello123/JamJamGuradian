@@ -76,7 +76,7 @@ protected:
 	virtual void Skill();
 	virtual void SearchTarget();
 
-private:
+public:
 	bool CheckDistance();
 	void AttackToTarget();
 

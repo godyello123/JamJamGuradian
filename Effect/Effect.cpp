@@ -9,7 +9,6 @@ AEffect::AEffect()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 
-
 	particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 
 	SetRootComponent(particle);

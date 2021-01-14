@@ -78,4 +78,7 @@ public:
 	bool CheckDistance();
 	void AttackToTarget();
 	void MultiShot();
+
+public:
+	void Test();
 };

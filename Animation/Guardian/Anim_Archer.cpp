@@ -38,11 +38,6 @@ void UAnim_Archer::NativeUpdateAnimation(float DeltaSeconds)
 void UAnim_Archer::AnimNotify_Bow_Attack_Start()
 {
 	AGuardian_Archer* Archer = Cast<AGuardian_Archer>(TryGetPawnOwner());
-
-	//if (IsValid(Archer))
-	//{
-	//	Archer->AttackEnable(true);
-	//}
 }
 
 void UAnim_Archer::AnimNotify_Bow_Attack()

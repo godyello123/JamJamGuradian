@@ -44,6 +44,9 @@ protected:
 public:
 	void SetAI(EKNIGHT_AI eAI);
 
+public:
+	void ChangeAnimation(EGuardianAnimType eType);
+
 protected:
 	void LoadSword(const FString& strSocket, const FString& strMeshPath);
 	void LoadShield(const FString& strSocket, const FString& strMeshPath);
@@ -76,6 +79,7 @@ public:
 public:
 	bool CheckDistance();
 	void AttackToTarget();
+	void PowerStrike();
 
 	
 };

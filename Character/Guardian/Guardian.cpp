@@ -21,7 +21,7 @@ AGuardian::AGuardian()
 	MPFillTimeMax = 1.f;
 }
 
-void AGuardian::SetFillMP(int32 iFill)
+void AGuardian::SetFillMP(float iFill)
 {
 	FillMP = iFill;
 }
@@ -79,13 +79,16 @@ bool AGuardian::IsSummoner()
 	return false;
 }
 
-void AGuardian::FillUpMP(int32 iValue, float fTime)
+void AGuardian::FillUpMP(float iValue, float fTime)
 {
 	MPFillTime += fTime;
 
 	if (MPFillTime >= MPFillTimeMax)
 	{
 		State.iMP += iValue;
+
+		if (State.iMP >= State.iMPMax)
+			State.iMP = State.iMPMax;
 		MPFillTime = 0.f;
 	}
 }

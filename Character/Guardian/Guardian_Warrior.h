@@ -46,6 +46,9 @@ public:
 protected:
 	void LoadTwohandSword(const FString& strSocket, const FString& strMeshPath);
 
+public:
+	void ChangeAnimation(EGuardianAnimType eType);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -69,8 +72,12 @@ protected:
 	virtual void Skill();
 	virtual void SearchTarget();
 
-private:
+public:
 	bool CheckDistance();
 	void AttackToTarget();
+
+public:
+	void CrushAttack();
+
 	
 };

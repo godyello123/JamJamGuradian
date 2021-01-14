@@ -24,20 +24,6 @@ public:
 	void ChangeAnimType(EGuardianAnimType eType);
 
 public:
-	UFUNCTION()
-	void AnimNotify_C_Knight_AT_Start();
-	UFUNCTION()
-	void AnimNotify_C_Knight_AT_1();
-	UFUNCTION()
-	void AnimNotify_C_Kngiht_AT_2();
-	UFUNCTION()
-	void AnimNotify_C_Knight_AT_End();
-	UFUNCTION()
-	void AnimNotify_Knight_AT_Start();
-	UFUNCTION()
-	void AnimNotify_Knight_AT();
-	UFUNCTION()
-	void AnimNotify_Knight_AT_End();
 
 
 public:
@@ -47,5 +33,16 @@ public:
 public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
+public:
+	UFUNCTION()
+		void AnimNotify_Knight_Attack();
+	UFUNCTION()
+		void AnimNotify_Knight_Attack_End();
+	UFUNCTION()
+		void AnimNotify_Knight_Skill();
+	UFUNCTION()
+		void AnimNotify_Knight_Skill_End();
+
 	
 };

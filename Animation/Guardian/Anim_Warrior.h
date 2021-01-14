@@ -30,4 +30,14 @@ public:
 public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
+public:
+	UFUNCTION()
+		void AnimNotify_Warrior_Attack();
+	UFUNCTION()
+		void AnimNotify_Warrior_Attack_End();
+	UFUNCTION()
+		void AnimNotify_Warrior_Skill();
+	UFUNCTION()
+		void AnimNotify_Warrior_Skill_End();
 };

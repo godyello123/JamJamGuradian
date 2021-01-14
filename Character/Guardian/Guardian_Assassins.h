@@ -43,6 +43,10 @@ protected:
 public:
 	void SetAI(EASSASSIN_AI _eAI);
 
+protected:
+	void LoadRightDagger(const FString& strSocket, const FString& strMeshPath);
+	void LoadLeftDagger(const FString& strSocket, const FString& strMeshPath);
+
 
 protected:
 	// Called when the game starts or when spawned
