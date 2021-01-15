@@ -79,7 +79,11 @@ void ASpell_MagicMissile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedC
 
 	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(GetOwner());
 
-	OtherActor->TakeDamage(GetDamage(), DmgEvent, pOwner->GetController(), this);
+	if (pOwner)
+	{
+		OtherActor->TakeDamage(GetDamage(), DmgEvent, pOwner->GetController(), this);
+	}
+
 	CreateEffect();
 	Destroy();
 }

@@ -82,6 +82,14 @@ enum class ESummonerAnimType : uint8
 
 };
 
+UENUM(BlueprintType,Meta=(Bitflags))
+enum class EElementalType : uint8
+{
+	ET_Normal,
+	ET_Fire,
+	ET_Ice
+};
+
 DECLARE_LOG_CATEGORY_EXTERN(UE7, Log, All);
 #define	LOG_CALLINFO	(FString(__FUNCTION__) + TEXT("{") + FString::FromInt(__LINE__) + TEXT("}"))
 #define	LOG(Format, ...)	UE_LOG(UE7, Warning, TEXT("%s : %s"), *LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
