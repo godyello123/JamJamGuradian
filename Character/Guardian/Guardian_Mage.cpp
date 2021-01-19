@@ -28,13 +28,13 @@ AGuardian_Mage::AGuardian_Mage()
 
 	SetState(5, 10, 10, 1.f);
 
-	fAttackDist = 300.f;
+	//fAttackDist = 300.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-	Target = nullptr;
+
 	bAttack = false;
-	bTarget = false;
+
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -283,3 +283,14 @@ void AGuardian_Mage::Motion()
 	}
 }
 
+void AGuardian_Mage::ShowUI(bool bShow)
+{
+	if (bShow)
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Mage"));
+	}
+	else
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Mage"));
+	}
+}

@@ -2,18 +2,26 @@
 
 #pragma once
 
-#include "../00Base/GameInfo.h"
+#include "GameInfo.h"
 #include "GameFramework/Actor.h"
-#include "RoadPoint.generated.h"
+#include "MasterActor.generated.h"
 
 UCLASS()
-class MPSG_API ARoadPoint : public AActor
+class MPSG_API AMasterActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ARoadPoint();
+	AMasterActor();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EActorType		ActorType;
+
+public:
+	void SetActorType(EActorType eType);
+	EActorType GetActorType() const;
 
 protected:
 	// Called when the game starts or when spawned

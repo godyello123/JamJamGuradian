@@ -12,14 +12,14 @@ ASummoner::ASummoner()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, MeshAsset, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/PrinceSK.PrinceSK'");
+	/*GetObjectAsset(USkeletalMesh, MeshAsset, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/PrinceSK.PrinceSK'");
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
 	GetClassAsset(UAnim_Summoner, AnimAsset, "AnimBlueprint'/Game/00Summoner/Summoner_Anim.Summoner_Anim_C'");
 
 	if (AnimAsset.Succeeded())
-		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
+		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);*/
 
 	FreeCam = nullptr;
 
@@ -48,7 +48,7 @@ void ASummoner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Animation = Cast<UAnim_Summoner>(GetMesh()->GetAnimInstance());	
+	//Animation = Cast<UAnim_Summoner>(GetMesh()->GetAnimInstance());	
 
 	FVector v = GetActorLocation();
 

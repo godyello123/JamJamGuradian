@@ -66,11 +66,6 @@ void ADemonGate::Tick(float DeltaTime)
 			Monster = Cast<AMonster>(GetWorld()->SpawnActor<AMonster_Beholder>(GetActorLocation(), Rot, params));
 			Monster->SetTarget(Target);
 
-			for (ARoadPoint* point : RoadPointArray)
-			{
-				Monster->AddRoadPoint(point);
-			}
-
 			if (iMonsterCount < iMaxMonsterCount)
 				++iMonsterCount;
 			else

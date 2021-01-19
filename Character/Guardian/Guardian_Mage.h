@@ -32,10 +32,6 @@ protected:
 	class UAnim_Mage* Animation;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor* Target;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bTarget;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Wand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -83,6 +79,8 @@ public:
 public:
 	void MagicMissaile();
 
+public:
+	virtual void ShowUI(bool bShow);
 
 
 

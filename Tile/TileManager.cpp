@@ -10,13 +10,14 @@ ATileManager::ATileManager()
 	TICKON;
 }
 
-void ATileManager::AddTile(int32 iKey, Tile_SpawnGuardian pTile)
+void ATileManager::AddTile(int32 iKey, ATile_SpawnGuardian pTile)
 {
 }
 
-Tile_SpawnGuardian ATileManager::FindTile() const
+ATile_SpawnGuardian* ATileManager::FindTile() const
 {
-	return Tile_SpawnGuardian();
+	//return ATile_SpawnGuardian();
+	return nullptr;
 }
 
 // Called when the game starts or when spawned

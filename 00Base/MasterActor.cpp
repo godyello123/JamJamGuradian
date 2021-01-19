@@ -1,26 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RoadPoint.h"
+#include "MasterActor.h"
 
 // Sets default values
-ARoadPoint::ARoadPoint()
+AMasterActor::AMasterActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	TICKON;
+}
 
+void AMasterActor::SetActorType(EActorType eType)
+{
+	ActorType = eType;
+}
+
+EActorType AMasterActor::GetActorType() const
+{
+	return ActorType;
 }
 
 // Called when the game starts or when spawned
-void ARoadPoint::BeginPlay()
+void AMasterActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ARoadPoint::Tick(float DeltaTime)
+void AMasterActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 

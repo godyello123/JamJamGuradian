@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "../../00Base/GameInfo.h"
+#include "../../00Base/MasterActor.h"
+#include "../../Projectile/Projectile.h"
 #include "GameFramework/Character.h"
 #include "Guardian.generated.h"
 
@@ -49,6 +50,10 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		bool bTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bCritical;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		FGuardianState		State;
@@ -56,6 +61,11 @@ protected:
 		float fAttackDist;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bAttack;
+	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AProjectile> Projectile;
+
+public:
+	AActor* GetTarget() const;
 
 protected:
 	float MPFillTime;
@@ -115,6 +125,9 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+
+public:
+	virtual void ShowUI(bool bShow);
 
  
 };

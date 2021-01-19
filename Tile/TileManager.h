@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../00Base/GameInfo.h"
+#include "Tile_SpawnGuardian.h"
 #include "GameFramework/Actor.h"
 #include "TileManager.generated.h"
 
@@ -17,11 +18,11 @@ public:
 
 private:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TMap<int32,class Tile_SpawnGuardian> TileMap;
+	TMap<int32, ATile_SpawnGuardian*> TileMap;
 
 public:
-	void AddTile(int32 iKey, class Tile_SpawnGuardian pTile);
-	class Tile_SpawnGuardian FindTile() const;
+	void AddTile(int32 iKey, ATile_SpawnGuardian pTile);
+	class ATile_SpawnGuardian* FindTile() const;
 
 
 protected:

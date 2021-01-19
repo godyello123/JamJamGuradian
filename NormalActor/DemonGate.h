@@ -3,7 +3,6 @@
 #pragma once
 
 #include "../00Base/GameInfo.h"
-#include "RoadPoint.h"
 #include "GameFramework/Actor.h"
 #include "DemonGate.generated.h"
 
@@ -19,11 +18,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AMonster> SpawnType;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float SpawnTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		TArray<ARoadPoint*> RoadPointArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		AActor* Target;
 

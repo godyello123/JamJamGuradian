@@ -68,41 +68,6 @@ void AMonster_ChestImp::BeginPlay()
 void AMonster_ChestImp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (!bDie)
-	{
-		if (State.iMP < State.iMPMax)
-		{
-			fMPRecovery += DeltaTime;
-
-			if (fMPRecovery > 1.f)
-			{
-				fMPRecovery = 0;
-				State.iMP++;
-			}
-		}
-
-
-		bool bCheck = CheckTargetDistance();
-
-		if (bCheck)
-		{
-			//if (State.iMP >= State.iMPMax)
-			//{
-			//	//스테이지가 높으면 -> 스테이지가 어떤 난이도인지에 따라서 스킬 발동 유무
-			//	//Skill();
-			//}
-			//else
-			//{
-			//	Attack();
-			//}
-			ChangeAnim(EMonsterAnimType::MAT_Attack);
-		}
-		else
-		{
-			Move();
-		}
-	}
 }
 
 void AMonster_ChestImp::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -134,27 +99,7 @@ void AMonster_ChestImp::ChangeAnim(EMonsterAnimType eType)
 
 void AMonster_ChestImp::Move()
 {
-	if (iMovePoint >= RoadArray.Num())
-		return;
 
-	AAIController* pAI = GetController<AAIController>();
-	FVector vMoveLoc = RoadArray[iMovePoint]->GetActorLocation();
-	FVector vMyLoc = GetActorLocation();
-
-	vMoveLoc.Z = vMyLoc.Z;
-	pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
-
-	ChangeAnim(EMonsterAnimType::MAT_Move);
-
-	vMoveLoc.Z = 0.f;
-	vMyLoc.Z = 0.f;
-
-	float fDist = FVector::Distance(vMoveLoc, vMyLoc);
-
-	if (fDist < 5.f)
-	{
-		NextMovePoint();
-	}
 }
 
 void AMonster_ChestImp::Skill()
@@ -163,27 +108,6 @@ void AMonster_ChestImp::Skill()
 
 bool AMonster_ChestImp::CheckTargetDistance()
 {
-	if (iMovePoint > 6)
-	{
-		if (Target)
-		{
-			FVector vTargetLoc = Target->GetActorLocation();
-			FVector vMyLoc = GetActorLocation();
-
-			vTargetLoc.Z = 0.f;
-			vMyLoc.Z = 0.f;
-
-			float fDist = FVector::Distance(vTargetLoc, vMyLoc);
-
-			if (fDist <= fDistance)
-				return true;
-			else
-				return false;
-
-		}
-
-		return false;
-	}
 
 	return false;
 }

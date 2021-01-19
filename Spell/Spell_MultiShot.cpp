@@ -76,7 +76,7 @@ void ASpell_MultiShot::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComp
 
 	if (IsValid(pArcher))
 	{
-		pArcher->Test();
+		//pArcher->Test();
 		OtherActor->TakeDamage(GetDamage(), DmgEvent, pArcher->GetController(), this);
 		CreateEffect();
 	}

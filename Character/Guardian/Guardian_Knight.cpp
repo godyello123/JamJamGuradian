@@ -23,15 +23,20 @@ AGuardian_Knight::AGuardian_Knight()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
+	GetClassAsset(AProjectile, ProjectileData, "Blueprint'/Game/07Projectile/Projectile_Knight.Projectile_Knight_C'");
+
+	if (ProjectileData.Succeeded())
+		Projectile = ProjectileData.Class;
+
 	SetState(5, 10, 10, 1.f);
 
-	fAttackDist = 200.f;
+	//fAttackDist = 10000.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-	Target = nullptr;
+
 	bAttack = false;
-	bTarget = false;
+
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -40,6 +45,8 @@ AGuardian_Knight::AGuardian_Knight()
 	Shield = nullptr;
 	
 	eAI = EKNIGHT_AI::Idle;
+
+	//Tags.Add("kngiht");
 
 }
 
@@ -79,8 +86,15 @@ void AGuardian_Knight::BeginPlay()
 	LoadShield(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));
 	Shield->SetActorRotation(FRotator(0.f, -20.f, 0.f));
 
+	FString Name = GetDebugName(this);
 
+	
 	SetFillMP(0.5);
+
+	for (int32 i = 0; i < Tags.Num(); ++i)
+	{
+		PrintViewport(10.f, FColor::Black, Tags[i].ToString());
+	}
 }
 
 void AGuardian_Knight::LoadSword(const FString& strSocket, const FString& strMeshPath)
@@ -183,7 +197,7 @@ void AGuardian_Knight::SearchTarget()
 	TArray<FHitResult> HitRetArray;
 
 	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, fAttackDist, TEXT("BlockAll"), false, IgnoreActors,
-		EDrawDebugTrace::Type::None, HitRetArray, true);
+		EDrawDebugTrace::Type::ForDuration, HitRetArray, true);
 
 	if (isHit)
 	{
@@ -324,4 +338,16 @@ void AGuardian_Knight::PowerStrike()
 		State.iMP = 0;
 	}
 
+}
+
+void AGuardian_Knight::ShowUI(bool bShow)
+{
+	if (bShow)
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Knight"));
+	}
+	else
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Knight"));
+	}
 }

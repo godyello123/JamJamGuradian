@@ -58,54 +58,6 @@ void AMonster_Beholder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!IsDead())
-	{
-		/*if (State.iHP <= 0)
-		{
-			if (Animation)
-			{
-				Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-			}
-		}*/
-
-		if (State.iMP < State.iMPMax)
-		{
-			fMPRecovery += DeltaTime;
-
-			if (fMPRecovery > 1.f)
-			{
-				fMPRecovery = 0;
-				State.iMP++;
-			}
-		}
-
-
-		bool bCheck = CheckTargetDistance();
-
-		if (bCheck)
-		{
-			//if (State.iMP >= State.iMPMax)
-			//{
-			//	//스테이지가 높으면 -> 스테이지가 어떤 난이도인지에 따라서 스킬 발동 유무
-			//	//Skill();
-			//}
-			//else
-			//{
-			//	Attack();
-			//}
-			ChangeAnim(EMonsterAnimType::MAT_Attack);
-		}
-		else
-		{
-			Move();
-		}
-	}
-
-	if (State.iHP <= 0)
-	{
-		if (Animation)
-			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-	}
 }
 
 void AMonster_Beholder::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -137,31 +89,6 @@ void AMonster_Beholder::ChangeAnim(EMonsterAnimType eType)
 
 void AMonster_Beholder::Move()
 {
-	//if (iMovePoint >= RoadArray.Num())
-	//	return;
-
-	AAIController* pAI = GetController<AAIController>();
-	FVector vMoveLoc = Target->GetActorLocation();
-	FVector vMyLoc = GetActorLocation();
-
-	//vMoveLoc.Z = vMyLoc.Z;
-	//pAI->MoveToActor(RoadArray[iMovePoint], -1.f, false, true);
-
-	//ChangeAnim(EMonsterAnimType::MAT_Move);
-
-	//vMoveLoc.Z = 0.f;
-	//vMyLoc.Z = 0.f;
-
-	//float fDist = FVector::Distance(vMoveLoc, vMyLoc);
-
-	//if (fDist < 5.f)
-	//{
-	//	NextMovePoint();
-	//}
-	pAI->MoveToActor(Target, -1, false, true);
-
-	ChangeAnim(EMonsterAnimType::MAT_Move);
-
 }
 
 void AMonster_Beholder::Skill()
@@ -170,28 +97,6 @@ void AMonster_Beholder::Skill()
 
 bool AMonster_Beholder::CheckTargetDistance()
 {
-	if (iMovePoint > 6)
-	{
-		if (Target)
-		{
-			FVector vTargetLoc = Target->GetActorLocation();
-			FVector vMyLoc = GetActorLocation();
-
-			vTargetLoc.Z = 0.f;
-			vMyLoc.Z = 0.f;
-
-			float fDist = FVector::Distance(vTargetLoc, vMyLoc);
-
-			if (fDist <= fDistance)
-				return true;
-			else
-				return false;
-
-		}
-
-		return false;
-	}
-
 	return false;
 }
 

@@ -90,6 +90,23 @@ enum class EElementalType : uint8
 	ET_Ice
 };
 
+UENUM(BlueprintType,Meta=(Bitflags))
+enum class EGuardianType : uint8
+{
+	GT_KNIGHT,
+	GT_MAGE,
+	GT_ARCHER,
+	GT_WARRIOR
+};
+
+UENUM(BlueprintType,Meta=(Bitflags))
+enum class EActorType : uint8
+{
+	AT_Tile,
+	AT_Guardian,
+	AT_Monster
+};
+
 DECLARE_LOG_CATEGORY_EXTERN(UE7, Log, All);
 #define	LOG_CALLINFO	(FString(__FUNCTION__) + TEXT("{") + FString::FromInt(__LINE__) + TEXT("}"))
 #define	LOG(Format, ...)	UE_LOG(UE7, Warning, TEXT("%s : %s"), *LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
@@ -105,7 +122,7 @@ void PrintViewport(float fTime, const FColor& Color,
 
 #define FreeCamLocationOffsetX -500.f
 #define FreeCamLocationOffsetY 0.f
-#define FreeCamLocationOffsetZ 1200.f
+#define FreeCamLocationOffsetZ 500.f
 
 #define FreeCamRotationOffsetRoll 0.f
 #define FreeCamRotationOffsetYaw 0.f

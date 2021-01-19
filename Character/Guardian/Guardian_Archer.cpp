@@ -30,12 +30,12 @@ AGuardian_Archer::AGuardian_Archer()
 
 	SetState(5, 10, 10, 1.f);
 
-	fAttackDist = 400.f;
+	//fAttackDist = 400.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-	Target = nullptr;
-	bTarget = false;
+
+
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -251,9 +251,16 @@ void AGuardian_Archer::MultiShot()
 	State.iMP = 0;
 }
 
-void AGuardian_Archer::Test()
+void AGuardian_Archer::ShowUI(bool bShow)
 {
-	PrintViewport(2.f, FColor::Blue, TEXT("ok"));
+	if (bShow)
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Archer"));
+	}
+	else
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Archer"));
+	}
 }
 
 void AGuardian_Archer::SetAI(EARCHER_AI _eAI)

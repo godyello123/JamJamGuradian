@@ -31,10 +31,6 @@ protected:
 	class UAnim_Archer* Animation;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor* Target;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bTarget;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -80,5 +76,7 @@ public:
 	void MultiShot();
 
 public:
-	void Test();
+	virtual void ShowUI(bool bShow);
+
+
 };

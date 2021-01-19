@@ -11,9 +11,9 @@ class MPSG_API ATile_SpawnGuardian : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+public:
 	ATile_SpawnGuardian();
+
 public:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
@@ -28,9 +28,12 @@ public:
 	bool IsClick() const;
 
 public:
-	void SetElementalTime(EElementalType eType);
+	void SetElementalType(EElementalType eType);
 	EElementalType GetElementalType() const;
 
+
+public:
+	void SpawnGuardian(EGuardianType eType);
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,5 +42,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	void ShowUI(bool bShow);
+
 
 };

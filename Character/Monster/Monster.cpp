@@ -12,6 +12,8 @@ AMonster::AMonster()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 	bDead = false;
+
+	Tags.Add("Monster");
 }
 
 bool AMonster::IsDead()
@@ -36,22 +38,6 @@ void AMonster::SetDemonGate(ADemonGate* pGate)
 {
 	if(IsValid(pGate))
 		Gate = pGate;
-}
-
-void AMonster::AddRoadPoint(ARoadPoint* pPoint)
-{
-	RoadArray.Add(pPoint);
-}
-
-int32 AMonster::GetRoadArraySize() const
-{
-	return RoadArray.Num();
-}
-
-void AMonster::NextMovePoint()
-{
-	if (iMovePoint < RoadArray.Num())
-		++iMovePoint;
 }
 
 // Called when the game starts or when spawned

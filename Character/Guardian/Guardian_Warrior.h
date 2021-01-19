@@ -30,10 +30,6 @@ protected:
 	class UAnim_Warrior* Animation;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor* Target;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bTarget;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* TwoHandSword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -78,6 +74,9 @@ public:
 
 public:
 	void CrushAttack();
+public:
+	virtual void ShowUI(bool bShow);
+
 
 	
 };

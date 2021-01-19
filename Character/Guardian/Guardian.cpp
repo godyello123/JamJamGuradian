@@ -19,6 +19,22 @@ AGuardian::AGuardian()
 	CriticalRatio = 1.5;
 	MPFillTime = 0.f;
 	MPFillTimeMax = 1.f;
+
+	Target = nullptr;
+	bTarget = false;
+
+	Projectile = nullptr;
+
+	fAttackDist = 1500.f;
+
+	//SetActorType(EActorType::AT_Guardian);
+
+	Tags.Add("Guardian");
+}
+
+AActor* AGuardian::GetTarget() const
+{
+	return Target;
 }
 
 void AGuardian::SetFillMP(float iFill)
@@ -107,6 +123,11 @@ void AGuardian::Skill()
 
 void AGuardian::SearchTarget()
 {
+}
+
+void AGuardian::ShowUI(bool bShow)
+{
+
 }
 
 void AGuardian::AttackEnable(bool bEnable)

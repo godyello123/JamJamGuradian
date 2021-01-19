@@ -9,11 +9,11 @@ AEffect_CrushAttack::AEffect_CrushAttack()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 
-	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	SetRootComponent(Collision);
+	//Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	//SetRootComponent(Collision);
 
-	particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
-	particle->SetupAttachment(particle);
+	//particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
+	//particle->SetupAttachment(particle);
 }
 
 // Called when the game starts or when spawned

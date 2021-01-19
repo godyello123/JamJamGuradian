@@ -23,13 +23,13 @@ AGuardian_Warrior::AGuardian_Warrior()
 
 	SetState(5, 10, 10, 1.f);
 
-	fAttackDist = 200.f;
+	//fAttackDist = 200.f;
 	bCritical = false;
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-	Target = nullptr;
+
 	bAttack = false;
-	bTarget = false;
+
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -254,3 +254,14 @@ void AGuardian_Warrior::CrushAttack()
 
 }
 
+void AGuardian_Warrior::ShowUI(bool bShow)
+{
+	if (bShow)
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Warrior"));
+	}
+	else
+	{
+		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Warrior"));
+	}
+}

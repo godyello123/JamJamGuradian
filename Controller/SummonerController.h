@@ -17,6 +17,10 @@ class MPSG_API ASummonerController : public APlayerController
 public:
 	ASummonerController();
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor* ClickedActor;
+
 private:
 	bool bLButtonDown;
 	bool bRButtonDown; 
@@ -43,5 +47,8 @@ private:
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent();
 
+private:
+	void PastProcess();
+	void CurrentProcess(AActor* _Actor);
 	
 };

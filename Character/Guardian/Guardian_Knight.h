@@ -30,16 +30,13 @@ protected:
 	class UAnim_Knight* Animation;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor* Target;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		bool bTarget;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Sword;
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Shield;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EKNIGHT_AI		eAI;
+
 
 public:
 	void SetAI(EKNIGHT_AI eAI);
@@ -80,6 +77,10 @@ public:
 	bool CheckDistance();
 	void AttackToTarget();
 	void PowerStrike();
+
+public:
+	virtual void ShowUI(bool bShow);
+
 
 	
 };
