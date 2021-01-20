@@ -23,11 +23,6 @@ AGuardian_Knight::AGuardian_Knight()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
-	GetClassAsset(AProjectile, ProjectileData, "Blueprint'/Game/07Projectile/Projectile_Knight.Projectile_Knight_C'");
-
-	if (ProjectileData.Succeeded())
-		Projectile = ProjectileData.Class;
-
 	SetState(5, 10, 10, 1.f);
 
 	//fAttackDist = 10000.f;

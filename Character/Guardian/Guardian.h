@@ -61,8 +61,6 @@ protected:
 		float fAttackDist;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bAttack;
-	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AProjectile> Projectile;
 
 public:
 	AActor* GetTarget() const;

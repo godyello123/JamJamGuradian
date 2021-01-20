@@ -2,6 +2,8 @@
 
 
 #include "Tile_SpawnGuardian.h"
+#include "../UI/SpawnGuardianTileUI.h"
+#include "Components/WidgetComponent.h"
 #include "../Character/Guardian/Guardian_Archer.h"
 #include "../Character/Guardian/Guardian_Knight.h"
 #include "../Character/Guardian/Guardian_Mage.h"
@@ -17,6 +19,12 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
+
+	SetRootComponent(Mesh);
+
+	UI = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
+	UI->SetupAttachment(Mesh);
+
 
 	Tags.Add("Tile");
 

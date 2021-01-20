@@ -4,6 +4,7 @@
 
 #include "../00Base/GameInfo.h"
 #include "GameFramework/Actor.h"
+#include "Blueprint/UserWidget.h"
 #include "Tile_SpawnGuardian.generated.h"
 
 UCLASS()
@@ -21,7 +22,8 @@ public:
 		bool bClicked;
 	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		EElementalType Elemental;
-
+	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	class UWidgetComponent* UI;
 
 public:
 	void Click(bool _Click);
