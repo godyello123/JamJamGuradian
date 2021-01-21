@@ -12,7 +12,9 @@ struct FMonsterState
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FMonsterState()
+	FMonsterState()	:
+		Damage(0),iHP(0),iHPMax(0),iMP(0),
+		iMPMax(0),AttackSpeed(0.f),MoveSpeed(0.f)
 	{
 
 	}

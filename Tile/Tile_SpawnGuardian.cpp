@@ -4,10 +4,7 @@
 #include "Tile_SpawnGuardian.h"
 #include "../UI/SpawnGuardianTileUI.h"
 #include "Components/WidgetComponent.h"
-#include "../Character/Guardian/Guardian_Archer.h"
-#include "../Character/Guardian/Guardian_Knight.h"
-#include "../Character/Guardian/Guardian_Mage.h"
-#include "../Character/Guardian/Guardian_Warrior.h"
+
 
 
 // Sets default values
@@ -22,9 +19,19 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 
 	SetRootComponent(Mesh);
 
-	UI = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
-	UI->SetupAttachment(Mesh);
+	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 
+	UIComponent->SetupAttachment(Mesh);
+
+	UIComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	UIComponent->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
+	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
+
+
+	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/SpawnTileUI.SpawnTileUI_C'");
+
+	if (WidgetClass.Succeeded())
+		UIComponent->SetWidgetClass(WidgetClass.Class);
 
 	Tags.Add("Tile");
 
@@ -55,29 +62,29 @@ void ATile_SpawnGuardian::SpawnGuardian(EGuardianType eType)
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
 
-	switch (eType)
-	{
-	case EGuardianType::GT_KNIGHT:
-	{
-		AGuardian_Knight* pKnight = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
-	}
-	break;
-	case EGuardianType::GT_MAGE:
-	{
-		AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
-	}
-	break;
-	case EGuardianType::GT_WARRIOR:
-	{
-		AGuardian_Warrior* pWarrior = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
-	}
-	break;
-	case EGuardianType::GT_ARCHER:
-	{
-		AGuardian_Archer* pArcher = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
-	}
-		break;
-	}
+	//switch (eType)
+	//{
+	//case EGuardianType::GT_KNIGHT:
+	//{
+	//	AGuardian_Knight* pKnight = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
+	//}
+	//break;
+	//case EGuardianType::GT_MAGE:
+	//{
+	//	AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
+	//}
+	//break;
+	//case EGuardianType::GT_WARRIOR:
+	//{
+	//	AGuardian_Warrior* pWarrior = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
+	//}
+	//break;
+	//case EGuardianType::GT_ARCHER:
+	//{
+	//	AGuardian_Archer* pArcher = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
+	//}
+	//	break;
+	//}
 
 	SetElementalType(EElementalType::ET_Normal);
 }
@@ -87,6 +94,11 @@ void ATile_SpawnGuardian::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SpawnUI = Cast< USpawnGuardianTileUI>(UIComponent->GetUserWidgetObject());
+	SpawnUI->SetOwner(this);
+	//SpawnUI->AddToViewport();
+	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+
 }
 
 // Called every frame
@@ -98,14 +110,18 @@ void ATile_SpawnGuardian::Tick(float DeltaTime)
 
 void ATile_SpawnGuardian::ShowUI(bool bShow)
 {
-	if (bShow)
+
+}
+
+void ATile_SpawnGuardian::ShowWidget()
+{
+	switch (SpawnUI->GetVisibility())
 	{
-		PrintViewport(2.f, FColor::Yellow, TEXT("SHOW UI"));
+	case ESlateVisibility::Visible:
+		SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+		break;
+	case ESlateVisibility::Collapsed:
+		SpawnUI->SetVisibility(ESlateVisibility::Visible);
 	}
-	else
-	{
-		PrintViewport(2.f, FColor::Yellow, TEXT("HIDE UI"));
-	}
-	
 }
 

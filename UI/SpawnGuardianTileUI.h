@@ -24,6 +24,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UButton* WarriorButton;
 
+private:
+	class ATile_SpawnGuardian* Owner;
+
+public:
+	void SetOwner(class ATile_SpawnGuardian* _Owner);
+
 protected:
 	virtual void NativeConstruct();
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
@@ -33,6 +39,14 @@ public:
 	void SpawnMage();
 	void SpawnArcher();
 	void SpawnWarrior();
+private:
+	UFUNCTION(BlueprintCallable)
+	void KnightButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void MageButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void ArcherButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void WarriorButtonCallback();
 
-	
 };

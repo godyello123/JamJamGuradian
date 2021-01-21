@@ -241,10 +241,12 @@ void AGuardian_Archer::MultiShot()
 
 		tParams.SpawnCollisionHandlingOverride =
 			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
 		tParams.Owner = this;
 
 		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
 			tParams);
+
 	}
 	
 

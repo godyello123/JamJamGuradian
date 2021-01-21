@@ -23,7 +23,11 @@ public:
 	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		EElementalType Elemental;
 	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
-	class UWidgetComponent* UI;
+	class UWidgetComponent* UIComponent;
+
+	class USpawnGuardianTileUI* SpawnUI;
+
+
 
 public:
 	void Click(bool _Click);
@@ -47,6 +51,7 @@ public:
 
 public:
 	void ShowUI(bool bShow);
+	void ShowWidget();
 
 
 };

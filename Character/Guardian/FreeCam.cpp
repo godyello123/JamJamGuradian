@@ -18,7 +18,7 @@ AFreeCam::AFreeCam()
 
 	Arm->SetupAttachment(GetMesh());
 	Camera->SetupAttachment(Arm);
-	
+	this->SetActorEnableCollision(false);
 
 	bChasePlayer = false;
 	CamDir = EFreeCamDir::None;

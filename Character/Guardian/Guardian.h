@@ -13,7 +13,9 @@ struct FGuardianState
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FGuardianState()
+	FGuardianState()	:
+		Damage(0),iHP(0),iHPMax(0),iMP(0),
+		iMPMax(0),AttackSpeed(0.f)
 	{
 
 	}
