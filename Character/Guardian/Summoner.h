@@ -17,7 +17,15 @@ public:
 
 private:
 	class UAnim_Summoner* Animation;
-	
+
+private:
+	class ATileManager* TileManager;
+
+public:
+	class ATileManager* GetTileManager() const;
+
+private:
+	void CreateCamera(FVector& vLoc,FRotator& vRot);
 
 private:
 	class AFreeCam* FreeCam;

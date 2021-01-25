@@ -4,6 +4,7 @@
 #include "Summoner.h"
 #include "FreeCam.h"
 #include "../../Animation/Monster/Anim_Summoner.h"
+#include "../../Tile/TileManager.h"
 
 
 // Sets default values
@@ -13,6 +14,7 @@ ASummoner::ASummoner()
 	TICKON;
 
 	/*GetObjectAsset(USkeletalMesh, MeshAsset, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/PrinceSK.PrinceSK'");
+
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
@@ -22,9 +24,21 @@ ASummoner::ASummoner()
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);*/
 
 	FreeCam = nullptr;
-
+	TileManager = nullptr;
 	YawOffset = 0.f;
 
+}
+
+ATileManager* ASummoner::GetTileManager() const
+{
+	return TileManager;
+}
+
+void ASummoner::CreateCamera(FVector& vLoc, FRotator& vRot)
+{
+	FreeCam = GetWorld()->SpawnActor<AFreeCam>(vLoc, vRot);
+
+	FreeCam->SetSummoner(this);
 }
 
 void ASummoner::SetOffsetYaw(float Rot)
@@ -48,23 +62,17 @@ void ASummoner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Animation = Cast<UAnim_Summoner>(GetMesh()->GetAnimInstance());	
-
-	FVector v = GetActorLocation();
-
-	FVector v2 = FVector(v.X + FreeCamLocationOffsetX, v.Y + FreeCamLocationOffsetY, v.Z + FreeCamLocationOffsetZ);
-
-	FRotator r = GetActorRotation();
+	FVector v = FVector(100.f, 100.f, 1000.f);
 
 	FRotator r2 = FRotator(FreeCamRotationOffsecPitch, FreeCamRotationOffsetYaw, FreeCamRotationOffsetRoll);
 
-	FreeCam = GetWorld()->SpawnActor<AFreeCam>(v2, r2);
+	CreateCamera(v, r2);
 
-	FreeCam->SetSummoner(this);
+	TileManager = GetWorld()->SpawnActor<ATileManager>();
 
-	UCharacterMovementComponent* Move = GetCharacterMovement();
+	this->SetActorEnableCollision(false);
 
-	Move->SetMovementMode(EMovementMode::MOVE_Flying);
+	SetHidden(true);
 }
 
 // Called every frame

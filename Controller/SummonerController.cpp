@@ -73,8 +73,8 @@ void ASummonerController::PastProcess()
 				//기존에 켜져있던 ui 안보이기
 				ATile_SpawnGuardian* pTile = Cast<ATile_SpawnGuardian>(ClickedActor);
 
-				pTile->ShowWidget();
-
+				if(!pTile->IsClick())
+					pTile->ShowWidget();
 			}
 		}
 	}
@@ -104,7 +104,8 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 			{
 				ATile_SpawnGuardian* pTile = Cast<ATile_SpawnGuardian>(ClickedActor);
 
-				pTile->ShowWidget();
+				if (!pTile->IsClick())
+					pTile->ShowWidget();
 			}
 		}
 	}

@@ -21,7 +21,7 @@ private:
 	TMap<int32, ATile_SpawnGuardian*> TileMap;
 
 public:
-	void AddTile(int32 iKey, ATile_SpawnGuardian pTile);
+	void AddTile(int32 iKey, ATile_SpawnGuardian* pTile);
 	class ATile_SpawnGuardian* FindTile() const;
 
 
@@ -32,5 +32,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	void CreateTile();
+
+
 
 };

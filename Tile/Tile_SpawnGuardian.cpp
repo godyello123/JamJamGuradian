@@ -17,6 +17,13 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
 
+	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+
+	if (IsValid(Asset))
+	{
+		Mesh->SetStaticMesh(Asset);
+	}
+
 	SetRootComponent(Mesh);
 
 	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
@@ -28,7 +35,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 
 
-	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/SpawnTileUI.SpawnTileUI_C'");
+	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/SpawnTile_UI.SpawnTile_UI_C'");
 
 	if (WidgetClass.Succeeded())
 		UIComponent->SetWidgetClass(WidgetClass.Class);
@@ -61,30 +68,6 @@ void ATile_SpawnGuardian::SpawnGuardian(EGuardianType eType)
 {
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
-
-	//switch (eType)
-	//{
-	//case EGuardianType::GT_KNIGHT:
-	//{
-	//	AGuardian_Knight* pKnight = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
-	//}
-	//break;
-	//case EGuardianType::GT_MAGE:
-	//{
-	//	AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
-	//}
-	//break;
-	//case EGuardianType::GT_WARRIOR:
-	//{
-	//	AGuardian_Warrior* pWarrior = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
-	//}
-	//break;
-	//case EGuardianType::GT_ARCHER:
-	//{
-	//	AGuardian_Archer* pArcher = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
-	//}
-	//	break;
-	//}
 
 	SetElementalType(EElementalType::ET_Normal);
 }
