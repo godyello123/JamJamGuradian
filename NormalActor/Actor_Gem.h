@@ -3,22 +3,30 @@
 #pragma once
 
 #include "../00Base/GameInfo.h"
-#include "Tile_SpawnGuardian.h"
 #include "GameFramework/Actor.h"
-#include "TileManager.generated.h"
+#include "Actor_Gem.generated.h"
 
 UCLASS()
-class MPSG_API ATileManager : public AActor
+class MPSG_API AActor_Gem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATileManager();
+	AActor_Gem();
 
-private:
+protected:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<ATile_SpawnGuardian*> TileArray;
+		UStaticMeshComponent* Mesh;
+	//UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//	UParticleSystemComponent* particle;
+
+protected:
+	int32 iValue;
+
+public:
+	void SetValue(int32 Value);
+	int32 GetValue() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,11 +35,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-public:
-	void CreateTile();
-	void ShowTileCount(int32 iCount);
-
-
 
 };

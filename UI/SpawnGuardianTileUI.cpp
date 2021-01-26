@@ -108,7 +108,7 @@ void USpawnGuardianTileUI::WarriorButtonCallback()
 	FVector vLoc = Owner->GetActorLocation();
 	vLoc.Z += 100.f;
 	FRotator vRot = Owner->GetActorRotation();
-	AGuardian_Warrior* Knight = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
+	AGuardian_Warrior* pKnight = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
 
 	Owner->Click(true);
 }

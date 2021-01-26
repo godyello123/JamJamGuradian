@@ -192,7 +192,7 @@ void AGuardian_Knight::SearchTarget()
 	TArray<FHitResult> HitRetArray;
 
 	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, fAttackDist, TEXT("BlockAll"), false, IgnoreActors,
-		EDrawDebugTrace::Type::ForDuration, HitRetArray, true);
+		EDrawDebugTrace::Type::None, HitRetArray, true);
 
 	if (isHit)
 	{

@@ -27,6 +27,11 @@ public:
 
 	class USpawnGuardianTileUI* SpawnUI;
 
+private:
+	bool bShowTile;
+
+public:
+	bool IsShow();
 
 
 public:
@@ -52,6 +57,9 @@ public:
 public:
 	void ShowUI(bool bShow);
 	void ShowWidget();
+
+public:
+	void EnableTile(bool bEnable);
 
 
 };

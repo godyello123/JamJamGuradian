@@ -17,7 +17,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
 
-	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Game/M5VFXVOL2/Props/Meshes/Box_A.Box_A'"));
 
 	if (IsValid(Asset))
 	{
@@ -34,6 +34,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	UIComponent->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
 	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 
+	bShowTile = false;
 
 	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/SpawnTile_UI.SpawnTile_UI_C'");
 
@@ -42,6 +43,12 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 
 	Tags.Add("Tile");
 
+	this->SetActorScale3D(FVector(1.5f, 1.5f, 1.5f));
+}
+
+bool ATile_SpawnGuardian::IsShow()
+{
+	return bShowTile;
 }
 
 void ATile_SpawnGuardian::Click(bool _Click)
@@ -82,6 +89,10 @@ void ATile_SpawnGuardian::BeginPlay()
 	//SpawnUI->AddToViewport();
 	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
 
+//	UMaterialInstance
+	//UMaterialInterface* pMaterial=GetObjectAsset(UMaterialInterface,)
+	//Mesh->SetMaterial(0,)
+
 }
 
 // Called every frame
@@ -93,7 +104,6 @@ void ATile_SpawnGuardian::Tick(float DeltaTime)
 
 void ATile_SpawnGuardian::ShowUI(bool bShow)
 {
-
 }
 
 void ATile_SpawnGuardian::ShowWidget()
@@ -106,5 +116,18 @@ void ATile_SpawnGuardian::ShowWidget()
 	case ESlateVisibility::Collapsed:
 		SpawnUI->SetVisibility(ESlateVisibility::Visible);
 	}
+}
+
+void ATile_SpawnGuardian::EnableTile(bool bEnable)
+{
+	bShowTile = bEnable;
+
+	Mesh->SetVisibility(bShowTile);
+	
+	if (!bShowTile)
+		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	else
+		Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
 }
 
