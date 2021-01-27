@@ -20,14 +20,21 @@ protected:
 		UStaticMeshComponent* Mesh;
 	//UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	//	UParticleSystemComponent* particle;
+	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		EElementalType Type;
 
 protected:
-	int32 iValue;
+	int32 iGemCount;
+	float fLifeTime;
+	float fMaxLifeTime;
 
 public:
-	void SetValue(int32 Value);
-	int32 GetValue() const;
+	void SetGemCount(int32 Value);
+	int32 GetGemCount() const;
 
+public:
+	void SetElementalType(EElementalType eType);
+	EElementalType GetElementalType() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

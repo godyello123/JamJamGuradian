@@ -24,6 +24,18 @@ private:
 	float fMPRecovery;
 	bool bAttack;
 
+	//Test
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	AActor* P0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	AActor* P1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	AActor* P2;
+
+	float fTime;
+	//Test
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

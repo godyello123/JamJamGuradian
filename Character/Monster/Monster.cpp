@@ -13,6 +13,21 @@ AMonster::AMonster()
 	TICKON;
 	bDead = false;
 
+	GetClassAsset(AActor_Gem, FireGemAsset, "Blueprint'/Game/11Gem/FireGem.FireGem_C'");
+
+	if (FireGemAsset.Succeeded())
+		FireGem = FireGemAsset.Class;
+
+	GetClassAsset(AActor_Gem, ICEGemAsset, "Blueprint'/Game/11Gem/ICEGem.ICEGem_C'");
+
+	if (ICEGemAsset.Succeeded())
+		ICEGem = ICEGemAsset.Class;
+
+	GetClassAsset(AActor_Gem, HolyGemAsset, "Blueprint'/Game/11Gem/HolyGem.HolyGem_C'");
+
+	if (HolyGemAsset.Succeeded())
+		HolyGem = HolyGemAsset.Class;
+
 	Tags.Add("Monster");
 }
 
@@ -51,6 +66,10 @@ void AMonster::BeginPlay()
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	
+
+	//움직이기
 }
 
 // Called to bind functionality to input
@@ -79,6 +98,61 @@ void AMonster::SetMonsterState(int32 iDamage, int32 iHP, int32 iMP, float fATSpe
 	State.iMP = 0;
 	State.MoveSpeed = fMoveSpeed;
 	State.AttackSpeed = fATSpeed;
+}
+
+FMonsterState AMonster::GetMonsterState() const
+{
+	return State;
+}
+
+void AMonster::CreateGem(int32 iGemCount)
+{
+	//난수 돌려서 나온거에따라서 해주깅
+	int32 iType = FMath::RandRange(0, 2);
+	int32 GemCount = FMath::RandRange(iGemCount - 3, iGemCount + 3);
+
+	FVector vPos = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+
+	switch (iType)
+	{
+	case 0:
+	{
+		FActorSpawnParameters tParams;
+
+		tParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(HolyGem, vPos, vRot,tParams);
+		pGem->SetElementalType(EElementalType::ET_Normal);
+		pGem->SetGemCount(GemCount);
+	}
+		break;
+	case 1:
+	{
+		FActorSpawnParameters tParams;
+
+		tParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(FireGem, vPos, vRot, tParams);
+		pGem->SetElementalType(EElementalType::ET_Fire);
+		pGem->SetGemCount(GemCount);
+	}
+		break;
+	case 2:
+	{
+		FActorSpawnParameters tParams;
+
+		tParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(ICEGem, vPos, vRot, tParams);
+		pGem->SetElementalType(EElementalType::ET_Ice);
+		pGem->SetGemCount(GemCount);
+	}
+		break;
+	}
 }
 
 

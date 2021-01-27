@@ -35,6 +35,12 @@ AMonster_Beholder::AMonster_Beholder()
 	fDistance = 1000.f;
 	SetMonsterState(5, 5, 5, 100, 100);
 
+	//Test
+	P0 = nullptr;
+	P1 = nullptr;
+	P2 = nullptr;
+	fTime = 0;
+	//Test
 }
 
 void AMonster_Beholder::Attack()
@@ -58,6 +64,31 @@ void AMonster_Beholder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector vLoc = GetActorLocation();
+
+	if (fTime < 1)
+	{
+		if (IsValid(P1) && IsValid(P0) && IsValid(P2))
+		{
+			fTime += DeltaTime;
+			FVector P0_Point = P0->GetActorLocation();
+			FVector P1_Point = P1->GetActorLocation();
+			FVector P2_Point = P2->GetActorLocation();
+
+			float Bezier1x = (1 - fTime) * (1 - fTime) * P0_Point.X;
+			float Bezier2x = 2 * fTime * (1 - fTime) * P1_Point.X;
+			float Bezier3x = fTime * fTime * P2_Point.X;
+
+			float Bezier1y = (1 - fTime) * (1 - fTime) * P0_Point.Y;
+			float Bezier2y = 2 * fTime * (1 - fTime) * P1_Point.Y;
+			float Bezier3y = fTime * fTime * P2_Point.Y;
+
+			vLoc.X = Bezier1x + Bezier2x + Bezier3x;
+			vLoc.Y = Bezier1y + Bezier2y + Bezier3y;
+
+			SetActorLocation(vLoc);
+		}
+	}
 }
 
 void AMonster_Beholder::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

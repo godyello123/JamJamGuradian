@@ -14,17 +14,28 @@ AActor_Gem::AActor_Gem()
 	//particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 	//particle->SetupAttachment(Mesh);
 
-	iValue = 0;
+	iGemCount = 0;
+	fLifeTime = 1.5;
 }
 
-void AActor_Gem::SetValue(int32 Value)
+void AActor_Gem::SetGemCount(int32 Value)
 {
-	iValue = Value;
+	iGemCount = Value;
 }
 
-int32 AActor_Gem::GetValue() const
+int32 AActor_Gem::GetGemCount() const
 {
-	return iValue;
+	return iGemCount;
+}
+
+void AActor_Gem::SetElementalType(EElementalType eType)
+{
+	Type = eType;
+}
+
+EElementalType AActor_Gem::GetElementalType() const
+{
+	return Type;
 }
 
 // Called when the game starts or when spawned

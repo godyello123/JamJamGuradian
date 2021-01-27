@@ -4,6 +4,7 @@
 
 #include "../../00Base/GameInfo.h"
 #include "GameFramework/Character.h"
+#include "../../NormalActor/Actor_Gem.h"
 #include "Monster.generated.h"
 
 USTRUCT(Atomic, BlueprintType)
@@ -48,11 +49,19 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		class ADemonGate* Gate;
+	class ADemonGate* Gate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		FMonsterState		State;
+	FMonsterState		State;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor* Target;
+	AActor* Target;
+	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor_Gem> FireGem;
+	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor_Gem> ICEGem;
+	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor_Gem> HolyGem;
+
+
 	
 protected:
 	bool bDead;
@@ -69,12 +78,6 @@ public:
 
 public:
 	void SetDemonGate(class ADemonGate* pGate);
-	void AddRoadPoint(class ARoadPoint* pPoint);
-	int32 GetRoadArraySize() const;
-
-public:
-	void NextMovePoint();
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -93,5 +96,11 @@ public:
 
 protected:
 	void SetMonsterState(int32 iDamage, int32 iHP, int32 iMP, float fATSpeed, float fMoveSpeed);
+
+public:
+	FMonsterState GetMonsterState() const;
+
+public:
+	void CreateGem(int32 iGemCount);
 
 };

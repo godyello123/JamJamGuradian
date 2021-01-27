@@ -36,6 +36,10 @@ void UAnim_Beholder::AnimNotify_Beholder_Die_End()
 {
 	AMonster_Beholder* Beholder = Cast<AMonster_Beholder>(TryGetPawnOwner());
 
+	int32 iCount = Beholder->GetMonsterState().iHPMax;
+
+	Beholder->CreateGem(iCount);
+
 	//PrintViewport(1.f, FColor::Red, TEXT("Beholder_Die_End"));
 	if (Beholder->IsDead())
 	{
