@@ -62,7 +62,7 @@ void ASummoner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FVector v = FVector(100.f, 100.f, 1000.f);
+	FVector v = FVector(-150.f, 500.f, 1300.f);
 
 	FRotator r2 = FRotator(FreeCamRotationOffsecPitch, FreeCamRotationOffsetYaw, FreeCamRotationOffsetRoll);
 

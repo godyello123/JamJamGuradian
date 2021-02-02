@@ -29,6 +29,29 @@ AMonster::AMonster()
 		HolyGem = HolyGemAsset.Class;
 
 	Tags.Add("Monster");
+
+	iPathPoint = 0;
+	SplineTime = 0.f;
+}
+
+void AMonster::AddSplineTime(float fTime)
+{
+	SplineTime += fTime* State.MoveSpeed;
+}
+
+float AMonster::GetSplineTime()
+{
+	return SplineTime;
+}
+
+void AMonster::ClearSplineTime()
+{
+	SplineTime = 0.f;
+}
+
+void AMonster::SetSplice(AActor_Spline* pSpline)
+{
+	Spline = pSpline;
 }
 
 bool AMonster::IsDead()
@@ -44,15 +67,15 @@ void AMonster::Dead()
 	bDead = true;
 }
 
-void AMonster::SetTarget(AActor* pTarget)
-{
-	Target = pTarget;
-}
-
 void AMonster::SetDemonGate(ADemonGate* pGate)
 {
 	if(IsValid(pGate))
 		Gate = pGate;
+}
+
+void AMonster::AddPathPoint(AActor* pActor)
+{
+	PathArray.Add(pActor);
 }
 
 // Called when the game starts or when spawned
@@ -153,6 +176,10 @@ void AMonster::CreateGem(int32 iGemCount)
 	}
 		break;
 	}
+}
+
+void AMonster::Skill()
+{
 }
 
 

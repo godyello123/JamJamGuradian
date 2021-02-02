@@ -45,8 +45,5 @@ public:
 	virtual void ChangeAnim(EMonsterAnimType eType);
 
 public:
-	void Attack();
-	void Move();
-	void Skill();
-	bool CheckTargetDistance();
+	virtual void Skill();
 };

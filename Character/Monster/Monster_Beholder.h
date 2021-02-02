@@ -36,6 +36,9 @@ public:
 	float fTime;
 	//Test
 
+private:
+	int32 iPathPoint;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,8 +55,6 @@ public:
 	virtual void ChangeAnim(EMonsterAnimType eType);
 
 public:
-	void Attack();
-	void Move();
-	void Skill();
-	bool CheckTargetDistance();
+	virtual void Skill();
+
 };

@@ -19,7 +19,7 @@ void ATileManager::BeginPlay()
 {
 	Super::BeginPlay();
 	CreateTile();
-	//ShowTileCount(5);
+	ShowTileCount(5);
 
 }
 
@@ -32,14 +32,14 @@ void ATileManager::Tick(float DeltaTime)
 
 void ATileManager::CreateTile()
 {
-	for (int32 i = 0; i < 5; ++i)
+	for (int32 i = 0; i < 8; ++i)
 	{
-		for (int32 j = 0; j < 5; ++j)
+		for (int32 j = 0; j < 4; ++j)
 		{
-			FVector vLoc = FVector((j*200)/*+(j+200)*/,(i * 200)/*+ (i+200)*/, 21.f);
+			FVector vLoc = FVector((j*170),(i * 170), 20.f);
 			FRotator vRot = FRotator::ZeroRotator;
 			ATile_SpawnGuardian* pTile = GetWorld()->SpawnActor< ATile_SpawnGuardian>(vLoc, vRot);
-			//pTile->EnableTile(false);
+			pTile->EnableTile(false);
 			TileArray.Add(pTile);
 		}
 	}

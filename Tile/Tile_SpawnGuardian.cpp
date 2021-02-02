@@ -17,7 +17,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
 
-	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Game/M5VFXVOL2/Props/Meshes/Box_A.Box_A'"));
+	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'"));
 
 	if (IsValid(Asset))
 	{
@@ -25,6 +25,14 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	}
 
 	SetRootComponent(Mesh);
+
+	UMaterialInstance* mtrl = LoadObject<UMaterialInstance>(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/MT_HolyTile.MT_HolyTile'"));
+	
+	Mesh->SetMaterial(0, mtrl);
+
+
+	
+
 
 	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 
@@ -43,7 +51,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 
 	Tags.Add("Tile");
 
-	this->SetActorScale3D(FVector(1.5f, 1.5f, 1.5f));
+	this->SetActorScale3D(FVector(1.5f, 1.5f, 1.f));
 }
 
 bool ATile_SpawnGuardian::IsShow()

@@ -32,7 +32,7 @@ AMonster_Specter::AMonster_Specter()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_Specter::Die()
@@ -87,21 +87,7 @@ void AMonster_Specter::ChangeAnim(EMonsterAnimType eType)
 	}
 }
 
-void AMonster_Specter::Attack()
-{
-
-}
-
-
-void AMonster_Specter::Move()
-{
-}
-
 void AMonster_Specter::Skill()
 {
 }
 
-bool AMonster_Specter::CheckTargetDistance()
-{
-	return false;
-}

@@ -13,6 +13,7 @@
 #include "Engine/DataTable.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/SplineComponent.h"
 /**
  * 
  */
@@ -105,6 +106,14 @@ enum class EActorType : uint8
 	AT_Tile,
 	AT_Guardian,
 	AT_Monster
+};
+
+UENUM(BlueprintType,Meta=(Bitflags))
+enum class EGameLevel : uint8
+{
+	GL_EASY,
+	GL_NORMAL,
+	GL_HARD
 };
 
 DECLARE_LOG_CATEGORY_EXTERN(UE7, Log, All);

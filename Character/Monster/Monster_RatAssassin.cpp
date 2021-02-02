@@ -32,7 +32,7 @@ AMonster_RatAssassin::AMonster_RatAssassin()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_RatAssassin::Die()
@@ -89,19 +89,7 @@ void AMonster_RatAssassin::ChangeAnim(EMonsterAnimType eType)
 	}
 }
 
-void AMonster_RatAssassin::Attack()
-{
-}
-
-void AMonster_RatAssassin::Move()
-{
-}
-
 void AMonster_RatAssassin::Skill()
 {
 }
 
-bool AMonster_RatAssassin::CheckTargetDistance()
-{	
-	return false;
-}

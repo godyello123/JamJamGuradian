@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../00Base/GameInfo.h"
 #include "AIController.h"
 #include "MonsterAIController.generated.h"
 
@@ -15,5 +16,13 @@ class MPSG_API AMonsterAIController : public AAIController
 
 public:
 	AMonsterAIController();
+
+protected:
+	UBehaviorTree* m_pBTAsset;
+	UBlackboardData* m_pBBAsset;
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 
 };

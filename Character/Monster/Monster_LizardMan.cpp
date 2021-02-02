@@ -32,7 +32,7 @@ AMonster_LizardMan::AMonster_LizardMan()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.6f);
 }
 
 void AMonster_LizardMan::Die()
@@ -87,19 +87,7 @@ void AMonster_LizardMan::ChangeAnim(EMonsterAnimType eType)
      
 }
 
-void AMonster_LizardMan::Attack()
-{
-}
-
-void AMonster_LizardMan::Move()
-{
-}
-
 void AMonster_LizardMan::Skill()
 {
 }
 
-bool AMonster_LizardMan::CheckTargetDistance()
-{
-	return false;
-}

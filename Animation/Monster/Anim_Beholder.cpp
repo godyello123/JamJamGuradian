@@ -53,7 +53,7 @@ void UAnim_Beholder::AnimNotify_Beholder_Attack()
 
 	if (Beholder)
 	{
-		Beholder->Attack();
+		//Beholder->Attack();
 	}
 }
 

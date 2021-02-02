@@ -33,7 +33,7 @@ AMonster_HellCrab::AMonster_HellCrab()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 
 }
 
@@ -90,20 +90,7 @@ void AMonster_HellCrab::ChangeAnim(EMonsterAnimType eType)
 		
 }
 
-void AMonster_HellCrab::Attack()
-{
-}
-
-void AMonster_HellCrab::Move()
-{
-
-}
-
 void AMonster_HellCrab::Skill()
 {
-}
 
-bool AMonster_HellCrab::CheckTargetDistance()
-{
-	return false;
 }

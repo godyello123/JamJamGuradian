@@ -32,7 +32,7 @@ AMonster_WereWolf::AMonster_WereWolf()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_WereWolf::Die()
@@ -89,20 +89,7 @@ void AMonster_WereWolf::ChangeAnim(EMonsterAnimType eType)
 	}
 }
 
-void AMonster_WereWolf::Attack()
-{
-}
-
-void AMonster_WereWolf::Move()
-{
-
-}
-
 void AMonster_WereWolf::Skill()
 {
 }
 
-bool AMonster_WereWolf::CheckTargetDistance()
-{
-	return false;
-}

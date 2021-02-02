@@ -33,7 +33,7 @@ AMonster_DeathWorm::AMonster_DeathWorm()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.5);
 }
 
 void AMonster_DeathWorm::Die()
@@ -84,20 +84,3 @@ void AMonster_DeathWorm::ChangeAnim(EMonsterAnimType eType)
 		Animation->ChangeAnimType(eType);
 }
 
-void AMonster_DeathWorm::Attack()
-{
-}
-
-void AMonster_DeathWorm::Move()
-{
-
-}
-
-void AMonster_DeathWorm::Skill()
-{
-}
-
-bool AMonster_DeathWorm::CheckTargetDistance()
-{
-	return false;
-}

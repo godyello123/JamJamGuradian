@@ -33,7 +33,7 @@ AMonster_ChestImp::AMonster_ChestImp()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.2);
 
 }
 
@@ -41,16 +41,6 @@ void AMonster_ChestImp::Die()
 {
 	bDie = true;
 	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-void AMonster_ChestImp::Attack()
-{
-	if (Target)
-	{
-		AController* Ai = GetController<AController>();
-		FDamageEvent DmgEvent;
-		Target->TakeDamage(State.Damage, DmgEvent, Ai, this);
-	}
 }
 
 bool AMonster_ChestImp::IsDie()
@@ -97,19 +87,7 @@ void AMonster_ChestImp::ChangeAnim(EMonsterAnimType eType)
 		Animation->ChangeAnimType(eType);
 }
 
-void AMonster_ChestImp::Move()
-{
-
-}
-
 void AMonster_ChestImp::Skill()
 {
+
 }
-
-bool AMonster_ChestImp::CheckTargetDistance()
-{
-
-	return false;
-}
-
-

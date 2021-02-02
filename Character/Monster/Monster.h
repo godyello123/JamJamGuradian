@@ -5,6 +5,7 @@
 #include "../../00Base/GameInfo.h"
 #include "GameFramework/Character.h"
 #include "../../NormalActor/Actor_Gem.h"
+#include "../../NormalActor/Actor_Spline.h"
 #include "Monster.generated.h"
 
 USTRUCT(Atomic, BlueprintType)
@@ -53,7 +54,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 	FMonsterState		State;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-	AActor* Target;
+		TArray<AActor*> PathArray;
 	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor_Gem> FireGem;
 	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -61,8 +62,27 @@ protected:
 	UPROPERTY(Category = Gem, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor_Gem> HolyGem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		AActor_Spline* Spline;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	float SplineTime;
 	
+
+public:
+	void AddSplineTime(float fTime);
+	float GetSplineTime();
+	void ClearSplineTime();
+	
+public:
+	void SetSplice(AActor_Spline* pSpline);
+
+public:
+	AActor_Spline* GetSpline() const
+	{
+		return Spline;
+	}
+
 protected:
 	bool bDead;
 
@@ -71,13 +91,12 @@ public:
 	void Dead();
 
 protected:
-	int32 iMovePoint;
-
-public:
-	void SetTarget(AActor* pTarget);
+	int32 iPathPoint;
 
 public:
 	void SetDemonGate(class ADemonGate* pGate);
+public:
+	void AddPathPoint(AActor* pActor);
 
 protected:
 	// Called when the game starts or when spawned
@@ -103,4 +122,6 @@ public:
 public:
 	void CreateGem(int32 iGemCount);
 
+public:
+	virtual void Skill();
 };

@@ -5,6 +5,7 @@
 #include "../Controller/SummonerController.h"
 #include "../Character/Guardian/Summoner.h"
 #include "../Character/Guardian/FreeCam.h"
+#include "../NormalActor/DemonGate.h"
 
 ADefenseGameMode::ADefenseGameMode()
 {
@@ -19,6 +20,17 @@ ADefenseGameMode::ADefenseGameMode()
 		PlayerControllerClass = PlayerController.Class;
 }
 
+
+void ADefenseGameMode::SetDemonGate(ADemonGate* pGate)
+{
+	if(pGate)
+		DemonGate = pGate;
+}
+
+ADemonGate* ADefenseGameMode::GetDemonGate() const
+{
+	return DemonGate;
+}
 
 void ADefenseGameMode::BeginPlay()
 {

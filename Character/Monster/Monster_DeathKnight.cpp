@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+  // Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Monster_DeathKnight.h"
@@ -32,7 +32,7 @@ AMonster_DeathKnight::AMonster_DeathKnight()
 
 	fMPRecovery = 0;
 	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 100);
+	SetMonsterState(5, 5, 5, 100, 1.3);
 
 }
 
@@ -87,20 +87,7 @@ void AMonster_DeathKnight::ChangeAnim(EMonsterAnimType eType)
 		Animation->ChangeAnimType(eType);
 }
 
-void AMonster_DeathKnight::Attack()
-{
-}
-
-void AMonster_DeathKnight::Move()
-{
-	
-}
-
 void AMonster_DeathKnight::Skill()
 {
-}
 
-bool AMonster_DeathKnight::CheckTargetDistance()
-{
-	return false;
 }

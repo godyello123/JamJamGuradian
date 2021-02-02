@@ -5,6 +5,7 @@
 #include "../00Base/GameInfo.h"
 #include "GameFramework/GameModeBase.h"
 #include "DefenseGameMode.generated.h"
+//#include "../NormalActor/DemonGate.h"
 
 /**
  * 
@@ -16,6 +17,13 @@ class MPSG_API ADefenseGameMode : public AGameModeBase
 
 public:
 	ADefenseGameMode();
+
+private:
+	class ADemonGate* DemonGate;
+
+public:
+	void SetDemonGate(class ADemonGate* pGate);
+	class ADemonGate* GetDemonGate() const;
 
 public:
 	virtual void BeginPlay();
