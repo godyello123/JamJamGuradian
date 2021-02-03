@@ -28,22 +28,7 @@ AMonster_LizardMan::AMonster_LizardMan()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
-
-	fMPRecovery = 0;
-	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 1.6f);
-}
-
-void AMonster_LizardMan::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-bool AMonster_LizardMan::IsDie()
-{
-	return bDie;
+	SetMonsterState(5, 5, 5, 100, 1.1f);
 }
 
 void AMonster_LizardMan::BeginPlay()
@@ -68,14 +53,16 @@ float AMonster_LizardMan::TakeDamage(float DamageAmount, FDamageEvent const& Dam
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 
-    return State.iHP;
+	return State.iHP;
 }
 
 void AMonster_LizardMan::ChangeAnim(EMonsterAnimType eType)

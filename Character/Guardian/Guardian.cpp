@@ -23,7 +23,7 @@ AGuardian::AGuardian()
 	Target = nullptr;
 	bTarget = false;
 
-	fAttackDist = 1500.f;
+	fAttackDist = 3000.f;
 
 	//SetActorType(EActorType::AT_Guardian);
 

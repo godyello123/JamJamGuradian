@@ -28,16 +28,6 @@ public:
 	virtual void Defeat();
 
 public:
-	UFUNCTION()
-		void AnimNotify_Beholder_Die_Start();
-	UFUNCTION()
-		void AnimNotify_Beholder_Die_End();
-	UFUNCTION()
-		void AnimNotify_Beholder_Attack();
-
-
-
-public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 };

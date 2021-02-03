@@ -29,22 +29,9 @@ AMonster_DeathWorm::AMonster_DeathWorm()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
-
-	fMPRecovery = 0;
-	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 1.5);
+	SetMonsterState(5, 5, 5, 100, 0.8);
 }
 
-void AMonster_DeathWorm::Die()
-{
-	bDie = true;
-}
-
-bool AMonster_DeathWorm::IsDie()
-{
-	return bDie;
-}
 
 void AMonster_DeathWorm::BeginPlay()
 {
@@ -68,10 +55,12 @@ float AMonster_DeathWorm::TakeDamage(float DamageAmount, FDamageEvent const& Dam
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 

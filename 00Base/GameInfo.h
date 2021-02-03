@@ -14,6 +14,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/SplineComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 /**
  * 
  */

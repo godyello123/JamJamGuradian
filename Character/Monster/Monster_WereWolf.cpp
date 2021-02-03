@@ -28,24 +28,9 @@ AMonster_WereWolf::AMonster_WereWolf()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
 
-	fMPRecovery = 0;
-	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 1.f);
-}
 
-void AMonster_WereWolf::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-
-}
-
-bool AMonster_WereWolf::IsDie()
-{
-	return bDie;
-
+	SetMonsterState(5, 5, 5, 100, 0.8f);
 }
 
 void AMonster_WereWolf::BeginPlay()
@@ -58,7 +43,6 @@ void AMonster_WereWolf::BeginPlay()
 void AMonster_WereWolf::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AMonster_WereWolf::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -70,10 +54,12 @@ float AMonster_WereWolf::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 

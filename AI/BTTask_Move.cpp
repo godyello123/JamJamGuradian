@@ -24,27 +24,37 @@ void UBTTask_Move::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
-
 	AMonsterAIController* pController = Cast<AMonsterAIController>(OwnerComp.GetAIOwner());
 
-	AMonster* pMonster = Cast<AMonster>(pController->GetPawn());
+	if (pController)
+	{
+		AMonster* pMonster = Cast<AMonster>(pController->GetPawn());
 
-	pMonster->AddSplineTime(DeltaSeconds);
+		if (pMonster)
+		{
+			if (pMonster->IsDead())
+				return;
 
+			pMonster->AddSplineTime(DeltaSeconds);
 
-	AActor_Spline* pSpline = pMonster->GetSpline();
+			AActor_Spline* pSpline = pMonster->GetSpline();
 
-	FVector vSpline = pSpline->GetPathLocation(pMonster->GetSplineTime());
+			pMonster->ChangeAnim(EMonsterAnimType::MAT_Move);
 
-	pController->MoveToLocation(vSpline, -1.f, false, true);
+			if (pSpline)
+			{
+				FVector vSpline = pSpline->GetPathLocation(pMonster->GetSplineTime());
 
-	float fDuration = pSpline->GetSplineDurationTime();
+				//pController->MoveToLocation(vSpline, -1.f, false, true);
 
-	if (pMonster->GetSplineTime() >= fDuration)
-		pMonster->ClearSplineTime();
+				pMonster->SetActorLocation(vSpline);
+				
 
+				float fDuration = pSpline->GetSplineDurationTime();
 
-
-	//if (fTime >= fDuration)
-	//	fTime = 0.f;
+				if (pMonster->GetSplineTime() >= fDuration)
+					pMonster->ClearSplineTime();
+			}
+		}
+	}
 }

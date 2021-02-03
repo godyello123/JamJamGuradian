@@ -31,3 +31,4 @@ void UAnim_Demon::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
+

@@ -19,17 +19,6 @@ public:
 private:
 	class UAnim_DeathKnight* Animation;
 
-	bool bDie;
-	float fDistance;
-
-	float fMPRecovery; 
-
-	bool bAttack;
-
-public:
-	void Die();
-	bool IsDie();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

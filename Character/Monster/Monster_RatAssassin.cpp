@@ -27,24 +27,10 @@ AMonster_RatAssassin::AMonster_RatAssassin()
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
 	AIControllerClass = AAIController::StaticClass();
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
 
-	fMPRecovery = 0;
-	fDistance = 1000.f;
-	SetMonsterState(5, 5, 5, 100, 1.f);
+	SetMonsterState(5, 5, 5, 100, 1.6f);
 }
 
-void AMonster_RatAssassin::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-bool AMonster_RatAssassin::IsDie()
-{
-	return bDie;
-}
 
 void AMonster_RatAssassin::BeginPlay()
 {
@@ -65,20 +51,19 @@ void AMonster_RatAssassin::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 float AMonster_RatAssassin::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 
 	return State.iHP;
-
-   
 }
 
 void AMonster_RatAssassin::ChangeAnim(EMonsterAnimType eType)

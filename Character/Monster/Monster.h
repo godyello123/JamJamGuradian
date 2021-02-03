@@ -63,10 +63,25 @@ protected:
 	TSubclassOf<AActor_Gem> HolyGem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		AActor_Spline* Spline;
+	AActor_Spline* m_pSpline;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 	float SplineTime;
+
+protected:
+	class UMaterialInstance* MaterialDynamicInst;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fBurn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fFilter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fTemperature;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fBurnTime;
+
+
+
 	
 
 public:
@@ -80,7 +95,12 @@ public:
 public:
 	AActor_Spline* GetSpline() const
 	{
-		return Spline;
+		if (m_pSpline)
+		{
+			return m_pSpline;
+		}
+		else
+			return nullptr;
 	}
 
 protected:
@@ -121,6 +141,13 @@ public:
 
 public:
 	void CreateGem(int32 iGemCount);
+
+public:
+	void SetBurnEffectMaterial();
+public:
+	void SetBurn(float fBurn);
+	void SetFilter(float fFilter);
+	void SetTemperature(float fTemperature);
 
 public:
 	virtual void Skill();

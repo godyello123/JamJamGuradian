@@ -32,6 +32,11 @@ AMonster::AMonster()
 
 	iPathPoint = 0;
 	SplineTime = 0.f;
+
+	m_fBurn = 0.f;
+	m_fFilter = 1.5f;
+	m_fTemperature = 4500.f;
+	m_fBurnTime = 2.f;
 }
 
 void AMonster::AddSplineTime(float fTime)
@@ -51,20 +56,18 @@ void AMonster::ClearSplineTime()
 
 void AMonster::SetSplice(AActor_Spline* pSpline)
 {
-	Spline = pSpline;
+	m_pSpline = pSpline;
 }
 
 bool AMonster::IsDead()
 {
-	if (State.iHP > 0)
-		return false;
-	else
-		return true;
+	return bDead;
 }
 
 void AMonster::Dead()
 {
 	bDead = true;
+	SetBurnEffectMaterial();
 }
 
 void AMonster::SetDemonGate(ADemonGate* pGate)
@@ -83,6 +86,10 @@ void AMonster::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UMaterialInstance* mtrl = LoadObject<UMaterialInstance>(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/MT_BurnEffect00_Inst.MT_BurnEffect00_Inst'"));
+
+	MaterialDynamicInst = mtrl;
+
 }
 
 // Called every frame
@@ -90,9 +97,17 @@ void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
+	if (bDead)
+	{
+		m_fBurn += DeltaTime / m_fBurnTime;
 
-	//움직이기
+		SetBurn(m_fBurn);
+		CreateGem(State.iHPMax);
+		if (m_fBurn >= m_fBurnTime)
+		{
+			Destroy();
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -176,6 +191,26 @@ void AMonster::CreateGem(int32 iGemCount)
 	}
 		break;
 	}
+}
+
+void AMonster::SetBurnEffectMaterial()
+{
+	GetMesh()->SetMaterial(0, MaterialDynamicInst);
+}
+
+void AMonster::SetBurn(float fBurn)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Burn"), fBurn);
+}
+
+void AMonster::SetFilter(float fFilter)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Filter"), fFilter);
+}
+
+void AMonster::SetTemperature(float fTemperature)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Temperature"), fTemperature);
 }
 
 void AMonster::Skill()

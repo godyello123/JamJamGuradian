@@ -32,3 +32,4 @@ void UAnim_Lizardman::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
+

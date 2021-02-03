@@ -29,24 +29,11 @@ AMonster_ChestImp::AMonster_ChestImp()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
 
-	fMPRecovery = 0;
-	fDistance = 1000.f;
 	SetMonsterState(5, 5, 5, 100, 1.2);
 
 }
 
-void AMonster_ChestImp::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-bool AMonster_ChestImp::IsDie()
-{
-	return bDie;
-}
 
 void AMonster_ChestImp::BeginPlay()
 {
@@ -67,14 +54,15 @@ void AMonster_ChestImp::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 float AMonster_ChestImp::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 

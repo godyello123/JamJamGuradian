@@ -31,5 +31,5 @@ public:
 public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds); 
-	
+
 };

@@ -19,6 +19,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 
 	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'"));
 
+	//Mesh->SetMaterial()
 	if (IsValid(Asset))
 	{
 		Mesh->SetStaticMesh(Asset);
@@ -29,10 +30,6 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	UMaterialInstance* mtrl = LoadObject<UMaterialInstance>(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/MT_HolyTile.MT_HolyTile'"));
 	
 	Mesh->SetMaterial(0, mtrl);
-
-
-	
-
 
 	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 

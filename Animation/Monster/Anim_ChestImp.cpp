@@ -2,7 +2,7 @@
 
 
 #include "Anim_ChestImp.h"
-#include "../../Character/Monster/Monster_Beholder.h"
+#include "../../Character/Monster/Monster_ChestImp.h"
 
 
 UAnim_ChestImp::UAnim_ChestImp()
@@ -33,3 +33,4 @@ void UAnim_ChestImp::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
+

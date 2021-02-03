@@ -201,23 +201,23 @@ void AGuardian_Archer::AttackToTarget()
 
 		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
 
-		FVector TargetLoc = Target->GetActorLocation();
+	/*	FVector TargetLoc = Target->GetActorLocation();
 		TargetLoc.Z = 0.f;
 		FVector MyLoc = GetActorLocation();
 
-		float fDist = FVector::Distance(TargetLoc, MyLoc);
+		float fDist = FVector::Distance(TargetLoc, MyLoc);*/
 
-		if (fDist > fAttackDist)
-		{
-			Target = nullptr;
-			bTarget = false;
-			//bAttack = false;
-			eAI = EARCHER_AI::Idle;
-		}
-		else
-		{
-			bTarget = true;
-		}
+		//if (fDist > fAttackDist)
+		//{
+		//	Target = nullptr;
+		//	bTarget = false;
+		//	//bAttack = false;
+		//	eAI = EARCHER_AI::Idle;
+		//}
+		//else
+		//{
+		//	bTarget = true;
+		//}
 
 		if (fHp <= 0.f)
 		{

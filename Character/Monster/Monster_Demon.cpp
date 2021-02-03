@@ -29,22 +29,8 @@ AMonster_Demon::AMonster_Demon()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
 
-	fMPRecovery = 0;
-	fDistance = 1000.f;
 	SetMonsterState(10, 10, 10, 100, 1.5);
-}
-
-void AMonster_Demon::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-bool AMonster_Demon::IsDie()
-{
-    return bDie;
 }
 
 void AMonster_Demon::BeginPlay()
@@ -70,10 +56,12 @@ float AMonster_Demon::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 

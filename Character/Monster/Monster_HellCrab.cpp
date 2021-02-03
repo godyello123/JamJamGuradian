@@ -29,29 +29,17 @@ AMonster_HellCrab::AMonster_HellCrab()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
-
-	fMPRecovery = 0;
-	fDistance = 1000.f;
+	
 	SetMonsterState(5, 5, 5, 100, 1.f);
 
 }
 
 
-void AMonster_HellCrab::Die()
-{
-	bDie = true;
-}
-
-bool AMonster_HellCrab::IsDie()
-{
-	return bDie;
-}
-
 void AMonster_HellCrab::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetMonsterState(5, 5, 5, 100, 1.f);
+
 	Animation = Cast<UAnim_HellCrab>(GetMesh()->GetAnimInstance());
 }
 
@@ -71,10 +59,12 @@ float AMonster_HellCrab::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 
@@ -84,10 +74,7 @@ float AMonster_HellCrab::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 void AMonster_HellCrab::ChangeAnim(EMonsterAnimType eType)
 {
 	if (Animation)
-	{
 		Animation->ChangeAnimType(eType);
-	}
-		
 }
 
 void AMonster_HellCrab::Skill()

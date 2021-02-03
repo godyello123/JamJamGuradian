@@ -28,24 +28,9 @@ AMonster_DeathKnight::AMonster_DeathKnight()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	bDie = false;
-
-	fMPRecovery = 0;
-	fDistance = 1000.f;
+	
 	SetMonsterState(5, 5, 5, 100, 1.3);
 
-}
-
-
-void AMonster_DeathKnight::Die()
-{
-	bDie = true;
-	Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
-}
-
-bool AMonster_DeathKnight::IsDie()
-{
-    return bDie;
 }
 
 void AMonster_DeathKnight::BeginPlay()
@@ -71,10 +56,12 @@ float AMonster_DeathKnight::TakeDamage(float DamageAmount, FDamageEvent const& D
 	State.iHP -= DamageAmount;
 	if (State.iHP <= 0)
 	{
+		State.iHP = 0;
 		//Á×ÀÌ±â
 		if (Animation)
 		{
-			Die();
+			Animation->ChangeAnimType(EMonsterAnimType::MAT_Die);
+			Dead();
 		}
 	}
 
