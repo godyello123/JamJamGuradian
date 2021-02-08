@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
-#include "DefenseGameStateBase.generated.h"
+#include "GameFramework/PlayerState.h"
+#include "DefenstPlayerState.generated.h"
 
 /**
  * 
  */
 USTRUCT(Atomic, BlueprintType)
-struct FGem1
+struct FGem
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FGem1() :
+	FGem() :
 		iGoldGem(0),
 		iFireGem(0),
 		iIceGem(0)
@@ -29,19 +29,17 @@ public:
 	int32 iIceGem;
 };
 
-
 UCLASS()
-class MPSG_API ADefenseGameStateBase : public AGameStateBase
+class MPSG_API ADefenstPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
 public:
-	ADefenseGameStateBase();
-	
+	ADefenstPlayerState();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		FGem1 m_tGem;
-
+		FGem m_tGem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UMainUI* m_pMainUI;
 
@@ -55,5 +53,5 @@ public:
 
 public:
 	void SetMainUI(class UMainUI* pUI);
-
+	
 };

@@ -51,4 +51,15 @@ public:
 	void SetGoldGemCount(int32 iCount);
 	void SetFireGemCount(int32 iCount);
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void DamageUpCallback();
+
+
+public:
+	void SetFireDmgLevel(int32 iLevel);
+	void SetIceDmgLevel(int32 iLevel);
+	void SetNormalDmgLevel(int32 iLevel);
+
+
 };
