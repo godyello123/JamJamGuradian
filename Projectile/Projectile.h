@@ -22,6 +22,12 @@ protected:
 		USphereComponent* Collision;
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		class AGuardian* m_pOwner;
+
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -37,6 +37,8 @@ protected:
 		EARCHER_AI		eAI;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_MultiShot> Arrow;
+	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AProjectile> ProjectileAsset;
 
 public:
 	void SetAI(EARCHER_AI _eAI);

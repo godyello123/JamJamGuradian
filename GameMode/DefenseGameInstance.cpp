@@ -16,22 +16,25 @@ UDefenseGameInstance::~UDefenseGameInstance()
 
 void UDefenseGameInstance::SetGameLevel(EGameLevel eLevel)
 {
+	m_eGameLevel = eLevel;
 }
 
 EGameLevel UDefenseGameInstance::GetGameLevel() const
 {
-	return EGameLevel();
+	return m_eGameLevel;
 }
 
 void UDefenseGameInstance::SetWaveNumber(int32 iWave)
 {
+	m_iWaveNumer = iWave;
 }
 
 int32 UDefenseGameInstance::GetWaveNumber() const
 {
-	return int32();
+	return m_iWaveNumer;
 }
 
 void UDefenseGameInstance::AddWaveNumber()
 {
+	m_iWaveNumer++;
 }

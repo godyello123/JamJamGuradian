@@ -50,6 +50,11 @@ void AGuardian::SetState(int32 iDmg, int32 HP, int32 MP, float Speed)
 	State.AttackSpeed = Speed;
 }
 
+FGuardianState AGuardian::GetState() const
+{
+	return State;
+}
+
 void AGuardian::SetCriticalChance(int32 iChance)
 {
 	CriticalChance = iChance;

@@ -75,7 +75,7 @@ void ADemonGate::SetSpawnDurationTime(float fTime)
 
 void ADemonGate::StartWave()
 {
-	SpawnType = (ESpawnMonsterType)FMath::RandRange(0, 7);
+	SpawnType = (ESpawnMonsterType)FMath::RandRange(0, 9);
 	
 	//스테이지 10 스테이지 넘어가면 랜덤 소환
 	switch (SpawnType)

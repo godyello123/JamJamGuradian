@@ -80,6 +80,7 @@ public:
 
 public:
 	void SetState(int32 iDmg, int32 HP, int32 MP, float Speed);
+	FGuardianState GetState() const;
 
 public:
 	void SetCriticalChance(int32 iChance);

@@ -2,6 +2,7 @@
 
 
 #include "Projectile.h"
+#include "../Character/Guardian/Guardian.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -20,6 +21,14 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_pOwner = Cast<AGuardian>(GetOwner());
+	Target = m_pOwner->GetTarget();
+	if (m_pOwner)
+	{
+		m_fSpeed = m_pOwner->GetState().AttackSpeed;
+	}
+
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::CollisionBeginOverlap);
 
 }
@@ -38,22 +47,43 @@ void AProjectile::Tick(float DeltaTime)
 	{
 		FVector vPos = GetActorLocation();
 
-		FVector vForward = GetActorForwardVector();
+		FVector vTarget = Target->GetActorLocation();
 
-		vPos = vPos + (vForward * 1000 * DeltaTime);
+		FVector vDir = vTarget - vPos;
+
+		vPos = vPos + (vDir * 2*(m_fSpeed)* DeltaTime);
 
 		SetActorLocation(vPos);
+
+		float fDist = 0;
+		fDist= FVector::Distance(vPos, Target->GetActorLocation());
+
+		if (fDist <= 2.f)
+		{
+			FDamageEvent DmgEvent;
+
+			Target->TakeDamage(m_pOwner->GetState().Damage, DmgEvent, m_pOwner->GetController(), this);
+
+			Destroy();
+
+		}
 	}
 
 }
 
 void AProjectile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor!=Target)
+	if ((OtherActor!=Target)||
+		!Target)
 	{
 		return;
 	}
 
+	FDamageEvent DmgEvent;
+
+	OtherActor->TakeDamage(m_pOwner->GetState().Damage, DmgEvent, m_pOwner->GetController(), this);
+	
+	Destroy();
 
 }
 

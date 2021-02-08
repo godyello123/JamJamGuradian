@@ -15,6 +15,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/SplineComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Blueprint/UserWidget.h"
 /**
  * 
  */

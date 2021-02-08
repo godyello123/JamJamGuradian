@@ -45,16 +45,15 @@ void UBTTask_Move::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 			{
 				FVector vSpline = pSpline->GetPathLocation(pMonster->GetSplineTime());
 
-				//pController->MoveToLocation(vSpline, -1.f, false, true);
+				pController->MoveToLocation(vSpline, -1.f, false, true);
 
-				pMonster->SetActorLocation(vSpline);
+				//pMonster->SetActorLocation(vSpline);
 				
-
 				float fDuration = pSpline->GetSplineDurationTime();
 
 				if (pMonster->GetSplineTime() >= fDuration)
 					pMonster->ClearSplineTime();
 			}
 		}
-	}
+	} 
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Summoner.generated.h"
 
+
 UCLASS()
 class MPSG_API ASummoner : public ACharacter
 {

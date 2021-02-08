@@ -34,8 +34,8 @@ AMonster::AMonster()
 	SplineTime = 0.f;
 
 	m_fBurn = 0.f;
-	m_fFilter = 1.5f;
-	m_fTemperature = 4500.f;
+	m_fFilter = 1.2f;
+	m_fTemperature = 3000.f;
 	m_fBurnTime = 2.f;
 }
 
@@ -102,9 +102,9 @@ void AMonster::Tick(float DeltaTime)
 		m_fBurn += DeltaTime / m_fBurnTime;
 
 		SetBurn(m_fBurn);
-		CreateGem(State.iHPMax);
 		if (m_fBurn >= m_fBurnTime)
 		{
+			CreateGem(State.iHPMax);
 			Destroy();
 		}
 	}
@@ -162,7 +162,7 @@ void AMonster::CreateGem(int32 iGemCount)
 			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(HolyGem, vPos, vRot,tParams);
-		pGem->SetElementalType(EElementalType::ET_Normal);
+		pGem->SetElementalType(0);
 		pGem->SetGemCount(GemCount);
 	}
 		break;
@@ -174,7 +174,7 @@ void AMonster::CreateGem(int32 iGemCount)
 			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(FireGem, vPos, vRot, tParams);
-		pGem->SetElementalType(EElementalType::ET_Fire);
+		pGem->SetElementalType(1);
 		pGem->SetGemCount(GemCount);
 	}
 		break;
@@ -186,7 +186,7 @@ void AMonster::CreateGem(int32 iGemCount)
 			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		AActor_Gem* pGem = GetWorld()->SpawnActor<AActor_Gem>(ICEGem, vPos, vRot, tParams);
-		pGem->SetElementalType(EElementalType::ET_Ice);
+		pGem->SetElementalType(2);
 		pGem->SetGemCount(GemCount);
 	}
 		break;

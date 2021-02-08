@@ -20,6 +20,9 @@ protected:
 	UPROPERTY(Category = Spline, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	USplineComponent* m_pSpline;
 
+	int32 m_iCurPoint;
+	int32 m_iMaxPoint;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,7 +33,12 @@ public:
 
 public:
 	FVector GetPathLocation(float fTime);
+	FVector GetPathLocation();
 
+public:
+	int32 GetPathPoint() const;
+	void AddPathPoint();
+	void ClearPathPoint();
 
 private:
 	void SetSplineDurationTime(float fTime);

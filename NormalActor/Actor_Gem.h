@@ -21,20 +21,20 @@ protected:
 	//UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	//	UParticleSystemComponent* particle;
 	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		EElementalType Type;
+		int32 Type;
 
 protected:
-	int32 iGemCount;
-	float fLifeTime;
-	float fMaxLifeTime;
+	int32 m_iGemCount;
+	float m_fLifeTime;
+	float m_fMaxLifeTime;
 
 public:
 	void SetGemCount(int32 Value);
 	int32 GetGemCount() const;
 
 public:
-	void SetElementalType(EElementalType eType);
-	EElementalType GetElementalType() const;
+	void SetElementalType(int32 iType);
+	int32 GetElementalType() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

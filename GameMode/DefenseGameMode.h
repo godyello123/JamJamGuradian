@@ -21,6 +21,17 @@ public:
 private:
 	class ADemonGate* DemonGate;
 
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<UUserWidget>	MainUIClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UMainUI* MainUI;
+
+public:
+	class UMainUI* GetMainUI() const;
+
+
+
 public:
 	void SetDemonGate(class ADemonGate* pGate);
 	class ADemonGate* GetDemonGate() const;

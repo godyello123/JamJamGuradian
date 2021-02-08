@@ -5,7 +5,9 @@
 #include "FreeCam.h"
 #include "../../Animation/Monster/Anim_Summoner.h"
 #include "../../Tile/TileManager.h"
-
+#include "../../GameMode/DefenseGameInstance.h"
+#include "../../UI/MainUI.h"
+#include "../../GameMode/DefenseGameMode.h"
 
 // Sets default values
 ASummoner::ASummoner()

@@ -19,8 +19,8 @@ public:
 	~UDefenseGameInstance();
 
 private:
-	int32 WaveNumer;
-	EGameLevel eGameLevel;
+	int32 m_iWaveNumer;
+	EGameLevel m_eGameLevel;
 
 public:
 	void SetGameLevel(EGameLevel eLevel);
