@@ -78,3 +78,9 @@ void AMonster_DeathKnight::Skill()
 {
 
 }
+
+void AMonster_DeathKnight::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}

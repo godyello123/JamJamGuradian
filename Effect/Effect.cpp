@@ -19,12 +19,13 @@ AEffect::AEffect()
 void AEffect::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 }
 
 // Called every frame
 void AEffect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

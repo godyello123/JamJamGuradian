@@ -92,17 +92,17 @@ void UMainUI::DamageUpCallback()
 void UMainUI::SetFireDmgLevel(int32 iLevel)
 {
 	if (DamageUpUI->GetVisibility() == ESlateVisibility::Visible)
-		DamageUpUI->SetFireDmgLevel(iLevel);
+		DamageUpUI->SetFireDmgLevelText(iLevel);
 }
 
 void UMainUI::SetIceDmgLevel(int32 iLevel)
 {
 	if (DamageUpUI->GetVisibility() == ESlateVisibility::Visible)
-		DamageUpUI->SetIceDmgLevel(iLevel);
+		DamageUpUI->SetIceDmgLevelText(iLevel);
 }
 
 void UMainUI::SetNormalDmgLevel(int32 iLevel)
 {
 	if (DamageUpUI->GetVisibility() == ESlateVisibility::Visible)
-		DamageUpUI->SetNormalDmgLevel(iLevel);
+		DamageUpUI->SetNormalDmgLevelText(iLevel);
 }

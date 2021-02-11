@@ -73,3 +73,13 @@ void AMonster_DeathWorm::ChangeAnim(EMonsterAnimType eType)
 		Animation->ChangeAnimType(eType);
 }
 
+void AMonster_DeathWorm::Skill()
+{
+}
+
+void AMonster_DeathWorm::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
+

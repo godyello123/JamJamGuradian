@@ -35,25 +35,32 @@ void UBTTask_Move::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 			if (pMonster->IsDead())
 				return;
 
-			pMonster->AddSplineTime(DeltaSeconds);
+			if (pMonster->IsGroggy())
+				return;
 
-			AActor_Spline* pSpline = pMonster->GetSpline();
-
-			pMonster->ChangeAnim(EMonsterAnimType::MAT_Move);
-
-			if (pSpline)
+			if (pMonster->IsGroggy() == false)
 			{
-				FVector vSpline = pSpline->GetPathLocation(pMonster->GetSplineTime());
+				pMonster->AddSplineTime(DeltaSeconds);
 
-				pController->MoveToLocation(vSpline, -1.f, false, true);
+				AActor_Spline* pSpline = pMonster->GetSpline();
 
-				//pMonster->SetActorLocation(vSpline);
-				
-				float fDuration = pSpline->GetSplineDurationTime();
+				pMonster->ChangeAnim(EMonsterAnimType::MAT_Move);
 
-				if (pMonster->GetSplineTime() >= fDuration)
-					pMonster->ClearSplineTime();
+				if (pSpline)
+				{
+					FVector vSpline = pSpline->GetPathLocation(pMonster->GetSplineTime());
+
+					pController->MoveToLocation(vSpline, -1.f, false, true);
+
+					//pMonster->SetActorLocation(vSpline);
+
+					float fDuration = pSpline->GetSplineDurationTime();
+
+					if (pMonster->GetSplineTime() >= fDuration)
+						pMonster->ClearSplineTime();
+				}
+
 			}
 		}
-	} 
+	}
 }

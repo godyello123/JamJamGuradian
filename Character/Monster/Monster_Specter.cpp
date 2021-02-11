@@ -79,3 +79,9 @@ void AMonster_Specter::Skill()
 {
 }
 
+void AMonster_Specter::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
+

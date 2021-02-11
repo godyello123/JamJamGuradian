@@ -36,5 +36,9 @@ public:
 public:
 	virtual void ChangeAnim(EMonsterAnimType eType);
 
+public:
+	virtual void Skill();
+	virtual void Groggy();
+
 
 };

@@ -42,14 +42,33 @@ private:
 		FGem m_tGem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UMainUI* m_pMainUI;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32 m_iFireDmg;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32 m_iIceDmg;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32 m_iNormalDmg;
 
 public:
 	void AllSetGem(int32 iCount);
 	void AllAddGem(int32 iCount);
-	void AllRemoveGem(int32 iCount);
+	bool AllRemoveGem(int32 iCount);
 	void AddGem(int32 iType, int32 iCount);
-	void RemoveGem(int32 iType, int32 iCount);
+	bool RemoveGem(int32 iType, int32 iCount);
 	int32 GetGem(int32 iType) const;
+
+public:
+	void AddFireDmg();
+	void AddIceDmg();
+	void AddNormalDmg();
+	int32 GetFireDmg() const;
+	int32 GetIceDmg() const;
+	int32 GetNormalDmg() const;
+
+public:
+	void SetFireDmg(int32 iLevel);
+	void SetIceDmg(int32 iLevel);
+	void SetNormalDmg(int32 iLevel);
 
 public:
 	void SetMainUI(class UMainUI* pUI);

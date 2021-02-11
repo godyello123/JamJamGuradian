@@ -3,6 +3,7 @@
 
 #include "DefenseGameMode.h"
 #include "DefenseGameStateBase.h"
+#include "DefenstPlayerState.h"
 #include "../Controller/SummonerController.h"
 #include "../Character/Guardian/Summoner.h"
 #include "../Character/Guardian/FreeCam.h"
@@ -56,12 +57,17 @@ void ADefenseGameMode::BeginPlay()
 		{
 			MainUI->AddToViewport();
 
-			ADefenseGameStateBase* pState = GetGameState<ADefenseGameStateBase>();
+			ASummonerController* pController = Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
 
-			if (pState)
+			ADefenstPlayerState* pPlayerState = pController->GetPlayerState<ADefenstPlayerState>();
+
+			if (pPlayerState)
 			{
-				pState->SetMainUI(MainUI);
-				pState->AllSetGem(5);
+				pPlayerState->SetMainUI(MainUI);
+				pPlayerState->AllSetGem(5);
+				pPlayerState->SetFireDmg(1);
+				pPlayerState->SetIceDmg(1);
+				pPlayerState->SetNormalDmg(1);
 			}
 				
 		}

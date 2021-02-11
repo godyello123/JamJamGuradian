@@ -19,6 +19,8 @@ protected:
 	UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UParticleSystemComponent* particle;
 
+	float m_fLifeTime;
+
 
 protected:
 	// Called when the game starts or when spawned

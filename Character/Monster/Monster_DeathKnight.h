@@ -36,7 +36,7 @@ public:
 
 public:
 	virtual void Skill();
-
+	virtual void Groggy();
 
 
 	

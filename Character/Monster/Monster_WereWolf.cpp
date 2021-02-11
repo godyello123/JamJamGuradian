@@ -79,3 +79,9 @@ void AMonster_WereWolf::Skill()
 {
 }
 
+void AMonster_WereWolf::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
+

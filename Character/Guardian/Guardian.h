@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Guardian.generated.h"
 
+
 USTRUCT(Atomic, BlueprintType)
 struct FGuardianState
 {
@@ -63,6 +64,13 @@ protected:
 		float fAttackDist;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		bool bAttack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		int32 m_iDmgLevel;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EElementalType m_eElementalType;
+	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	class UWidgetComponent* UIComponent;
+	class UGuardianUI* SpawnUI;
 
 public:
 	AActor* GetTarget() const;
@@ -120,6 +128,9 @@ public:
 	virtual void Groggy();
 	virtual void Victory();
 	virtual void LevelUP(ELevelUpType eType);
+	virtual void NormalLevelUp();
+	virtual void FireLevelUp();
+	virtual void IceLevelUp();
 
 public:
 	virtual void Motion();
@@ -128,7 +139,9 @@ public:
 	virtual void SearchTarget();
 
 public:
-	virtual void ShowUI(bool bShow);
+	void ShowUI();
+
+
 
  
 };

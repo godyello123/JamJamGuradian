@@ -32,7 +32,7 @@ void ADefenstPlayerState::AllAddGem(int32 iCount)
 	m_pMainUI->SetIceGemCount(m_tGem.iIceGem);
 }
 
-void ADefenstPlayerState::AllRemoveGem(int32 iCount)
+bool ADefenstPlayerState::AllRemoveGem(int32 iCount)
 {
 
 	int32 iGoldValue = m_tGem.iGoldGem -= iCount;
@@ -41,11 +41,13 @@ void ADefenstPlayerState::AllRemoveGem(int32 iCount)
 	{
 		m_tGem.iGoldGem = iGoldValue;
 		m_pMainUI->SetGoldGemCount(m_tGem.iGoldGem);
+
+		return true;
 	}
 	else
 	{
 		//*ㅅ*자원부족 UI 만들기
-		return;
+		return false;
 	}
 
 
@@ -55,11 +57,13 @@ void ADefenstPlayerState::AllRemoveGem(int32 iCount)
 	{
 		m_tGem.iFireGem = iFireValue;
 		m_pMainUI->SetFireGemCount(m_tGem.iFireGem);
+
+		return true;
 	}
 	else
 	{
 		//*ㅅ* 자원부족 UI 만들기
-		return;
+		return false;
 	}
 
 	int32 iIceValue = m_tGem.iIceGem -= iCount;
@@ -68,11 +72,13 @@ void ADefenstPlayerState::AllRemoveGem(int32 iCount)
 	{
 		m_tGem.iIceGem = iIceValue;
 		m_pMainUI->SetIceGemCount(m_tGem.iIceGem);
+
+		return true;
 	}
 	else
 	{
 		//*ㅅ* 자원부족 UI 만들기
-		return;
+		return false;
 	}
 
 }
@@ -99,10 +105,10 @@ void ADefenstPlayerState::AddGem(int32 iType, int32 iCount)
 	}
 }
 
-void ADefenstPlayerState::RemoveGem(int32 iType, int32 iCount)
+bool ADefenstPlayerState::RemoveGem(int32 iType, int32 iCount)
 {
 	if (iType < 0 || iType>2 || iCount < 0)
-		return;
+		return false;
 
 
 	if (iType == 0)
@@ -113,11 +119,11 @@ void ADefenstPlayerState::RemoveGem(int32 iType, int32 iCount)
 		{
 			m_tGem.iGoldGem = iValue;
 			m_pMainUI->SetGoldGemCount(m_tGem.iGoldGem);
+			return true;
 		}
 		else
 		{
-			//*ㅅ*자원 부족하다는 ui 노출
-			return;
+			return false;
 		}
 
 	}
@@ -129,11 +135,13 @@ void ADefenstPlayerState::RemoveGem(int32 iType, int32 iCount)
 		{
 			m_tGem.iFireGem = iValue;
 			m_pMainUI->SetFireGemCount(m_tGem.iFireGem);
+
+			return true;
 		}
 		else
 		{
 			//*ㅅ* 자원 부족 하다는 ui 노출
-			return;
+			return false;
 		}
 	}
 	else if (iType == 2)
@@ -144,13 +152,17 @@ void ADefenstPlayerState::RemoveGem(int32 iType, int32 iCount)
 		{
 			m_tGem.iIceGem = iValue;
 			m_pMainUI->SetIceGemCount(m_tGem.iIceGem);
+
+			return true;
 		}
 		else
 		{
 			//*ㅅ* 자원부족하다는 ui 노출
-			return;
+			return false;
 		}
 	}
+
+	return false;
 }
 
 int32 ADefenstPlayerState::GetGem(int32 iType) const
@@ -169,6 +181,54 @@ int32 ADefenstPlayerState::GetGem(int32 iType) const
 	}
 	else
 		return -1;
+}
+
+void ADefenstPlayerState::AddFireDmg()
+{
+	++m_iFireDmg;
+}
+
+void ADefenstPlayerState::AddIceDmg()
+{
+	++m_iIceDmg;
+}
+
+void ADefenstPlayerState::AddNormalDmg()
+{
+	++m_iNormalDmg;
+}
+
+int32 ADefenstPlayerState::GetFireDmg() const
+{
+	return m_iFireDmg;
+}
+
+int32 ADefenstPlayerState::GetIceDmg() const
+{
+	return m_iIceDmg;
+}
+
+int32 ADefenstPlayerState::GetNormalDmg() const
+{
+	return m_iNormalDmg;
+}
+
+void ADefenstPlayerState::SetFireDmg(int32 iLevel)
+{
+	m_iFireDmg = iLevel;
+	m_pMainUI->SetFireDmgLevel(iLevel);
+}
+
+void ADefenstPlayerState::SetIceDmg(int32 iLevel)
+{
+	m_iIceDmg=iLevel;
+	m_pMainUI->SetIceDmgLevel(iLevel);
+}
+
+void ADefenstPlayerState::SetNormalDmg(int32 iLevel)
+{
+	m_iNormalDmg = iLevel;
+	m_pMainUI->SetNormalDmgLevel(iLevel);
 }
 
 void ADefenstPlayerState::SetMainUI(UMainUI* pUI)

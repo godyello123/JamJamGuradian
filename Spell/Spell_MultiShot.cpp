@@ -42,7 +42,7 @@ void ASpell_MultiShot::Tick(float DeltaTime)
 
 	FVector vForward = GetActorForwardVector();
 
-	vPos = vPos + (vForward * 100 * DeltaTime);
+	vPos = vPos + (vForward * 800 * DeltaTime);
 
 	SetActorLocation(vPos);
 
@@ -77,7 +77,8 @@ void ASpell_MultiShot::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComp
 	if (IsValid(pArcher))
 	{
 		//pArcher->Test();
-		OtherActor->TakeDamage(GetDamage(), DmgEvent, pArcher->GetController(), this);
+
+		OtherActor->TakeDamage(GetDamage()*2.f, DmgEvent, pArcher->GetController(), this);
 		CreateEffect();
 	}
 	

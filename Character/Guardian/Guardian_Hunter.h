@@ -2,15 +2,15 @@
 
 #pragma once
 
-
 #include "Guardian.h"
-#include "Guardian_Warrior.generated.h"
+#include "../../Spell/Spell_MultiShot.h"
+#include "Guardian_Hunter.generated.h"
 
 /**
  * 
  */
 UENUM(BlueprintType, Meta = (Bitflags))
-enum class EWARRIOR_AI : uint8
+enum class EHUNTER_AI : uint8
 {
 	Idle,
 	Attack,
@@ -19,28 +19,36 @@ enum class EWARRIOR_AI : uint8
 };
 
 UCLASS()
-class MPSG_API AGuardian_Warrior : public AGuardian
+class MPSG_API AGuardian_Hunter : public AGuardian
 {
 	GENERATED_BODY()
 
 public:
-	AGuardian_Warrior();
+	AGuardian_Hunter();
 
 protected:
-	class UAnim_Warrior* Animation;
+	class UAnim_Hunter* Animation;
 
 protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class AActor_Weapon* TwoHandSword;
+		class AActor_Weapon* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EWARRIOR_AI 	eAI;
+		EHUNTER_AI		eAI;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_MultiShot> Arrow;
+	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AProjectile> ProjectileAsset;
+	
+	EElementalType m_eElemental;
 
 public:
-	void SetAI(EWARRIOR_AI _eAI);
+	void SetElemental(EElementalType eType);
 
+public:
+	void SetAI(EHUNTER_AI _eAI);
 
 protected:
-	void LoadTwohandSword(const FString& strSocket, const FString& strMeshPath);
+	void LoadBow(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	void ChangeAnimation(EGuardianAnimType eType);
@@ -65,7 +73,7 @@ public:
 	virtual void FireLevelUp();
 	virtual void IceLevelUp();
 
-protected:
+public:
 	virtual void Motion();
 	virtual void Attack();
 	virtual void Skill();
@@ -74,7 +82,6 @@ protected:
 public:
 	bool CheckDistance();
 	void AttackToTarget();
-
-public:
-	void CrushAttack();
+	void MultiShot();
+	
 };

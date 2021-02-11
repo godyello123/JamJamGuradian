@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Guardian.h"
+#include "../../Effect/Effect.h"
 #include "Guardian_Knight.generated.h"
-
 /**
  * 
  */
@@ -36,6 +36,8 @@ protected:
 		class AActor_Weapon* Shield;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EKNIGHT_AI		eAI;
+	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AEffect> Effect;
 
 
 public:
@@ -62,12 +64,18 @@ public:
 
 public:
 	virtual void LevelUP(ELevelUpType eType);
+	virtual void NormalLevelUp();
+	virtual void FireLevelUp();
+	virtual void IceLevelUp();
 
 protected:
 	virtual void Motion();
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+
+private:
+	void CreateEffect();
 
 public:
 	virtual void Groggy();

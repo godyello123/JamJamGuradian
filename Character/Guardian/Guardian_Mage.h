@@ -63,8 +63,10 @@ public:
 public:
 	virtual void Groggy();
 	virtual void Victory();
-
 	virtual void LevelUP(ELevelUpType eType);
+	virtual void NormalLevelUp();
+	virtual void FireLevelUp();
+	virtual void IceLevelUp();
 
 protected:
 	virtual void Motion();
@@ -78,10 +80,6 @@ public:
 
 public:
 	void MagicMissaile();
-
-public:
-	virtual void ShowUI(bool bShow);
-
 
 
 };

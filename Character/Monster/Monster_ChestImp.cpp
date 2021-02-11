@@ -79,3 +79,9 @@ void AMonster_ChestImp::Skill()
 {
 
 }
+
+void AMonster_ChestImp::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}

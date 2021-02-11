@@ -20,7 +20,7 @@ void AActor_Spline::BeginPlay()
 {
 	Super::BeginPlay();
 	//Spline->bShouldVisualizeScale(true);
-	m_pSpline->Duration = 50.f;
+	m_pSpline->Duration = 30.f;
 
 	m_iMaxPoint = m_pSpline->GetNumberOfSplinePoints();
 }

@@ -52,6 +52,18 @@ void AGuardian_Warrior::LevelUP(ELevelUpType eType)
 {
 }
 
+void AGuardian_Warrior::NormalLevelUp()
+{
+}
+
+void AGuardian_Warrior::FireLevelUp()
+{
+}
+
+void AGuardian_Warrior::IceLevelUp()
+{
+}
+
 void AGuardian_Warrior::BeginPlay()
 {
 	Super::BeginPlay();
@@ -252,16 +264,4 @@ void AGuardian_Warrior::AttackToTarget()
 void AGuardian_Warrior::CrushAttack()
 {
 
-}
-
-void AGuardian_Warrior::ShowUI(bool bShow)
-{
-	if (bShow)
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Warrior"));
-	}
-	else
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Warrior"));
-	}
 }

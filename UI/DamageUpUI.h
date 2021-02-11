@@ -26,7 +26,12 @@ class MPSG_API UDamageUpUI : public UUserWidget
 	class UTextBlock* FireDmgCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTextBlock* IceDmgCount;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* NormalCostText;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* FireCostText;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* IceCostText;
 
 protected:
 	virtual void NativePreConstruct();
@@ -34,7 +39,21 @@ protected:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
 public:
-	void SetFireDmgLevel(int32 iLevel);
-	void SetIceDmgLevel(int32 iLevel);
-	void SetNormalDmgLevel(int32 iLevel);
+	void SetFireDmgLevelText(int32 iLevel);
+	void SetIceDmgLevelText(int32 iLevel);
+	void SetNormalDmgLevelText(int32 iLevel);
+	void AddFireDmgLevel();
+	void AddIceDmgLevel();
+	void AddNormalDmgLevel();
+	void SetFireCostText(int32 iCost);
+	void SetNormalCostText(int32 iCost);
+	void SetIceCostText(int32 iCost);
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void FireUpButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void IceUpButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void NormalUpButtonCallback();
 };

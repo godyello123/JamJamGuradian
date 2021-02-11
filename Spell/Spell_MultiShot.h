@@ -18,7 +18,6 @@ public:
 	ASpell_MultiShot();
 
 protected:
-protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AEffect_Multishot> Effect;
 

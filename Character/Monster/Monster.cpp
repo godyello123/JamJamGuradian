@@ -37,6 +37,39 @@ AMonster::AMonster()
 	m_fFilter = 1.2f;
 	m_fTemperature = 3000.f;
 	m_fBurnTime = 2.f;
+	bGroggy = false;
+}
+
+void AMonster::SetGroggyTime(float fTime)
+{
+	m_fGroggyTime = fTime;
+	Groggy();
+}
+
+void AMonster::AddCurGroggyTime(float fTime)
+{
+	m_fCurGroggyTime += fTime;
+}
+
+float AMonster::GetCurGroggyTime() const
+{
+	return m_fCurGroggyTime;
+}
+
+float AMonster::GetGroggyTime() const
+{
+	return m_fGroggyTime;
+}
+
+void AMonster::GroggyEnd()
+{
+	bGroggy = false;
+	ChangeAnim(EMonsterAnimType::MAT_Idle);
+}
+
+void AMonster::SetSlowRate(float fRate)
+{
+	State.MoveSpeed *= fRate;
 }
 
 void AMonster::AddSplineTime(float fTime)
@@ -70,6 +103,11 @@ void AMonster::Dead()
 	SetBurnEffectMaterial();
 }
 
+bool AMonster::IsGroggy()
+{
+	return bGroggy;
+}
+
 void AMonster::SetDemonGate(ADemonGate* pGate)
 {
 	if(IsValid(pGate))
@@ -89,13 +127,23 @@ void AMonster::BeginPlay()
 	UMaterialInstance* mtrl = LoadObject<UMaterialInstance>(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/MT_BurnEffect00_Inst.MT_BurnEffect00_Inst'"));
 
 	MaterialDynamicInst = mtrl;
-
+	m_fCurGroggyTime = 0.f;
 }
 
 // Called every frame
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bGroggy)
+	{
+		m_fCurGroggyTime += DeltaTime;
+
+		if (m_fCurGroggyTime >= m_fGroggyTime)
+		{
+			GroggyEnd();
+		}
+	}
 
 	if (bDead)
 	{
@@ -108,6 +156,7 @@ void AMonster::Tick(float DeltaTime)
 			Destroy();
 		}
 	}
+
 }
 
 // Called to bind functionality to input
@@ -215,6 +264,12 @@ void AMonster::SetTemperature(float fTemperature)
 
 void AMonster::Skill()
 {
+}
+
+void AMonster::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);		
 }
 
 

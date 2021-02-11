@@ -23,6 +23,11 @@ AGuardian_Knight::AGuardian_Knight()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
+	GetClassAsset(AEffect, EffectAsset, "Blueprint'/Game/06Effect/BP_Effect_Knight.BP_Effect_Knight_C'");
+
+	if (EffectAsset.Succeeded())
+		Effect = EffectAsset.Class;
+
 	SetState(5, 10, 10, 1.f);
 
 	//fAttackDist = 10000.f;
@@ -32,6 +37,7 @@ AGuardian_Knight::AGuardian_Knight()
 
 	bAttack = false;
 
+	SetFillMP(0.44);
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -69,6 +75,18 @@ void AGuardian_Knight::LevelUP(ELevelUpType eType)
 	case ELevelUpType::TYPE4:
 		break;
 	}
+}
+
+void AGuardian_Knight::NormalLevelUp()
+{
+}
+
+void AGuardian_Knight::FireLevelUp()
+{
+}
+
+void AGuardian_Knight::IceLevelUp()
+{
 }
 
 void AGuardian_Knight::BeginPlay()
@@ -161,12 +179,12 @@ void AGuardian_Knight::Motion()
 
 void AGuardian_Knight::Attack()
 {
-	//if (State.iMP >= State.iMPMax)
-	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	//else
-	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	if (State.iMP >= State.iMPMax)
+		ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	else
+		ChangeAnimation(EGuardianAnimType::GAT_Attack);
 
-	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	//ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Knight::Skill()
@@ -220,6 +238,20 @@ void AGuardian_Knight::SearchTarget()
 	}
 }
 
+void AGuardian_Knight::CreateEffect()
+{
+	
+	FVector vPos = Target->GetActorLocation();
+	
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	AEffect* pEffect = GetWorld()->SpawnActor<AEffect>(Effect, vPos, GetActorRotation(),
+		tParams);
+}
+
 void AGuardian_Knight::Groggy()
 {
 	ChangeAnimation(EGuardianAnimType::GAT_Groggy);
@@ -259,31 +291,13 @@ bool AGuardian_Knight::CheckDistance()
 
 void AGuardian_Knight::AttackToTarget()
 {
-	if (bTarget && Target)
+	if (bTarget&&Target)
 	{
 		AController* AI = GetController<AController>();
 
 		FDamageEvent DmgEvent;
 
 		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
-
-		FVector TargetLoc = Target->GetActorLocation();
-		TargetLoc.Z = 0.f;
-		FVector MyLoc = GetActorLocation();
-
-		float fDist = FVector::Distance(TargetLoc, MyLoc);
-
-		if (fDist > fAttackDist)
-		{
-			Target = nullptr;
-			bTarget = false;
-			//bAttack = false;
-			eAI = EKNIGHT_AI::Idle;
-		}
-		else
-		{
-			bTarget = true;
-		}
 
 		if (fHp <= 0.f)
 		{
@@ -298,39 +312,27 @@ void AGuardian_Knight::PowerStrike()
 	//강하게 한대 때리기
 	if (bTarget && Target)
 	{
+		//이펙트 생성
+		CreateEffect();
+
 		AController* AI = GetController<AController>();
+
+		AMonster* pMonster = Cast<AMonster>(Target);
+		pMonster->SetGroggyTime(0.5f);
 
 		FDamageEvent DmgEvent;
 
 		float fDmg = State.Damage * 1.5;
 
 		float fHp = Target->TakeDamage(fDmg, DmgEvent, AI, this);
-
-		FVector TargetLoc = Target->GetActorLocation();
-		TargetLoc.Z = 0.f;
-		FVector MyLoc = GetActorLocation();
-
-		float fDist = FVector::Distance(TargetLoc, MyLoc);
-
-		if (fDist > fAttackDist)
-		{
-			Target = nullptr;
-			bTarget = false;
-			//bAttack = false;
-			eAI = EKNIGHT_AI::Idle;
-		}
-		else
-		{
-			bTarget = true;
-		}
-
+		
 		if (fHp <= 0.f)
 		{
 			Target = nullptr;
 			bTarget = false;
 		}
+		//State.iMP = 0;
 
-		State.iMP = 0;
 	}
 
 }

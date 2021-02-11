@@ -78,3 +78,9 @@ void AMonster_LizardMan::Skill()
 {
 }
 
+void AMonster_LizardMan::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
+

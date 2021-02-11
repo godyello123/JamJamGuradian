@@ -67,6 +67,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 	float SplineTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	float m_fSlowRate;
 
 protected:
 	class UMaterialInstance* MaterialDynamicInst;
@@ -80,7 +82,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float m_fBurnTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float m_fGroggyTime;
 
+	float m_fCurGroggyTime;
+public:
+	void SetGroggyTime(float fTime);
+	void AddCurGroggyTime(float fTime);
+	float GetCurGroggyTime() const;
+	float GetGroggyTime() const;
+
+public:
+	void GroggyEnd();
+
+public:
+	void SetSlowRate(float fRate);
 
 	
 
@@ -105,11 +121,15 @@ public:
 
 protected:
 	bool bDead;
+	bool bGroggy;
 
 public:
 	bool IsDead();
 	void Dead();
 
+public:
+	bool IsGroggy();
+	
 protected:
 	int32 iPathPoint;
 
@@ -151,4 +171,5 @@ public:
 
 public:
 	virtual void Skill();
+	virtual void Groggy();
 };

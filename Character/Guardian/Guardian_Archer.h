@@ -65,6 +65,9 @@ public:
 	virtual void Groggy();
 	virtual void Victory();
 	virtual void LevelUP(ELevelUpType eType);
+	virtual void NormalLevelUp();
+	virtual void FireLevelUp();
+	virtual void IceLevelUp();
 
 public:
 	virtual void Motion();
@@ -76,9 +79,5 @@ public:
 	bool CheckDistance();
 	void AttackToTarget();
 	void MultiShot();
-
-public:
-	virtual void ShowUI(bool bShow);
-
 
 };

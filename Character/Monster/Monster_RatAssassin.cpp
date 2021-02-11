@@ -78,3 +78,9 @@ void AMonster_RatAssassin::Skill()
 {
 }
 
+void AMonster_RatAssassin::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
+

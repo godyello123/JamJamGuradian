@@ -5,6 +5,8 @@
 #include "../GameMode/DefenseGameMode.h"
 #include "../GameMode/DefenseGameStateBase.h"
 #include "../Character/Guardian/Summoner.h"
+#include "../Controller/SummonerController.h"
+#include "../GameMode/DefenstPlayerState.h"
 
 // Sets default values
 AActor_Gem::AActor_Gem()
@@ -61,8 +63,10 @@ void AActor_Gem::Tick(float DeltaTime)
 
 		if (pMode)
 		{
-			ADefenseGameStateBase* pBase = pMode->GetGameState<ADefenseGameStateBase>();
-			pBase->AddGem(Type, m_iGemCount);
+			ASummonerController* pController = Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
+			ADefenstPlayerState* pPlayerState = pController->GetPlayerState<ADefenstPlayerState>();
+
+			pPlayerState->AddGem(Type, m_iGemCount);
 		}
 
 		Destroy();

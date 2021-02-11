@@ -77,3 +77,9 @@ void AMonster_Beholder::ChangeAnim(EMonsterAnimType eType)
 void AMonster_Beholder::Skill()
 {
 }
+
+void AMonster_Beholder::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}

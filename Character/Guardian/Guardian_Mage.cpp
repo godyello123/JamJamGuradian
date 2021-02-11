@@ -6,6 +6,9 @@
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Mage.h"
+#include "../../Controller/SummonerController.h"
+#include "../../GameMode/DefenstPlayerState.h"
+
 
 AGuardian_Mage::AGuardian_Mage()
 {
@@ -35,6 +38,8 @@ AGuardian_Mage::AGuardian_Mage()
 
 	bAttack = false;
 
+	SetFillMP(0.64);
+
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -59,6 +64,18 @@ break;
 	}
 }
 
+void AGuardian_Mage::NormalLevelUp()
+{
+}
+
+void AGuardian_Mage::FireLevelUp()
+{
+}
+
+void AGuardian_Mage::IceLevelUp()
+{
+}
+
 void AGuardian_Mage::BeginPlay()
 {
 	Super::BeginPlay();
@@ -66,6 +83,14 @@ void AGuardian_Mage::BeginPlay()
 	LoadWand(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Wand01SM.Wand01SM'"));
 
 	Animation = Cast<UAnim_Mage>(GetMesh()->GetAnimInstance());
+
+	ASummonerController* pController = Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
+	ADefenstPlayerState* pState = pController->GetPlayerState<ADefenstPlayerState>();
+
+	m_iDmgLevel = pState->GetNormalDmg();
+
+	//State.AttackSpeed = m_iDmgLevel + (m_iDmgLevel * 1);
+	State.Damage = State.Damage + (m_iDmgLevel * 5);
 }
 
 void AGuardian_Mage::SetAI(EMAGE_AI _eAI)
@@ -109,12 +134,12 @@ float AGuardian_Mage::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 void AGuardian_Mage::Attack()
 {
-	//if (State.iMP >= State.iMPMax)
-	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	//else
-	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	if (State.iMP >= State.iMPMax)
+		ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	else
+		ChangeAnimation(EGuardianAnimType::GAT_Attack);
 
-	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	//ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Mage::Groggy()
@@ -135,9 +160,10 @@ void AGuardian_Mage::Victory()
 void AGuardian_Mage::SearchTarget()
 {
 	if (Target || bTarget)
+	{
+		eAI = EMAGE_AI::Attack;
 		return;
-
-	Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
+	}
 
 	FVector StartLoc = GetActorLocation();
 
@@ -167,6 +193,7 @@ void AGuardian_Mage::SearchTarget()
 				{
 					Target = pTarget;
 					bTarget = true;
+
 					eAI = EMAGE_AI::Attack;
 				}
 
@@ -191,8 +218,6 @@ bool AGuardian_Mage::CheckDistance()
 		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
 
 		Attack();
-
-		return true;
 	}
 	else
 	{
@@ -205,31 +230,13 @@ bool AGuardian_Mage::CheckDistance()
 
 void AGuardian_Mage::AttackToTarget()
 {
-	if (bTarget && Target)
+	if (bTarget&&Target)
 	{
 		AController* AI = GetController<AController>();
 
 		FDamageEvent DmgEvent;
 
 		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
-
-		FVector TargetLoc = Target->GetActorLocation();
-		TargetLoc.Z = 0.f;
-		FVector MyLoc = GetActorLocation();
-
-		float fDist = FVector::Distance(TargetLoc, MyLoc);
-
-		if (fDist > fAttackDist)
-		{
-			Target = nullptr;
-			bTarget = false;
-			//bAttack = false;
-			eAI = EMAGE_AI::Idle;
-		}
-		else
-		{
-			bTarget = true;
-		}
 
 		if (fHp <= 0.f)
 		{
@@ -249,11 +256,13 @@ void AGuardian_Mage::MagicMissaile()
 	tParams.SpawnCollisionHandlingOverride =
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-
+	tParams.Owner = this;
 	ASpell_MagicMissile* pMagic= GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
 		tParams);
 
 	//pMagic->SetMage(this);
+
+	State.iMP = 0.f;
 }
 
 void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)
@@ -283,14 +292,3 @@ void AGuardian_Mage::Motion()
 	}
 }
 
-void AGuardian_Mage::ShowUI(bool bShow)
-{
-	if (bShow)
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Mage"));
-	}
-	else
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Mage"));
-	}
-}

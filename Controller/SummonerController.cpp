@@ -63,6 +63,8 @@ void ASummonerController::PastProcess()
 			if (ClickedActor->Tags[0] == "Guardian")
 			{
 				//기존에 켜져있던 ui 안보이기
+				AGuardian* pGuardian = Cast<AGuardian>(ClickedActor);
+				pGuardian->ShowUI();
 			}
 			else if (ClickedActor->Tags[0] == "Monster")
 			{
@@ -90,11 +92,8 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 		{
 			if (ClickedActor->Tags[0] == "Guardian")
 			{
-				int a = 0;
-				PrintViewport(10.f, FColor::Red, TEXT("ok"));
-
-				AGuardian* aaa = Cast<AGuardian>(ClickedActor);
-				aaa->Victory();
+				AGuardian* pGuardian = Cast<AGuardian>(ClickedActor);
+				pGuardian->ShowUI();
 			}
 			else if (ClickedActor->Tags[0] == "Monster")
 			{

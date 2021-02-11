@@ -3,7 +3,8 @@
 
 #include "Guardian.h"
 #include "Summoner.h"
-
+#include "Components/WidgetComponent.h"
+#include "../../UI/GuardianUI.h"
 
 // Sets default values
 AGuardian::AGuardian()
@@ -28,6 +29,22 @@ AGuardian::AGuardian()
 	//SetActorType(EActorType::AT_Guardian);
 
 	Tags.Add("Guardian");
+
+	m_eElementalType = EElementalType::ET_Normal;
+
+	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
+
+	UIComponent->SetupAttachment(GetMesh());
+
+	UIComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	UIComponent->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
+	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
+
+
+	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/BP_GuardianUI.BP_GuardianUI_C'");
+
+	if (WidgetClass.Succeeded())
+		UIComponent->SetWidgetClass(WidgetClass.Class);
 }
 
 AActor* AGuardian::GetTarget() const
@@ -128,9 +145,16 @@ void AGuardian::SearchTarget()
 {
 }
 
-void AGuardian::ShowUI(bool bShow)
+void AGuardian::ShowUI()
 {
-
+	switch (SpawnUI->GetVisibility())
+	{
+	case ESlateVisibility::Visible:
+		SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+		break;
+	case ESlateVisibility::Collapsed:
+		SpawnUI->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void AGuardian::AttackEnable(bool bEnable)
@@ -157,10 +181,31 @@ void AGuardian::LevelUP(ELevelUpType eType)
 
 }
 
+void AGuardian::NormalLevelUp()
+{
+	PrintViewport(2.f, FColor::Yellow, TEXT("NormalLevelUP"));
+}
+
+void AGuardian::FireLevelUp()
+{
+	PrintViewport(2.f, FColor::Yellow, TEXT("FireLevelUP"));
+}
+
+void AGuardian::IceLevelUp()
+{
+	PrintViewport(2.f, FColor::Yellow, TEXT("IceLevelUP"));
+}
+
 // Called when the game starts or when spawned
 void AGuardian::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SpawnUI = Cast< UGuardianUI>(UIComponent->GetUserWidgetObject());
+	SpawnUI->SetOwner(this);
+	//SpawnUI->AddToViewport();
+	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+
 }
 
 // Called every frame

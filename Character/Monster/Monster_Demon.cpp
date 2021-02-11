@@ -78,3 +78,9 @@ void AMonster_Demon::Skill()
 {
 
 }
+
+void AMonster_Demon::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}

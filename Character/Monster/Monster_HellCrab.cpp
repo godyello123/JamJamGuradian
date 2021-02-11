@@ -81,3 +81,9 @@ void AMonster_HellCrab::Skill()
 {
 
 }
+
+void AMonster_HellCrab::Groggy()
+{
+	bGroggy = true;
+	ChangeAnim(EMonsterAnimType::MAT_Groggy);
+}
