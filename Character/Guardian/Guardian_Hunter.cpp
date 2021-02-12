@@ -118,7 +118,17 @@ void AGuardian_Hunter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Motion();
+	if (!m_bDead)
+	{
+		Motion();
+	}
+	else
+	{
+		m_fDeadTime += DeltaTime;
+
+		if (m_fDeadTime >= 6.f)
+			this->Destroy();
+	}
 }
 
 void AGuardian_Hunter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)

@@ -17,7 +17,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
 
-	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'"));
+	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 
 	//Mesh->SetMaterial()
 	if (IsValid(Asset))
@@ -27,7 +27,9 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 
 	SetRootComponent(Mesh);
 
-	UMaterialInstance* mtrl = LoadObject<UMaterialInstance>(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/MT_HolyTile.MT_HolyTile'"));
+	UMaterialInstance* mtrl = 
+		LoadObject<UMaterialInstance>
+		(nullptr, TEXT("MaterialInstanceConstant'/Game/07Material/Mtrl_Tile2.Mtrl_Tile2'"));
 	
 	Mesh->SetMaterial(0, mtrl);
 

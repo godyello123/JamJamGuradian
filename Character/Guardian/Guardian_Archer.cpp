@@ -74,7 +74,17 @@ void AGuardian_Archer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Motion();
+	if (!m_bDead)
+	{
+		Motion();
+	}
+	else
+	{
+		m_fDeadTime += DeltaTime;
+
+		if (m_fDeadTime >= 6.f)
+			this->Destroy();
+	}
 }
 
 void AGuardian_Archer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -103,16 +113,20 @@ void AGuardian_Archer::LevelUP(ELevelUpType eType)
 
 void AGuardian_Archer::NormalLevelUp()
 {
+	Dead();
 	PrintViewport(2.f, FColor::Yellow, TEXT("NormalLevelUP"));
 }
 
 void AGuardian_Archer::FireLevelUp()
 {
+	Dead();
+
 	PrintViewport(2.f, FColor::Yellow, TEXT("FireLevelUP"));
 }
 
 void AGuardian_Archer::IceLevelUp()
 {
+	Dead();
 	PrintViewport(2.f, FColor::Yellow, TEXT("IceLevelUP"));
 }
 

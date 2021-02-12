@@ -4,6 +4,7 @@
 
 #include "../../00Base/MasterActor.h"
 #include "../../Projectile/Projectile.h"
+#include "../../Effect/Effect_LevelUp.h"
 #include "GameFramework/Character.h"
 #include "Guardian.generated.h"
 
@@ -68,9 +69,22 @@ protected:
 		int32 m_iDmgLevel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EElementalType m_eElementalType;
-	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* UIComponent;
 	class UGuardianUI* SpawnUI;
+	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AEffect_LevelUp> LightningLevelUp_EffectAsset;
+	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AEffect_LevelUp> FireLevelUp_EffectAsset;
+	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AEffect_LevelUp> IceLevelUp_EffectAsset;
+
+protected:
+	bool m_bDead;
+	float m_fDeadTime;
+
+public:
+	void Dead();
 
 public:
 	AActor* GetTarget() const;
@@ -140,6 +154,8 @@ public:
 
 public:
 	void ShowUI();
+	void CreateEffectLevelUp(EElementalType eType);
+	
 
 
 

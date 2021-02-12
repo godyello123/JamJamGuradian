@@ -6,6 +6,8 @@
 #include "Components/WidgetComponent.h"
 #include "../../UI/GuardianUI.h"
 
+
+
 // Sets default values
 AGuardian::AGuardian()
 {
@@ -20,7 +22,7 @@ AGuardian::AGuardian()
 	CriticalRatio = 1.5;
 	MPFillTime = 0.f;
 	MPFillTimeMax = 1.f;
-
+	m_fDeadTime = 0.f;
 	Target = nullptr;
 	bTarget = false;
 
@@ -157,6 +159,30 @@ void AGuardian::ShowUI()
 	}
 }
 
+void AGuardian::CreateEffectLevelUp(EElementalType eType)
+{
+	switch (eType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		FVector vPos = this->GetActorLocation();
+		FRotator vRot = this->GetActorRotation();
+		AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(vPos, vRot);
+	}
+		break;
+	case EElementalType::ET_Fire:
+	{
+
+	}
+		break;
+	case EElementalType::ET_Ice:
+	{
+
+	}
+		break;
+	}
+}
+
 void AGuardian::AttackEnable(bool bEnable)
 {
 	bAttack = bEnable;
@@ -213,7 +239,17 @@ void AGuardian::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FillUpMP(FillMP, DeltaTime);
+	if (!m_bDead)
+	{
+		FillUpMP(FillMP, DeltaTime);
+	}
+	else
+	{
+		m_fDeadTime += DeltaTime;
+
+		if (m_fDeadTime >= 6.f)
+			this->Destroy();
+	}
 }
 
 // Called to bind functionality to input
@@ -228,3 +264,9 @@ float AGuardian::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 	return 0.0f;
 }
 
+void AGuardian::Dead()
+{
+	m_bDead = true;
+	GetMesh()->SetVisibility(false);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
