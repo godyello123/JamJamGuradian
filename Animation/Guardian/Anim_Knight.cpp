@@ -53,7 +53,7 @@ void UAnim_Knight::AnimNotify_Knight_Attack_End()
 	{
 		PrintViewport(5.f, FColor::Red, TEXT("Archer Attack End"));
 		//Archer->AttackEnable(false);
-		pOwner->SetAI(EKNIGHT_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }
@@ -64,7 +64,7 @@ void UAnim_Knight::AnimNotify_Knight_Skill()
 
 	if (IsValid(pOwner))
 	{
-		pOwner->PowerStrike();
+		pOwner->Skill();
 	}
 }
 
@@ -74,7 +74,7 @@ void UAnim_Knight::AnimNotify_Knight_Skill_End()
 
 	if (IsValid(pOwner))
 	{
-		pOwner->SetAI(EKNIGHT_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }

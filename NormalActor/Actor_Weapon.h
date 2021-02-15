@@ -30,4 +30,7 @@ public:
 public:
 	void LoadMesh(const FString& strPath);
 
+public:
+	void SetScale(FVector& vScale);
+
 };

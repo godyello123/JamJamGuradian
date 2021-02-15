@@ -8,14 +8,7 @@
 /**
  * 
  */
-UENUM(BlueprintType, Meta = (Bitflags))
-enum class EKNIGHT_AI : uint8
-{
-	Idle,
-	Attack,
-	Groggy,
-	Victory
-};
+
 
 
 UCLASS()
@@ -35,13 +28,13 @@ protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Shield;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EKNIGHT_AI		eAI;
+		EGUARDIAN_AI		eAI;
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AEffect> Effect;
 
 
 public:
-	void SetAI(EKNIGHT_AI eAI);
+	void SetAI(EGUARDIAN_AI eAI);
 
 public:
 	void ChangeAnimation(EGuardianAnimType eType);
@@ -67,11 +60,12 @@ public:
 	virtual void NormalLevelUp();
 	virtual void FireLevelUp();
 	virtual void IceLevelUp();
+	virtual void Dead();
+	virtual void Skill();
 
 protected:
 	virtual void Motion();
 	virtual void Attack();
-	virtual void Skill();
 	virtual void SearchTarget();
 
 private:

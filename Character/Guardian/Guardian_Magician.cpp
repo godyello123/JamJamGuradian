@@ -1,25 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Guardian_Mage.h"
+#include "Guardian_Magician.h"
 #include "Summoner.h"
+#include "Guardian_Mage.h"
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
-#include "../../Animation/Guardian/Anim_Mage.h"
+#include "../../Animation/Guardian/Anim_Magician.h"
 #include "../../Controller/SummonerController.h"
 #include "../../GameMode/DefenstPlayerState.h"
 
-
-AGuardian_Mage::AGuardian_Mage()
+AGuardian_Magician::AGuardian_Magician()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/PrinceSK.PrinceSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/MageSK.MageSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
 
-	GetClassAsset(UAnim_Mage, AnimData, "AnimBlueprint'/Game/01Guardian/04Mage/Mage_Anim.Mage_Anim_C'");
+	GetClassAsset(UAnim_Magician, AnimData, "AnimBlueprint'/Game/01Guardian/04Mage/Magician_Anim.Magician_Anim_C'");
 
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
@@ -43,7 +43,6 @@ AGuardian_Mage::AGuardian_Mage()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-	GetMesh()->SetRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
 
 	Wand = nullptr;
 
@@ -51,7 +50,7 @@ AGuardian_Mage::AGuardian_Mage()
 }
 
 
-void AGuardian_Mage::NormalLevelUp()
+void AGuardian_Magician::NormalLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -59,9 +58,10 @@ void AGuardian_Mage::NormalLevelUp()
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
 }
 
-void AGuardian_Mage::FireLevelUp()
+void AGuardian_Magician::FireLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -69,9 +69,10 @@ void AGuardian_Mage::FireLevelUp()
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
 }
 
-void AGuardian_Mage::IceLevelUp()
+void AGuardian_Magician::IceLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -79,21 +80,22 @@ void AGuardian_Mage::IceLevelUp()
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Mage* pMage = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
 }
 
-void AGuardian_Mage::Dead()
+void AGuardian_Magician::Dead()
 {
 	Super::Dead();
 	Wand->Destroy();
 }
 
-void AGuardian_Mage::BeginPlay()
+void AGuardian_Magician::BeginPlay()
 {
 	Super::BeginPlay();
 
 	LoadWand(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Wand01SM.Wand01SM'"));
 
-	Animation = Cast<UAnim_Mage>(GetMesh()->GetAnimInstance());
+	Animation = Cast<UAnim_Magician>(GetMesh()->GetAnimInstance());
 
 	ASummonerController* pController = Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
 	ADefenstPlayerState* pState = pController->GetPlayerState<ADefenstPlayerState>();
@@ -102,16 +104,14 @@ void AGuardian_Mage::BeginPlay()
 
 	//State.AttackSpeed = m_iDmgLevel + (m_iDmgLevel * 1);
 	State.Damage = State.Damage + (m_iDmgLevel * 5);
-
-	Wand->SetActorRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
 }
 
-void AGuardian_Mage::SetAI(EGUARDIAN_AI _eAI)
+void AGuardian_Magician::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
 }
 
-void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPath)
+void AGuardian_Magician::LoadWand(const FString& strSocket, const FString& strMeshPath)
 {
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride =
@@ -126,7 +126,7 @@ void AGuardian_Mage::LoadWand(const FString& strSocket, const FString& strMeshPa
 	Wand->LoadMesh(strMeshPath);
 }
 
-void AGuardian_Mage::Tick(float DeltaTime)
+void AGuardian_Magician::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -143,19 +143,19 @@ void AGuardian_Mage::Tick(float DeltaTime)
 	}
 }
 
-void AGuardian_Mage::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AGuardian_Magician::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-float AGuardian_Mage::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float AGuardian_Magician::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	return 0.0f;
 }
 
 
-void AGuardian_Mage::Attack()
+void AGuardian_Magician::Attack()
 {
 	if (State.iMP >= State.iMPMax)
 		ChangeAnimation(EGuardianAnimType::GAT_Skill);
@@ -165,22 +165,26 @@ void AGuardian_Mage::Attack()
 	//ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
-void AGuardian_Mage::Groggy()
+void AGuardian_Magician::Groggy()
 {
 	ChangeAnimation(EGuardianAnimType::GAT_Groggy);
 }
 
-void AGuardian_Mage::Skill()
+void AGuardian_Magician::Skill()
 {
-	
+	MagicMissaile();
 }
 
-void AGuardian_Mage::Victory()
+void AGuardian_Magician::Victory()
 {
 	ChangeAnimation(EGuardianAnimType::GAT_Victory);
 }
 
-void AGuardian_Mage::SearchTarget()
+void AGuardian_Magician::LevelUP(ELevelUpType eType)
+{
+}
+
+void AGuardian_Magician::SearchTarget()
 {
 	FVector StartLoc = GetActorLocation();
 
@@ -220,7 +224,7 @@ void AGuardian_Mage::SearchTarget()
 	}
 }
 
-bool AGuardian_Mage::CheckDistance()
+bool AGuardian_Magician::CheckDistance()
 {
 	if (Target && bTarget)
 	{
@@ -245,7 +249,7 @@ bool AGuardian_Mage::CheckDistance()
 	return false;
 }
 
-void AGuardian_Mage::AttackToTarget()
+void AGuardian_Magician::AttackToTarget()
 {
 	if (bTarget&&Target)
 	{
@@ -263,7 +267,7 @@ void AGuardian_Mage::AttackToTarget()
 	}
 }
 
-void AGuardian_Mage::MagicMissaile()
+void AGuardian_Magician::MagicMissaile()
 {
 	//스킬 만들기
 	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
@@ -274,7 +278,7 @@ void AGuardian_Mage::MagicMissaile()
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	tParams.Owner = this;
-	ASpell_MagicMissile* pMagic= GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
+	ASpell_MagicMissile* pMagic = GetWorld()->SpawnActor<ASpell_MagicMissile>(MagicMissile, vPos, GetActorRotation(),
 		tParams);
 
 	//pMagic->SetMage(this);
@@ -282,13 +286,13 @@ void AGuardian_Mage::MagicMissaile()
 	State.iMP = 0.f;
 }
 
-void AGuardian_Mage::EraseTarget()
+void AGuardian_Magician::EraseTarget()
 {
 	Target = nullptr;
 	bTarget = false;
 }
 
-void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)
+void AGuardian_Magician::ChangeAnimation(EGuardianAnimType eType)
 {
 	if (IsValid(Animation))
 	{
@@ -296,7 +300,7 @@ void AGuardian_Mage::ChangeAnimation(EGuardianAnimType eType)
 	}
 }
 
-void AGuardian_Mage::Motion()
+void AGuardian_Magician::Motion()
 {
 	switch (eAI)
 	{

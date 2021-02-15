@@ -16,7 +16,7 @@ AMonster_Beholder::AMonster_Beholder()
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
-	GetClassAsset(UAnim_Beholder, AnimAsset,"AnimBlueprint'/Game/02Monster/01Beholder/Beholder_Anim.Beholder_Anim_C'");
+	GetClassAsset(UAnim_Beholder, AnimAsset, "AnimBlueprint'/Game/02Monster/01Beholder/Beholder_Anim.Beholder_Anim_C'");
 
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
@@ -54,6 +54,7 @@ void AMonster_Beholder::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 float AMonster_Beholder::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	State.iHP -= DamageAmount;
+
 	if (State.iHP <= 0)
 	{
 		State.iHP = 0;

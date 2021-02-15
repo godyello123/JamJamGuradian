@@ -2,6 +2,7 @@
 
 
 #include "Guardian_Archer.h"
+#include "Guardian_Hunter.h"
 #include "Summoner.h"
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
@@ -31,7 +32,7 @@ AGuardian_Archer::AGuardian_Archer()
 	if (ArrowAsset.Succeeded())
 		Arrow = ArrowAsset.Class;
 
-	SetState(2, 10, 10, 1.f);
+	SetState(2, 10, 1.5, 1.f);
 
 	//fAttackDist = 400.f;
 	bCritical = false;
@@ -43,7 +44,7 @@ AGuardian_Archer::AGuardian_Archer()
 
 	Bow = nullptr;
 
-	eAI = EARCHER_AI::Idle;
+	eAI = EGUARDIAN_AI::Idle;
 
 	m_eElementalType = EElementalType::ET_Normal;
 }
@@ -114,36 +115,55 @@ void AGuardian_Archer::LevelUP(ELevelUpType eType)
 void AGuardian_Archer::NormalLevelUp()
 {
 	Dead();
-	PrintViewport(2.f, FColor::Yellow, TEXT("NormalLevelUP"));
+	//이펙트 넣어주
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
 }
 
 void AGuardian_Archer::FireLevelUp()
 {
 	Dead();
+	//이펙트 넣어주기
 
-	PrintViewport(2.f, FColor::Yellow, TEXT("FireLevelUP"));
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
 }
 
 void AGuardian_Archer::IceLevelUp()
 {
 	Dead();
-	PrintViewport(2.f, FColor::Yellow, TEXT("IceLevelUP"));
+	//이펙트 넣어주기
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
+}
+
+void AGuardian_Archer::Dead()
+{
+	Super::Dead();
+	Bow->Destroy();
 }
 
 void AGuardian_Archer::Motion()
 {
 	switch (eAI)
 	{
-	case EARCHER_AI::Idle:
+	case EGUARDIAN_AI::Idle:
 		SearchTarget();
 		break;
-	case EARCHER_AI::Attack:
+	case EGUARDIAN_AI::Attack:
 		CheckDistance();
 		break;
-	case EARCHER_AI::Victory:
+	case EGUARDIAN_AI::Victory:
 		Victory();
 		break;
-	case EARCHER_AI::Groggy:
+	case EGUARDIAN_AI::Groggy:
 		Groggy();
 		break;
 	}
@@ -153,22 +173,34 @@ void AGuardian_Archer::Attack()
 {
 	if (State.iMP >= State.iMPMax)
 		ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	else
-		ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Archer::Skill()
 {
+	for (int32 i = -1; i < 2; ++i)
+	{
+		FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+		FRotator vRot = GetActorRotation();
+
+		vRot.Yaw += i * 30.f;
+
+		FActorSpawnParameters tParams;
+
+		tParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		tParams.Owner = this;
+
+		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
+			tParams);
+	}
+
+	State.iMP = 0;
 }
 
 void AGuardian_Archer::SearchTarget()
 {
-	if (Target || bTarget)
-	{
-		eAI = EARCHER_AI::Attack;
-		return;
-	} 
-
 	FVector StartLoc = GetActorLocation();
 
 	FVector TargetLoc = FVector(StartLoc.X + fAttackDist, StartLoc.Y + fAttackDist, StartLoc.Z + fAttackDist);
@@ -198,7 +230,7 @@ void AGuardian_Archer::SearchTarget()
 					Target = pTarget;
 					bTarget = true;
 
-					eAI = EARCHER_AI::Attack;
+					eAI = EGUARDIAN_AI::Attack;
 				}
 
 				return;
@@ -225,7 +257,7 @@ bool AGuardian_Archer::CheckDistance()
 	}
 	else
 	{
-		eAI = EARCHER_AI::Idle;
+		eAI = EGUARDIAN_AI::Idle;
 		return false;
 	}
 
@@ -275,7 +307,13 @@ void AGuardian_Archer::MultiShot()
 	State.iMP = 0;
 }
 
-void AGuardian_Archer::SetAI(EARCHER_AI _eAI)
+void AGuardian_Archer::EraseTarget()
+{
+	Target = nullptr;
+	bTarget = false;
+}
+
+void AGuardian_Archer::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
 }

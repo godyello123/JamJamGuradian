@@ -19,7 +19,7 @@ void ATileManager::BeginPlay()
 {
 	Super::BeginPlay();
 	CreateTile();
-	//ShowTileCount(5);
+	ShowTileCount(5);
 
 }
 
@@ -39,7 +39,8 @@ void ATileManager::CreateTile()
 			FVector vLoc = FVector((j*170),(i * 170), 20.f);
 			FRotator vRot = FRotator::ZeroRotator;
 			ATile_SpawnGuardian* pTile = GetWorld()->SpawnActor< ATile_SpawnGuardian>(vLoc, vRot);
-			//pTile->EnableTile(false);
+			pTile->EnableTile(false);
+			int32 iRand = FMath::RandRange(0, 2);
 			TileArray.Add(pTile);
 		}
 	}

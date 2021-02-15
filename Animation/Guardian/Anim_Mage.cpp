@@ -38,7 +38,7 @@ void UAnim_Mage::AnimNotify_Mage_Skill()
 	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(TryGetPawnOwner());
 
 	if (IsValid(pOwner))
-		pOwner->MagicMissaile();
+		pOwner->Skill();
 }
 
 void UAnim_Mage::AnimNotify_Mage_Skill_End()
@@ -47,7 +47,7 @@ void UAnim_Mage::AnimNotify_Mage_Skill_End()
 
 	if (IsValid(pOwner))
 	{
-		pOwner->SetAI(EMAGE_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }
@@ -68,7 +68,7 @@ void UAnim_Mage::AnimNotify_Mage_Attack_End()
 
 	if (IsValid(pOwner))
 	{
-		pOwner->SetAI(EMAGE_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }

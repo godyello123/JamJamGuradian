@@ -38,6 +38,7 @@ AMonster::AMonster()
 	m_fTemperature = 3000.f;
 	m_fBurnTime = 2.f;
 	bGroggy = false;
+	bBurn = false;
 }
 
 void AMonster::SetGroggyTime(float fTime)
@@ -101,6 +102,15 @@ void AMonster::Dead()
 {
 	bDead = true;
 	SetBurnEffectMaterial();
+	CreateGem(State.iHPMax);
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+
+	GetMesh()->SetCollisionProfileName(TEXT("Pawn"));
+}
+
+void AMonster::Burn()
+{
+	bBurn = true;
 }
 
 bool AMonster::IsGroggy()
@@ -152,11 +162,9 @@ void AMonster::Tick(float DeltaTime)
 		SetBurn(m_fBurn);
 		if (m_fBurn >= m_fBurnTime)
 		{
-			CreateGem(State.iHPMax);
 			Destroy();
 		}
 	}
-
 }
 
 // Called to bind functionality to input

@@ -2,35 +2,36 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "Guardian.h"
-#include "../../Spell/Spell_MultiShot.h"
-#include "Guardian_Hunter.generated.h"
+#include "Guardian_Ranger.generated.h"
 
 /**
  * 
  */
+ 
 
 UCLASS()
-class MPSG_API AGuardian_Hunter : public AGuardian
+class MPSG_API AGuardian_Ranger : public AGuardian
 {
 	GENERATED_BODY()
 
 public:
-	AGuardian_Hunter();
+	AGuardian_Ranger();
 
 protected:
-	class UAnim_Hunter* Animation;
+	class UAnim_Ranger* Animation;
 
 protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EGUARDIAN_AI		eAI;
-	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<ASpell_MultiShot> Arrow;
+	//UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//	TSubclassOf<ASpell_MultiShot> Arrow;
 	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectile> ProjectileAsset;
-	
+
 	EElementalType m_eElemental;
 
 public:
@@ -76,5 +77,5 @@ public:
 	bool CheckDistance();
 	void AttackToTarget();
 	void MultiShot();
-	
+
 };

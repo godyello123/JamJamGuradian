@@ -28,7 +28,7 @@ AGuardian_Knight::AGuardian_Knight()
 	if (EffectAsset.Succeeded())
 		Effect = EffectAsset.Class;
 
-	SetState(5, 10, 10, 1.f);
+	SetState(5, 10, 2, 1.f);
 
 	//fAttackDist = 10000.f;
 	bCritical = false;
@@ -41,17 +41,17 @@ AGuardian_Knight::AGuardian_Knight()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-
+	GetMesh()->SetRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
 	Sword = nullptr;
 	Shield = nullptr;
 	
-	eAI = EKNIGHT_AI::Idle;
+	eAI = EGUARDIAN_AI::Idle;
 
 	//Tags.Add("kngiht");
 
 }
 
-void AGuardian_Knight::SetAI(EKNIGHT_AI _eAI)
+void AGuardian_Knight::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
 }
@@ -79,14 +79,39 @@ void AGuardian_Knight::LevelUP(ELevelUpType eType)
 
 void AGuardian_Knight::NormalLevelUp()
 {
+	Dead();
+	//이펙트 넣어주기
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
 }
 
 void AGuardian_Knight::FireLevelUp()
 {
+	Dead();
+	//이펙트 넣어주기
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
 }
 
 void AGuardian_Knight::IceLevelUp()
 {
+	Dead();
+	//이펙트 넣어주기
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
+}
+
+void AGuardian_Knight::Dead()
+{
+	Super::Dead();
+	Sword->Destroy();
+	Shield->Destroy();
 }
 
 void AGuardian_Knight::BeginPlay()
@@ -98,7 +123,8 @@ void AGuardian_Knight::BeginPlay()
 	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
 	LoadShield(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));
 	Shield->SetActorRotation(FRotator(0.f, -20.f, 0.f));
-
+	Sword->SetActorRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
+	Shield->SetActorRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
 	FString Name = GetDebugName(this);
 
 	
@@ -172,16 +198,16 @@ void AGuardian_Knight::Motion()
 {
 	switch (eAI)
 	{
-	case EKNIGHT_AI::Idle:
+	case EGUARDIAN_AI::Idle:
 		SearchTarget();
 		break;
-	case EKNIGHT_AI::Attack:
+	case EGUARDIAN_AI::Attack:
 		CheckDistance();
 		break;
-	case EKNIGHT_AI::Victory:
+	case EGUARDIAN_AI::Victory:
 		Victory();
 		break;
-	case EKNIGHT_AI::Groggy:
+	case EGUARDIAN_AI::Groggy:
 		Groggy();
 		break;
 	}
@@ -191,25 +217,19 @@ void AGuardian_Knight::Attack()
 {
 	if (State.iMP >= State.iMPMax)
 		ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	else
-		ChangeAnimation(EGuardianAnimType::GAT_Attack);
+	//else
+	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 
 	//ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Knight::Skill()
 {
-
+	PowerStrike();
 }
 
 void AGuardian_Knight::SearchTarget()
 {
-	if (Target || bTarget)
-	{
-		eAI = EKNIGHT_AI::Attack;
-		return;
-	}
-
 	FVector StartLoc = GetActorLocation();
 
 	FVector TargetLoc = FVector(StartLoc.X + fAttackDist, StartLoc.Y + fAttackDist, StartLoc.Z + fAttackDist);
@@ -239,7 +259,7 @@ void AGuardian_Knight::SearchTarget()
 					Target = pTarget;
 					bTarget = true;
 
-					eAI = EKNIGHT_AI::Attack;
+					eAI = EGUARDIAN_AI::Attack;
 				}
 
 				return;
@@ -292,7 +312,7 @@ bool AGuardian_Knight::CheckDistance()
 	}
 	else
 	{
-		eAI = EKNIGHT_AI::Idle;
+		eAI = EGUARDIAN_AI::Idle;
 		return false;
 	}
 
@@ -341,7 +361,8 @@ void AGuardian_Knight::PowerStrike()
 			Target = nullptr;
 			bTarget = false;
 		}
-		//State.iMP = 0;
+
+		State.iMP = 0;
 
 	}
 

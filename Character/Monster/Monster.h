@@ -121,11 +121,14 @@ public:
 
 protected:
 	bool bDead;
+	bool bBurn;
 	bool bGroggy;
 
 public:
 	bool IsDead();
 	void Dead();
+public:
+	void Burn();
 
 public:
 	bool IsGroggy();

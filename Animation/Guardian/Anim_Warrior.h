@@ -37,7 +37,7 @@ public:
 	UFUNCTION()
 		void AnimNotify_Warrior_Attack_End();
 	UFUNCTION()
-		void AnimNotify_Warrior_Skill();
+		void AnimNotify_Knight_Skill();
 	UFUNCTION()
-		void AnimNotify_Warrior_Skill_End();
+		void AnimNotify_Knight_Skill_End();
 };

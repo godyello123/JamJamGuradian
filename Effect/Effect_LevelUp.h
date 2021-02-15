@@ -16,6 +16,10 @@ class MPSG_API AEffect_LevelUp : public AEffect
 public:
 	AEffect_LevelUp();
 
+private:
+	float m_fTime;
+	float m_fMaxTime;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

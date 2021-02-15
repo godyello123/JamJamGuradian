@@ -2,7 +2,7 @@
 
 
 #include "Spell_MagicMissile.h"
-#include "../Character/Guardian/Guardian_Mage.h"
+#include "../Character/Guardian/Guardian_Magician.h"
 
 ASpell_MagicMissile::ASpell_MagicMissile()
 {
@@ -77,15 +77,18 @@ void ASpell_MagicMissile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedC
 	//몬스터 데미지 주기
 	FDamageEvent DmgEvent;
 
-	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(GetOwner());
+	AGuardian_Magician* pOwner = Cast<AGuardian_Magician>(GetOwner());
 
 	float fDmg = pOwner->GetState().Damage * 2.5;
 
 	if (pOwner)
 	{
-		OtherActor->TakeDamage(fDmg, DmgEvent, pOwner->GetController(), this);
+		float fHP=OtherActor->TakeDamage(fDmg, DmgEvent, pOwner->GetController(), this);
+		CreateEffect();
+		if (fHP <= 0.f)
+		{
+			pOwner->EraseTarget();
+		}
 	}
-
-	CreateEffect();
 	Destroy();
 }

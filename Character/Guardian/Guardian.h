@@ -8,6 +8,16 @@
 #include "GameFramework/Character.h"
 #include "Guardian.generated.h"
 
+UENUM(BlueprintType, Meta = (Bitflags))
+enum class EGUARDIAN_AI : uint8
+{
+	Idle,
+	Attack,
+	Groggy,
+	Victory
+};
+
+
 
 USTRUCT(Atomic, BlueprintType)
 struct FGuardianState
@@ -84,7 +94,7 @@ protected:
 	float m_fDeadTime;
 
 public:
-	void Dead();
+	virtual void Dead();
 
 public:
 	AActor* GetTarget() const;

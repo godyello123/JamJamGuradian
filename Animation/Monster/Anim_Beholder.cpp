@@ -34,3 +34,11 @@ void UAnim_Beholder::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 }
+
+void UAnim_Beholder::AnimNotify_Beholder_Dead()
+{
+}
+
+void UAnim_Beholder::AnimNotify_Beholder_Burn()
+{
+}

@@ -72,11 +72,7 @@ void ASummonerController::PastProcess()
 			}
 			else if (ClickedActor->Tags[0] == "Tile")
 			{
-				//기존에 켜져있던 ui 안보이기
-				ATile_SpawnGuardian* pTile = Cast<ATile_SpawnGuardian>(ClickedActor);
 
-				if(!pTile->IsClick())
-					pTile->ShowWidget();
 			}
 		}
 	}
@@ -101,10 +97,10 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 			}
 			else if (ClickedActor->Tags[0] == "Tile")
 			{
-				ATile_SpawnGuardian* pTile = Cast<ATile_SpawnGuardian>(ClickedActor);
+				//ATile_SpawnGuardian* pTile = Cast<ATile_SpawnGuardian>(ClickedActor);
 
-				if (!pTile->IsClick())
-					pTile->ShowWidget();
+				//if (!pTile->IsClick())
+				//	pTile->ShowWidget();
 			}
 		}
 	}

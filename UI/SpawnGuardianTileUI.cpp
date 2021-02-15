@@ -68,7 +68,7 @@ void USpawnGuardianTileUI::KnightButtonCallback()
 	FRotator vRot = Owner->GetActorRotation();
 	AGuardian_Knight* Knight = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
 	
-	Owner->Click(true);
+	//Owner->Click(true);
 }
 
 void USpawnGuardianTileUI::MageButtonCallback()
@@ -82,7 +82,7 @@ void USpawnGuardianTileUI::MageButtonCallback()
 	FRotator vRot = Owner->GetActorRotation();
 	AGuardian_Mage* Knight = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
 
-	Owner->Click(true);
+	//Owner->Click(true);
 }
 
 void USpawnGuardianTileUI::ArcherButtonCallback()
@@ -96,7 +96,7 @@ void USpawnGuardianTileUI::ArcherButtonCallback()
 	FRotator vRot = Owner->GetActorRotation();
 	AGuardian_Archer* Knight = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
 
-	Owner->Click(true);
+	//Owner->Click(true);
 }
 
 void USpawnGuardianTileUI::WarriorButtonCallback()
@@ -110,5 +110,5 @@ void USpawnGuardianTileUI::WarriorButtonCallback()
 	FRotator vRot = Owner->GetActorRotation();
 	AGuardian_Warrior* pKnight = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
 
-	Owner->Click(true);
+	//Owner->Click(true);
 }

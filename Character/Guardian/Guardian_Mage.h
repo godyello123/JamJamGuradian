@@ -11,14 +11,7 @@
 /**
  * 
  */
-UENUM(BlueprintType, Meta = (Bitflags))
-enum class EMAGE_AI : uint8
-{
-	Idle,
-	Attack,
-	Groggy,
-	Victory
-};
+
 
 UCLASS()
 class MPSG_API AGuardian_Mage : public AGuardian
@@ -35,12 +28,12 @@ protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Wand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EMAGE_AI		eAI;
+		EGUARDIAN_AI		eAI;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_MagicMissile> MagicMissile;
 
 public:
-	void SetAI(EMAGE_AI eAI);
+	void SetAI(EGUARDIAN_AI eAI);
 
 protected:
 	void LoadWand(const FString& strSocket, const FString& strMeshPath);
@@ -63,15 +56,15 @@ public:
 public:
 	virtual void Groggy();
 	virtual void Victory();
-	virtual void LevelUP(ELevelUpType eType);
 	virtual void NormalLevelUp();
 	virtual void FireLevelUp();
 	virtual void IceLevelUp();
+	virtual void Dead();
+	virtual void Skill();
 
 protected:
 	virtual void Motion();
 	virtual void Attack();
-	virtual void Skill();
 	virtual void SearchTarget();
 
 public:
@@ -80,6 +73,9 @@ public:
 
 public:
 	void MagicMissaile();
+
+public:
+	void EraseTarget();
 
 
 };

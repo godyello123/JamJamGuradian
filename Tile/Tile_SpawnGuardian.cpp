@@ -4,6 +4,11 @@
 #include "Tile_SpawnGuardian.h"
 #include "../UI/SpawnGuardianTileUI.h"
 #include "Components/WidgetComponent.h"
+#include "../Character/Guardian/Guardian_Archer.h"
+#include "../Character/Guardian/Guardian_Knight.h"
+#include "../Character/Guardian/Guardian_Mage.h"
+#include "../Character/Guardian/Guardian_Magician.h"
+#include "../Character/Guardian/Guardian_Warrior.h"
 
 
 
@@ -14,7 +19,6 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	TICKON;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	bClicked = false;
 	Elemental = EElementalType::ET_Normal;
 
 	UStaticMesh* Asset = LoadObject<UStaticMesh>(nullptr, TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
@@ -33,20 +37,7 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 	
 	Mesh->SetMaterial(0, mtrl);
 
-	UIComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
-
-	UIComponent->SetupAttachment(Mesh);
-
-	UIComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	UIComponent->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
-	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
-
 	bShowTile = false;
-
-	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/SpawnTile_UI.SpawnTile_UI_C'");
-
-	if (WidgetClass.Succeeded())
-		UIComponent->SetWidgetClass(WidgetClass.Class);
 
 	Tags.Add("Tile");
 
@@ -56,16 +47,6 @@ ATile_SpawnGuardian::ATile_SpawnGuardian()
 bool ATile_SpawnGuardian::IsShow()
 {
 	return bShowTile;
-}
-
-void ATile_SpawnGuardian::Click(bool _Click)
-{
-	bClicked = _Click;
-}
-
-bool ATile_SpawnGuardian::IsClick() const
-{
-	return bClicked;
 }
 
 void ATile_SpawnGuardian::SetElementalType(EElementalType eType)
@@ -78,28 +59,39 @@ EElementalType ATile_SpawnGuardian::GetElementalType() const
 	return Elemental;
 }
 
-void ATile_SpawnGuardian::SpawnGuardian(EGuardianType eType)
+void ATile_SpawnGuardian::SpawnGuardian(int32 iType)
 {
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
+	if (iType == 0)
+	{
+		FVector vLoc = GetActorLocation();
+		vLoc.Z += 100.f;
+		FRotator vRot = GetActorRotation();
+		AGuardian_Archer* Knight = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
+	}
+	else if (iType == 1)
+	{
+		FVector vLoc = GetActorLocation();
+		vLoc.Z += 100.f;
+		FRotator vRot = GetActorRotation();
+		AGuardian_Magician* Knight = GetWorld()->SpawnActor<AGuardian_Magician>(vLoc, vRot);
 
-	SetElementalType(EElementalType::ET_Normal);
+	}
+	else if (iType == 2)
+	{
+		FVector vLoc = GetActorLocation();
+		vLoc.Z += 100.f;
+		FRotator vRot = GetActorRotation();
+		AGuardian_Warrior* Knight = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
+
+	}
+	else
+		return;
 }
 
 // Called when the game starts or when spawned
 void ATile_SpawnGuardian::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SpawnUI = Cast< USpawnGuardianTileUI>(UIComponent->GetUserWidgetObject());
-	SpawnUI->SetOwner(this);
-	//SpawnUI->AddToViewport();
-	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
-
-//	UMaterialInstance
-	//UMaterialInterface* pMaterial=GetObjectAsset(UMaterialInterface,)
-	//Mesh->SetMaterial(0,)
-
 }
 
 // Called every frame
@@ -107,22 +99,6 @@ void ATile_SpawnGuardian::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void ATile_SpawnGuardian::ShowUI(bool bShow)
-{
-}
-
-void ATile_SpawnGuardian::ShowWidget()
-{
-	switch (SpawnUI->GetVisibility())
-	{
-	case ESlateVisibility::Visible:
-		SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
-		break;
-	case ESlateVisibility::Collapsed:
-		SpawnUI->SetVisibility(ESlateVisibility::Visible);
-	}
 }
 
 void ATile_SpawnGuardian::EnableTile(bool bEnable)
@@ -134,7 +110,11 @@ void ATile_SpawnGuardian::EnableTile(bool bEnable)
 	if (!bShowTile)
 		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	else
+	{
 		Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	
+		int32 iRand = FMath::RandRange(0, 2);
+		SpawnGuardian(iRand);
+	}
+
 }
 

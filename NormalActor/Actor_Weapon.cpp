@@ -43,3 +43,8 @@ void AActor_Weapon::LoadMesh(const FString& strPath)
 
 }
 
+void AActor_Weapon::SetScale(FVector & vScale)
+{
+	Mesh->SetRelativeScale3D(vScale);
+}
+

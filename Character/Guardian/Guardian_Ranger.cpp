@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Guardian_Hunter.h"
 #include "Guardian_Ranger.h"
+#include "../../Animation/Guardian/Anim_Ranger.h"
 #include "Summoner.h"
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
@@ -10,24 +10,24 @@
 #include "../../Controller/SummonerController.h"
 #include "../../GameMode/DefenstPlayerState.h"
 
-AGuardian_Hunter::AGuardian_Hunter()
+AGuardian_Ranger::AGuardian_Ranger()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/CountSK.CountSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/EngineerSK.EngineerSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
 
-	GetClassAsset(UAnim_Hunter, AnimData, "AnimBlueprint'/Game/01Guardian/02Archer/Hunter_Anim.Hunter_Anim_C'");
+	GetClassAsset(UAnim_Ranger, AnimData, "AnimBlueprint'/Game/01Guardian/02Archer/Ranger_Anim.Ranger_Anim_C'");
 
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
-	GetClassAsset(ASpell_MultiShot, ArrowAsset, "Blueprint'/Game/05Spell/Multishot_BP.Multishot_BP_C'");
+	/*GetClassAsset(ASpell_MultiShot, ArrowAsset, "Blueprint'/Game/05Spell/Multishot_BP.Multishot_BP_C'");
 
 	if (ArrowAsset.Succeeded())
-		Arrow = ArrowAsset.Class;
+		Arrow = ArrowAsset.Class;*/
 
 	SetState(2, 10, 1.5, 1.f);
 
@@ -38,7 +38,7 @@ AGuardian_Hunter::AGuardian_Hunter()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-	GetMesh()->SetRelativeScale3D(FVector(1.15f, 1.15f, 1.15f));
+	GetMesh()->SetRelativeScale3D(FVector(1.3f, 1.3f, 1.3f));
 
 	Bow = nullptr;
 
@@ -47,7 +47,7 @@ AGuardian_Hunter::AGuardian_Hunter()
 	m_eElementalType = EElementalType::ET_Normal;
 }
 
-void AGuardian_Hunter::SetElemental(EElementalType eType)
+void AGuardian_Ranger::SetElemental(EElementalType eType)
 {
 	m_eElemental = eType;
 
@@ -57,26 +57,26 @@ void AGuardian_Hunter::SetElemental(EElementalType eType)
 	{
 
 	}
-		break;
+	break;
 	case EElementalType::ET_Fire:
 	{
 
 	}
-		break;
+	break;
 	case EElementalType::ET_Ice:
 	{
 
 	}
-		break;
+	break;
 	}
 }
 
-void AGuardian_Hunter::SetAI(EGUARDIAN_AI _eAI)
+void AGuardian_Ranger::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
 }
 
-void AGuardian_Hunter::LoadBow(const FString & strSocket, const FString & strMeshPath)
+void AGuardian_Ranger::LoadBow(const FString & strSocket, const FString & strMeshPath)
 {
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride =
@@ -91,19 +91,19 @@ void AGuardian_Hunter::LoadBow(const FString & strSocket, const FString & strMes
 	Bow->LoadMesh(strMeshPath);
 }
 
-void AGuardian_Hunter::ChangeAnimation(EGuardianAnimType eType)
+void AGuardian_Ranger::ChangeAnimation(EGuardianAnimType eType)
 {
 	if (IsValid(Animation))
 		Animation->ChangeAnimType(eType);
 }
 
-void AGuardian_Hunter::BeginPlay()
+void AGuardian_Ranger::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Animation = Cast<UAnim_Hunter>(GetMesh()->GetAnimInstance());
+	Animation = Cast<UAnim_Ranger>(GetMesh()->GetAnimInstance());
 
-	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
+	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow02SM.Bow02SM'"));
 
 	SetFillMP(0.3);
 
@@ -114,10 +114,10 @@ void AGuardian_Hunter::BeginPlay()
 
 	//State.AttackSpeed = m_iDmgLevel + (m_iDmgLevel * 1);
 	State.Damage = State.Damage + (m_iDmgLevel * 5);
-	Bow->SetActorRelativeScale3D(FVector(1.15f, 1.15f, 1.15f));
+	Bow->SetActorRelativeScale3D(FVector(1.3f, 1.3f, 1.3f));
 }
 
-void AGuardian_Hunter::Tick(float DeltaTime)
+void AGuardian_Ranger::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -134,31 +134,31 @@ void AGuardian_Hunter::Tick(float DeltaTime)
 	}
 }
 
-void AGuardian_Hunter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
+void AGuardian_Ranger::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-float AGuardian_Hunter::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+float AGuardian_Ranger::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	return 0.0f;
 }
 
-void AGuardian_Hunter::Groggy()
+void AGuardian_Ranger::Groggy()
 {
 	ChangeAnimation(EGuardianAnimType::GAT_Groggy);
 }
 
-void AGuardian_Hunter::Victory()
+void AGuardian_Ranger::Victory()
 {
 	ChangeAnimation(EGuardianAnimType::GAT_Victory);
 }
 
-void AGuardian_Hunter::LevelUP(ELevelUpType eType)
+void AGuardian_Ranger::LevelUP(ELevelUpType eType)
 {
 }
 
-void AGuardian_Hunter::NormalLevelUp()
+void AGuardian_Ranger::NormalLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -166,10 +166,9 @@ void AGuardian_Hunter::NormalLevelUp()
 	FVector vLoc = GetActorLocation();
 	FRotator vRot = GetActorRotation();
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
-	AGuardian_Ranger* pRanger = GetWorld()->SpawnActor<AGuardian_Ranger>(vLoc, vRot);
 }
 
-void AGuardian_Hunter::FireLevelUp()
+void AGuardian_Ranger::FireLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -179,7 +178,7 @@ void AGuardian_Hunter::FireLevelUp()
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
 }
 
-void AGuardian_Hunter::IceLevelUp()
+void AGuardian_Ranger::IceLevelUp()
 {
 	Dead();
 	//이펙트 넣어주기
@@ -189,13 +188,13 @@ void AGuardian_Hunter::IceLevelUp()
 	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
 }
 
-void AGuardian_Hunter::Dead()
+void AGuardian_Ranger::Dead()
 {
 	Super::Dead();
 	Bow->Destroy();
 }
 
-void AGuardian_Hunter::Motion()
+void AGuardian_Ranger::Motion()
 {
 	switch (eAI)
 	{
@@ -214,19 +213,17 @@ void AGuardian_Hunter::Motion()
 	}
 }
 
-void AGuardian_Hunter::Attack()
+void AGuardian_Ranger::Attack()
 {
 	if (State.iMP >= State.iMPMax)
 		ChangeAnimation(EGuardianAnimType::GAT_Skill);
-	//else
-	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
-void AGuardian_Hunter::Skill()
+void AGuardian_Ranger::Skill()
 {
 }
 
-void AGuardian_Hunter::SearchTarget()
+void AGuardian_Ranger::SearchTarget()
 {
 	FVector StartLoc = GetActorLocation();
 
@@ -266,7 +263,7 @@ void AGuardian_Hunter::SearchTarget()
 	}
 }
 
-bool AGuardian_Hunter::CheckDistance()
+bool AGuardian_Ranger::CheckDistance()
 {
 	if (Target && bTarget)
 	{
@@ -291,47 +288,10 @@ bool AGuardian_Hunter::CheckDistance()
 	return false;
 }
 
-void AGuardian_Hunter::AttackToTarget()
+void AGuardian_Ranger::AttackToTarget()
 {
-	if (bTarget&&Target)
-	{
-		AController* AI = GetController<AController>();
-
-		FDamageEvent DmgEvent;
-
-		//속성 별로 특성 추가 해주기
-
-		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
-
-		if (fHp <= 0.f)
-		{
-			Target = nullptr;
-			bTarget = false;
-		}
-	}
 }
 
-void AGuardian_Hunter::MultiShot()
+void AGuardian_Ranger::MultiShot()
 {
-	for (int32 i = -2; i < 3; ++i)
-	{
-		FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
-
-		FRotator vRot = GetActorRotation();
-
-		vRot.Yaw += i * 5.f;
-
-		FActorSpawnParameters tParams;
-
-		tParams.SpawnCollisionHandlingOverride =
-			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		tParams.Owner = this;
-
-		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
-			tParams);
-		//속성 별로 파티클 다른거 넣어주기
-	}
-
-	State.iMP = 0;
 }

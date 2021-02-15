@@ -49,28 +49,28 @@ void UAnim_Warrior::AnimNotify_Warrior_Attack_End()
 
 	if (IsValid(pOwner))
 	{
-		pOwner->SetAI(EWARRIOR_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }
 
-void UAnim_Warrior::AnimNotify_Warrior_Skill()
+void UAnim_Warrior::AnimNotify_Knight_Skill()
 {
 	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
 
 	if (IsValid(pOwner))
 	{
-		pOwner->CrushAttack();
+		pOwner->Skill();
 	}
 }
 
-void UAnim_Warrior::AnimNotify_Warrior_Skill_End()
+void UAnim_Warrior::AnimNotify_Knight_Skill_End()
 {
 	AGuardian_Warrior* pOwner = Cast<AGuardian_Warrior>(TryGetPawnOwner());
 
 	if (IsValid(pOwner))
 	{
-		pOwner->SetAI(EWARRIOR_AI::Idle);
+		pOwner->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }

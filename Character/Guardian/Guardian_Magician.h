@@ -2,45 +2,40 @@
 
 #pragma once
 
+
 #include "Guardian.h"
-#include "../../Spell/Spell_MultiShot.h"
-#include "Guardian_Hunter.generated.h"
+#include "../../Spell/Spell_MagicMissile.h"
+#include "Guardian_Magician.generated.h"
 
 /**
  * 
  */
 
+
 UCLASS()
-class MPSG_API AGuardian_Hunter : public AGuardian
+class MPSG_API AGuardian_Magician : public AGuardian
 {
 	GENERATED_BODY()
 
 public:
-	AGuardian_Hunter();
+	AGuardian_Magician();
 
 protected:
-	class UAnim_Hunter* Animation;
+	class UAnim_Magician* Animation;
 
 protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class AActor_Weapon* Bow;
+		class AActor_Weapon* Wand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EGUARDIAN_AI		eAI;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<ASpell_MultiShot> Arrow;
-	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AProjectile> ProjectileAsset;
-	
-	EElementalType m_eElemental;
+		TSubclassOf<ASpell_MagicMissile> MagicMissile;
 
 public:
-	void SetElemental(EElementalType eType);
-
-public:
-	void SetAI(EGUARDIAN_AI _eAI);
+	void SetAI(EGUARDIAN_AI eAI);
 
 protected:
-	void LoadBow(const FString& strSocket, const FString& strMeshPath);
+	void LoadWand(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	void ChangeAnimation(EGuardianAnimType eType);
@@ -67,7 +62,7 @@ public:
 	virtual void Dead();
 	virtual void Skill();
 
-public:
+protected:
 	virtual void Motion();
 	virtual void Attack();
 	virtual void SearchTarget();
@@ -75,6 +70,11 @@ public:
 public:
 	bool CheckDistance();
 	void AttackToTarget();
-	void MultiShot();
+
+public:
+	void MagicMissaile();
+
+public:
+	void EraseTarget();
 	
 };

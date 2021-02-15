@@ -58,7 +58,7 @@ void UAnim_Archer::AnimNotify_Bow_Attack_End()
 	{
 		PrintViewport(5.f, FColor::Red, TEXT("Archer Attack End"));
 		//Archer->AttackEnable(false);
-		Archer->SetAI(EARCHER_AI::Idle);
+		Archer->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }
@@ -70,7 +70,7 @@ void UAnim_Archer::AnimNotify_Bow_Skill()
 
 	if (IsValid(Archer))
 	{
-		Archer->MultiShot();
+		Archer->Skill();
 	}
 }
 
@@ -80,7 +80,7 @@ void UAnim_Archer::AnimNotify_Bow_Skill_End()
 
 	if (IsValid(Archer))
 	{
-		Archer->SetAI(EARCHER_AI::Idle);
+		Archer->SetAI(EGUARDIAN_AI::Idle);
 		AnimType = (uint8)EGuardianAnimType::GAT_Idle;
 	}
 }

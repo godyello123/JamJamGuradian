@@ -2,20 +2,19 @@
 
 #pragma once
 
-
 #include "../AnimBase.h"
-#include "Anim_Hunter.generated.h"
+#include "Anim_Ranger.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MPSG_API UAnim_Hunter : public UAnimBase
+class MPSG_API UAnim_Ranger : public UAnimBase
 {
 	GENERATED_BODY()
 
 public:
-	UAnim_Hunter();
+	UAnim_Ranger();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true", Bitmask, BitmaskEnum = "EGuardianAnimType"))
@@ -32,11 +31,10 @@ public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 
-
 public:
 	UFUNCTION()
-		void AnimNotify_Bow_Skill();
+		void AnimNotify_Mage_Skill();
 	UFUNCTION()
-		void AnimNotify_Bow_Skill_End();
+		void AnimNotify_Mage_Skill_End();
 	
 };

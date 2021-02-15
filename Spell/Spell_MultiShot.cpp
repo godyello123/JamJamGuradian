@@ -3,6 +3,7 @@
 
 #include "Spell_MultiShot.h"
 #include "../Character/Guardian/Guardian_Archer.h"
+#include "../Character/Monster/Monster.h"
 
 ASpell_MultiShot::ASpell_MultiShot()
 {
@@ -75,10 +76,14 @@ void ASpell_MultiShot::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComp
 	AGuardian_Archer* pArcher = Cast<AGuardian_Archer>(GetOwner());
 
 	if (IsValid(pArcher))
-	{
-		//pArcher->Test();
+	{	
+		float fHp = OtherActor->TakeDamage(GetDamage()*2.f, DmgEvent, pArcher->GetController(), this);
 
-		OtherActor->TakeDamage(GetDamage()*2.f, DmgEvent, pArcher->GetController(), this);
+		if (fHp <= 0.f)
+		{
+			pArcher->EraseTarget();
+		}
+
 		CreateEffect();
 	}
 	

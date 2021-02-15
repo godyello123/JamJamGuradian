@@ -4,6 +4,7 @@
 
 #include "../00Base/GameInfo.h"
 #include "GameFramework/Actor.h"
+#include "../Effect/Effect_LevelUp.h"
 #include "Blueprint/UserWidget.h"
 #include "Tile_SpawnGuardian.generated.h"
 
@@ -18,14 +19,11 @@ public:
 public:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
-	UPROPERTY(Category = MouseClick, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		bool bClicked;
+
 	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		EElementalType Elemental;
-	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
-	class UWidgetComponent* UIComponent;
-
-	class USpawnGuardianTileUI* SpawnUI;
+	UPROPERTY(Category=Effect,VisibleAnywhere,BlueprintReadOnly,meta=(AllowPrivateAccess="true"))
+		TSubclassOf<AEffect_LevelUp> Spawn_EffectAsset;
 
 private:
 	bool bShowTile;
@@ -33,18 +31,13 @@ private:
 public:
 	bool IsShow();
 
-
-public:
-	void Click(bool _Click);
-	bool IsClick() const;
-
 public:
 	void SetElementalType(EElementalType eType);
 	EElementalType GetElementalType() const;
 
 
 public:
-	void SpawnGuardian(EGuardianType eType);
+	void SpawnGuardian(int32 iType);
 
 protected:
 	// Called when the game starts or when spawned
@@ -53,10 +46,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-public:
-	void ShowUI(bool bShow);
-	void ShowWidget();
 
 public:
 	void EnableTile(bool bEnable);

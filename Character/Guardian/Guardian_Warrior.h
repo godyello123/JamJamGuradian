@@ -4,19 +4,12 @@
 
 
 #include "Guardian.h"
+#include "../../Effect/Effect.h"
 #include "Guardian_Warrior.generated.h"
 
 /**
  * 
  */
-UENUM(BlueprintType, Meta = (Bitflags))
-enum class EWARRIOR_AI : uint8
-{
-	Idle,
-	Attack,
-	Groggy,
-	Victory
-};
 
 UCLASS()
 class MPSG_API AGuardian_Warrior : public AGuardian
@@ -31,16 +24,18 @@ protected:
 
 protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class AActor_Weapon* TwoHandSword;
+		class AActor_Weapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EWARRIOR_AI 	eAI;
+		EGUARDIAN_AI 	eAI;
+	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AEffect> Effect;
 
 public:
-	void SetAI(EWARRIOR_AI _eAI);
+	void SetAI(EGUARDIAN_AI _eAI);
 
 
 protected:
-	void LoadTwohandSword(const FString& strSocket, const FString& strMeshPath);
+	void LoadSword(const FString& strSocket, const FString& strMeshPath);
 
 public:
 	void ChangeAnimation(EGuardianAnimType eType);
@@ -64,12 +59,15 @@ public:
 	virtual void NormalLevelUp();
 	virtual void FireLevelUp();
 	virtual void IceLevelUp();
+	virtual void Dead();
+	virtual void Skill();
 
 protected:
 	virtual void Motion();
 	virtual void Attack();
-	virtual void Skill();
 	virtual void SearchTarget();
+
+public:
 
 public:
 	bool CheckDistance();
@@ -77,4 +75,7 @@ public:
 
 public:
 	void CrushAttack();
+
+private:
+	void CreateEffect();
 };

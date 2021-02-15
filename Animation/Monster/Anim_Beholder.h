@@ -30,4 +30,11 @@ public:
 public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
+public:
+	UFUNCTION()
+		void AnimNotify_Beholder_Dead();
+	UFUNCTION()
+		void AnimNotify_Beholder_Burn();
+
 };

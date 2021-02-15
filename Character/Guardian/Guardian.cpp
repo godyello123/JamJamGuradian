@@ -47,6 +47,27 @@ AGuardian::AGuardian()
 
 	if (WidgetClass.Succeeded())
 		UIComponent->SetWidgetClass(WidgetClass.Class);
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Guardian"));
+
+	GetMesh()->SetCollisionProfileName(TEXT("Guardian"));
+
+	GetClassAsset(AEffect_LevelUp, EffectAsset1, "Blueprint'/Game/06Effect/BP_Effect_L_Up.BP_Effect_L_Up_C'");
+
+	if (EffectAsset1.Succeeded())
+		LightningLevelUp_EffectAsset = EffectAsset1.Class;
+
+	GetClassAsset(AEffect_LevelUp, EffectAsset2, "Blueprint'/Game/06Effect/BP_L_Up2.BP_L_Up2_C'");
+
+	if (EffectAsset2.Succeeded())
+		FireLevelUp_EffectAsset = EffectAsset2.Class;
+
+	GetClassAsset(AEffect_LevelUp, EffectAsset3, "Blueprint'/Game/06Effect/BP_L_Up3.BP_L_Up3_C'");
+
+	if (EffectAsset1.Succeeded())
+		IceLevelUp_EffectAsset = EffectAsset3.Class;
+
+
 }
 
 AActor* AGuardian::GetTarget() const
@@ -209,17 +230,17 @@ void AGuardian::LevelUP(ELevelUpType eType)
 
 void AGuardian::NormalLevelUp()
 {
-	PrintViewport(2.f, FColor::Yellow, TEXT("NormalLevelUP"));
+	
 }
 
 void AGuardian::FireLevelUp()
 {
-	PrintViewport(2.f, FColor::Yellow, TEXT("FireLevelUP"));
+	
 }
 
 void AGuardian::IceLevelUp()
 {
-	PrintViewport(2.f, FColor::Yellow, TEXT("IceLevelUP"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -269,4 +290,5 @@ void AGuardian::Dead()
 	m_bDead = true;
 	GetMesh()->SetVisibility(false);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
 }

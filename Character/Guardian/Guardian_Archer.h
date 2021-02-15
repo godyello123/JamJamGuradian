@@ -9,14 +9,6 @@
 /**
  * 
  */
-UENUM(BlueprintType, Meta = (Bitflags))
-enum class EARCHER_AI : uint8
-{
-	Idle,
-	Attack,
-	Groggy,
-	Victory
-};
 
 
 UCLASS()
@@ -34,14 +26,14 @@ protected:
 	UPROPERTY(Category = Item, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class AActor_Weapon* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		EARCHER_AI		eAI;
+		EGUARDIAN_AI		eAI;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_MultiShot> Arrow;
 	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectile> ProjectileAsset;
 
 public:
-	void SetAI(EARCHER_AI _eAI);
+	void SetAI(EGUARDIAN_AI _eAI);
 
 protected:
 	void LoadBow(const FString& strSocket, const FString& strMeshPath);
@@ -68,11 +60,12 @@ public:
 	virtual void NormalLevelUp();
 	virtual void FireLevelUp();
 	virtual void IceLevelUp();
+	virtual void Dead();
+	virtual void Skill();
 
 public:
 	virtual void Motion();
 	virtual void Attack();
-	virtual void Skill();
 	virtual void SearchTarget();
 
 public:
@@ -80,4 +73,6 @@ public:
 	void AttackToTarget();
 	void MultiShot();
 
+public:
+	void EraseTarget();
 };

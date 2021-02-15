@@ -3,9 +3,11 @@
 
 #include "Guardian_Warrior.h"
 #include "Summoner.h"
+#include "Guardian_Knight.h"
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Warrior.h"
+
 
 AGuardian_Warrior::AGuardian_Warrior()
 {
@@ -21,7 +23,12 @@ AGuardian_Warrior::AGuardian_Warrior()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
-	SetState(5, 10, 10, 1.f);
+	GetClassAsset(AEffect, EffectAsset, "Blueprint'/Game/06Effect/BP_Effect_Knight.BP_Effect_Knight_C'");
+
+	if (EffectAsset.Succeeded())
+		Effect = EffectAsset.Class;
+
+	SetState(5, 10, 2, 1.f);
 
 	//fAttackDist = 200.f;
 	bCritical = false;
@@ -34,7 +41,7 @@ AGuardian_Warrior::AGuardian_Warrior()
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
-	TwoHandSword = nullptr;
+	Sword = nullptr;
 }
 
 
@@ -54,46 +61,68 @@ void AGuardian_Warrior::LevelUP(ELevelUpType eType)
 
 void AGuardian_Warrior::NormalLevelUp()
 {
+	Dead();
+	//이펙트 넣어주기
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Knight* pHunter = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
 }
 
 void AGuardian_Warrior::FireLevelUp()
 {
+	Dead();
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Knight* pHunter = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
 }
 
 void AGuardian_Warrior::IceLevelUp()
 {
+	Dead();
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
+	AGuardian_Knight* pHunter = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
+}
+
+void AGuardian_Warrior::Dead()
+{
+	Super::Dead();
+	Sword->Destroy();
 }
 
 void AGuardian_Warrior::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	Animation = Cast<UAnim_Warrior>(GetMesh()->GetAnimInstance());
 
-	LoadTwohandSword(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
-	//TwoHandSword->SetActorRelativeLocation(FVector(0.f, 10.f, 0.363824));
-	TwoHandSword->SetActorRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
+	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
+
+	SetFillMP(0.5);
 }
 
-void AGuardian_Warrior::SetAI(EWARRIOR_AI _eAI)
+void AGuardian_Warrior::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
 }
 
-void AGuardian_Warrior::LoadTwohandSword(const FString& strSocket, const FString& strMeshPath)
+void AGuardian_Warrior::LoadSword(const FString& strSocket, const FString& strMeshPath)
 {
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride =
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	TwoHandSword = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
+	Sword = GetWorld()->SpawnActor<AActor_Weapon>(FVector::ZeroVector,
 		FRotator::ZeroRotator, params);
 
-	TwoHandSword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform,
 		*strSocket);
 
-	TwoHandSword->LoadMesh(strMeshPath);
+	Sword->LoadMesh(strMeshPath);
 }
 
 void AGuardian_Warrior::ChangeAnimation(EGuardianAnimType eType)
@@ -125,16 +154,16 @@ void AGuardian_Warrior::Motion()
 {
 	switch (eAI)
 	{
-	case EWARRIOR_AI::Idle:
+	case EGUARDIAN_AI::Idle:
 		SearchTarget();
 		break;
-	case EWARRIOR_AI::Attack:
+	case EGUARDIAN_AI::Attack:
 		CheckDistance();
 		break;
-	case EWARRIOR_AI::Groggy:
+	case EGUARDIAN_AI::Groggy:
 		Groggy();
 		break;
-	case EWARRIOR_AI::Victory:
+	case EGUARDIAN_AI::Victory:
 		Victory();
 		break;
 	}
@@ -142,23 +171,20 @@ void AGuardian_Warrior::Motion()
 
 void AGuardian_Warrior::Attack()
 {
-	//if (State.iMP >= State.iMPMax)
-	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	if (State.iMP >= State.iMPMax)
+		ChangeAnimation(EGuardianAnimType::GAT_Skill);
 	//else
 	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 
-	ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Warrior::Skill()
 {
+	CrushAttack();
 }
 
 void AGuardian_Warrior::SearchTarget()
 {
-	if (Target || bTarget)
-		return;
-
 	Animation->ChangeAnimType(EGuardianAnimType::GAT_Idle);
 
 	FVector StartLoc = GetActorLocation();
@@ -189,7 +215,7 @@ void AGuardian_Warrior::SearchTarget()
 				{
 					Target = pTarget;
 					bTarget = true;
-					eAI = EWARRIOR_AI::Attack;
+					eAI = EGUARDIAN_AI::Attack;
 				}
 
 				return;
@@ -218,7 +244,7 @@ bool AGuardian_Warrior::CheckDistance()
 	}
 	else
 	{
-		eAI = EWARRIOR_AI::Idle;
+		eAI = EGUARDIAN_AI::Idle;
 		return false;
 	}
 
@@ -246,7 +272,7 @@ void AGuardian_Warrior::AttackToTarget()
 			Target = nullptr;
 			bTarget = false;
 			//bAttack = false;
-			eAI = EWARRIOR_AI::Idle;
+			eAI = EGUARDIAN_AI::Idle;
 		}
 		else
 		{
@@ -263,5 +289,43 @@ void AGuardian_Warrior::AttackToTarget()
 
 void AGuardian_Warrior::CrushAttack()
 {
+	//강하게 한대 때리기
+	if (bTarget && Target)
+	{
+		//이펙트 생성
+		CreateEffect();
 
+		AController* AI = GetController<AController>();
+
+		AMonster* pMonster = Cast<AMonster>(Target);
+		pMonster->SetGroggyTime(0.5f);
+
+		FDamageEvent DmgEvent;
+
+		float fDmg = State.Damage * 1.5;
+
+		float fHp = Target->TakeDamage(fDmg, DmgEvent, AI, this);
+
+		if (fHp <= 0.f)
+		{
+			Target = nullptr;
+			bTarget = false;
+		}
+
+		State.iMP = 0;
+
+	}
+}
+
+void AGuardian_Warrior::CreateEffect()
+{
+	FVector vPos = Target->GetActorLocation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	AEffect* pEffect = GetWorld()->SpawnActor<AEffect>(Effect, vPos, GetActorRotation(),
+		tParams);
 }
