@@ -39,6 +39,20 @@ AGuardian_Mage::AGuardian_Mage()
 	if (SpellAsset3.Succeeded())
 		Bolt_Yellow = SpellAsset3.Class;
 
+	GetClassAsset(ASpell_FireField, SpellAsset4, "Blueprint'/Game/05Spell/Spell_FireField_BP.Spell_FireField_BP_C'");
+
+	if (SpellAsset4.Succeeded())
+		FireField = SpellAsset4.Class;
+
+	GetClassAsset(ASpell_Crystalize, SpellAsset5, "Blueprint'/Game/05Spell/Crystalize_BP.Crystalize_BP_C'");
+
+	if (SpellAsset5.Succeeded())
+		Crystalize = SpellAsset5.Class;
+
+	GetClassAsset(ASpell_Thunder, SpellAsset6, "Blueprint'/Game/05Spell/BP_Thunder.BP_Thunder_C'");
+
+	if (SpellAsset6.Succeeded())
+		Thunder = SpellAsset6.Class;
 
 	//SetState(5, 10, 1, 1.f);
 
@@ -159,15 +173,16 @@ void AGuardian_Mage::Groggy()
 
 void AGuardian_Mage::Skill()
 {
-	//if (State.fTierGage_3 >= State.fTierGageMax_3)
-	//{
-	//	
-	//}
+	if (State.fTierGage_3 >= State.fTierGageMax_3)
+	{
+		
+	}
 
-	//if (State.fTierGage_2 > State.fTierGageMax_2)
-	//{
-	//	
-	//}
+	if (State.fTierGage_2 >= State.fTierGageMax_2)
+	{
+		MageTier2Skill();
+		State.fTierGage_2 = 0.f;
+	}
 
 	if (State.fTierGage_1 >= State.fTierGageMax_1)
 	{
@@ -187,6 +202,7 @@ void AGuardian_Mage::LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType)
 	case EGUARDIANLEVEL::GL_LEVEL1:
 	{
 		Mage_Tier2(eType);
+
 	}
 	break;
 	case EGUARDIANLEVEL::GL_LEVEL2:
@@ -249,6 +265,7 @@ void AGuardian_Mage::Mage_Tier2(EElementalType eType)
 	GetMesh()->SetWorldScale3D(FVector(1.1f, 1.1f, 1.1f));
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL2);
 	SetElementalType(eType);
+	SetFillTierGage_2(0.7f);
 }
 
 void AGuardian_Mage::Mage_Tier3(EElementalType eType)
@@ -258,6 +275,77 @@ void AGuardian_Mage::Mage_Tier3(EElementalType eType)
 	GetMesh()->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
 	SetElementalType(eType);
+	SetFillTierGage_2(0.7f);
+}
+
+void AGuardian_Mage::MageTier2Skill()
+{
+	if (m_eElementalType == EElementalType::ET_Normal)
+	{
+		ThunderSkill();
+	}
+	else if (m_eElementalType == EElementalType::ET_Fire)
+	{
+		FireFieldSkill();
+	}
+	else if (m_eElementalType == EElementalType::ET_Ice)
+	{
+		CrytalizeSkill();
+	}
+}
+
+void AGuardian_Mage::FireFieldSkill()
+{
+	FVector vPos = Target->GetActorLocation();
+	FVector vFwd = Target->GetActorForwardVector();
+
+	vPos += vFwd * 30.f;
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_FireField* pMagic = GetWorld()->SpawnActor<ASpell_FireField>(FireField, vPos, GetActorRotation(),
+		tParams);
+}
+
+void AGuardian_Mage::CrytalizeSkill()
+{
+	FVector vPos = Target->GetActorLocation();
+	FVector vFwd = Target->GetActorForwardVector();
+
+	vPos += vFwd * 30.f;
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_Crystalize* pMagic = GetWorld()->SpawnActor<ASpell_Crystalize>(Crystalize, vPos, Target->GetActorRotation(),
+		tParams);
+}
+
+void AGuardian_Mage::ThunderSkill()
+{
+	FVector vPos = Target->GetActorLocation();
+	FVector vFwd = Target->GetActorForwardVector();
+
+	vPos += vFwd * 30.f;
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_Thunder* pMagic = GetWorld()->SpawnActor<ASpell_Thunder>(Thunder, vPos, Target->GetActorRotation(),
+		tParams);
 }
 
 bool AGuardian_Mage::CheckDistance()

@@ -5,6 +5,9 @@
 
 #include "Guardian.h"
 #include "../../Spell/Spell_MagicMissile.h"
+#include "../../Spell/Spell_FireField.h"
+#include "../../Spell/Spell_Crystalize.h"
+#include "../../Spell/Spell_Thunder.h"
 #include "Guardian_Mage.generated.h"
 
 
@@ -35,6 +38,12 @@ protected:
 		TSubclassOf<ASpell_MagicMissile> Bolt_Yellow;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_MagicMissile> Bolt_Blue;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_FireField> FireField;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_Crystalize> Crystalize;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_Thunder> Thunder;
 
 public:
 	void SetAI(EGUARDIAN_AI eAI);
@@ -72,6 +81,12 @@ public:
 private:
 	void Mage_Tier2(EElementalType eType);
 	void Mage_Tier3(EElementalType eType);
+
+private:
+	void MageTier2Skill();
+	void FireFieldSkill();
+	void CrytalizeSkill();
+	void ThunderSkill();
 
 public:
 	bool CheckDistance();
