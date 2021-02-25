@@ -28,7 +28,7 @@ AMonster_RatAssassin::AMonster_RatAssassin()
 
 	AIControllerClass = AAIController::StaticClass();
 
-	SetMonsterState(5, 5, 5, 100, 1.6f);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 

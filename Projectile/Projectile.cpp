@@ -26,7 +26,7 @@ void AProjectile::BeginPlay()
 	Target = m_pOwner->GetTarget();
 	if (m_pOwner)
 	{
-		m_fSpeed = m_pOwner->GetState().AttackSpeed;
+		m_fSpeed = m_pOwner->GetState().fAttackSpeed;
 	}
 
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::CollisionBeginOverlap);
@@ -62,7 +62,7 @@ void AProjectile::Tick(float DeltaTime)
 		{
 			FDamageEvent DmgEvent;
 
-			Target->TakeDamage(m_pOwner->GetState().Damage, DmgEvent, m_pOwner->GetController(), this);
+			Target->TakeDamage(m_pOwner->GetState().iDamage, DmgEvent, m_pOwner->GetController(), this);
 
 			Destroy();
 
@@ -81,7 +81,7 @@ void AProjectile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent
 
 	FDamageEvent DmgEvent;
 
-	OtherActor->TakeDamage(m_pOwner->GetState().Damage, DmgEvent, m_pOwner->GetController(), this);
+	OtherActor->TakeDamage(m_pOwner->GetState().iDamage, DmgEvent, m_pOwner->GetController(), this);
 	
 	Destroy();
 

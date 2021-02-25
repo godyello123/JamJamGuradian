@@ -29,7 +29,7 @@ AMonster_Specter::AMonster_Specter()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(5, 5, 5, 100, 1.8f);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_Specter::BeginPlay()

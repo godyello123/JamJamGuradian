@@ -29,7 +29,7 @@ AMonster_DeathWorm::AMonster_DeathWorm()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	SetMonsterState(5, 5, 5, 100, 0.8);
+	SetMonsterState(5, 5, 5, 100, 1);
 }
 
 

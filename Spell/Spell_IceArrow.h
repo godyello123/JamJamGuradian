@@ -3,27 +3,27 @@
 #pragma once
 
 #include "Spell.h"
-#include "../Effect/Effect_Multishot.h"
-#include "Spell_MultiShot.generated.h"
+#include "../Effect/Effect_IceArrow.h"
+#include "Spell_IceArrow.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MPSG_API ASpell_MultiShot : public ASpell
+class MPSG_API ASpell_IceArrow : public ASpell
 {
 	GENERATED_BODY()
 
 public:
-	ASpell_MultiShot();
+	ASpell_IceArrow();
 
 protected:
+	UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UParticleSystemComponent* particle1;
+	UPROPERTY(Category = Particle, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UParticleSystemComponent* particle2;
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Yellow;
-	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Red;
-	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Blue;
+		TSubclassOf<AEffect_IceArrow> Effect;
 
 private:
 	class AGuardian_Archer* Archer;
@@ -31,6 +31,16 @@ private:
 protected:
 	float fLifeTime;
 	float fLifeTimeMax;
+
+protected:
+	float m_fSlowRate;
+	float m_fSlowTime;
+
+public:
+	void SetSlowTime(float fTime);
+	void SetSlowRate(float fRate);
+	float GetSlowTime() const;
+	float GetSlowRate() const;
 
 public:
 	void SetArcher(class AGuardian_Archer* pArcher);
@@ -45,7 +55,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void CreateEffect(EElementalType eType);
+	void CreateEffect();
 
 public:
 	UFUNCTION()
@@ -56,4 +66,5 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
+
 };

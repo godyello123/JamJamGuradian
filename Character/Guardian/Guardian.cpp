@@ -20,11 +20,9 @@ AGuardian::AGuardian()
 
 	CriticalChance = 10;
 	CriticalRatio = 1.5;
-	MPFillTime = 0.f;
-	MPFillTimeMax = 1.f;
 	m_fDeadTime = 0.f;
-	Target = nullptr;
 	bTarget = false;
+	m_eLevel = EGUARDIANLEVEL::GL_LEVEL1;
 
 	fAttackDist = 3000.f;
 
@@ -67,7 +65,40 @@ AGuardian::AGuardian()
 	if (EffectAsset1.Succeeded())
 		IceLevelUp_EffectAsset = EffectAsset3.Class;
 
+	m_fTierGageTimeMax = 0.5f;
+}
 
+EGUARDIANLEVEL AGuardian::GetGuardianLevel() const
+{
+	return m_eLevel;
+}
+
+void AGuardian::SetGuardianLevel(EGUARDIANLEVEL eLevel)
+{
+	m_eLevel = eLevel;
+}
+
+void AGuardian::SetElementalType(EElementalType eType)
+{
+	m_eElementalType = eType;
+	SetMeshMaterial(m_eElementalType);
+}
+
+EElementalType AGuardian::GetElementalType() const
+{
+	return m_eElementalType;
+}
+
+void AGuardian::RandElementalType()
+{
+	int32 iType = FMath::RandRange(0, 2);
+
+	if (iType == 0)
+		SetElementalType(EElementalType::ET_Normal);
+	else if(iType==1)
+		SetElementalType(EElementalType::ET_Fire);
+	else
+		SetElementalType(EElementalType::ET_Ice);
 }
 
 AActor* AGuardian::GetTarget() const
@@ -75,19 +106,29 @@ AActor* AGuardian::GetTarget() const
 	return Target;
 }
 
-void AGuardian::SetFillMP(float iFill)
+void AGuardian::SetFillTierGage_1(float fGage)
 {
-	FillMP = iFill;
+	m_fFillTierGage_1 = fGage;
 }
 
-void AGuardian::SetState(int32 iDmg, int32 HP, int32 MP, float Speed)
+void AGuardian::SetFillTierGage_2(float fGage)
 {
-	State.Damage = iDmg;
-	State.iHPMax = HP;
-	State.iHP = State.iHPMax;
-	State.iMPMax = MP;
-	State.iMP = 0;
-	State.AttackSpeed = Speed;
+	m_fFillTierGage_2 = fGage;
+}
+
+void AGuardian::SetFillTierGage_3(float fGage)
+{
+	m_fFillTierGage_3 = fGage;
+}
+
+
+void AGuardian::SetState(int32 iDmg, float fTier1, float fTier2, float fTier3, float fSpeed)
+{
+	State.iDamage = iDmg;
+	State.fTierGageMax_1 = fTier1;
+	State.fTierGageMax_2 = fTier2;
+	State.fTierGageMax_3 = fTier3;
+	State.fAttackSpeed = fSpeed;
 }
 
 FGuardianState AGuardian::GetState() const
@@ -115,6 +156,48 @@ float AGuardian::GetCriticalRatio() const
 	return CriticalRatio;
 }
 
+void AGuardian::SetMeshMaterial(EElementalType eType)
+{
+	UMaterialInstance* mtrl0 = LoadObject<UMaterialInstance>(nullptr,
+		TEXT("MaterialInstanceConstant'/Game/07Material/HeadPartsMat_2_Inst.HeadPartsMat_2_Inst'"));
+	UMaterialInstance* mtrl1 = LoadObject<UMaterialInstance>(nullptr,
+		TEXT("MaterialInstanceConstant'/Game/07Material/BodyPartsMat_2_Inst.BodyPartsMat_2_Inst'"));
+	UMaterialInstance* mtrl2 = LoadObject<UMaterialInstance>(nullptr,
+		TEXT("MaterialInstanceConstant'/Game/07Material/CostumesMat_2_Inst.CostumesMat_2_Inst'"));
+
+	GetMesh()->SetMaterial(0, mtrl0);
+	GetMesh()->SetMaterial(1, mtrl1);
+	GetMesh()->SetMaterial(2, mtrl2);
+
+	switch (eType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		FVector4 vColor = FVector4(1.f, 1.f, 0.f, 0.f);
+		SetMeshMaterialColor(vColor);
+	}
+		break;
+	case EElementalType::ET_Fire:
+	{
+		FVector4 vColor = FVector4(1.f, 0.f, 0.f, 0.f);
+		SetMeshMaterialColor(vColor);
+	}
+		break;
+	case EElementalType::ET_Ice:
+	{
+		FVector4 vColor = FVector4(0.f, 0.f, 1.f, 0.f);
+		SetMeshMaterialColor(vColor);
+	}
+		break;
+	}
+}
+
+void AGuardian::SetMeshMaterialColor(FVector4 & vColor)
+{
+	GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Color"), vColor);
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Value"), 10.f);
+}
+
 void AGuardian::AddCriticalChance()
 {
 	++CriticalChance;
@@ -136,20 +219,6 @@ bool AGuardian::IsSummoner()
 		return true;
 	
 	return false;
-}
-
-void AGuardian::FillUpMP(float iValue, float fTime)
-{
-	MPFillTime += fTime;
-
-	if (MPFillTime >= MPFillTimeMax)
-	{
-		State.iMP += iValue;
-
-		if (State.iMP >= State.iMPMax)
-			State.iMP = State.iMPMax;
-		MPFillTime = 0.f;
-	}
 }
 
 void AGuardian::Motion()
@@ -214,6 +283,57 @@ bool AGuardian::IsAttack() const
 	return bAttack;
 }
 
+void AGuardian::FillUpTierGage_1(float iValue, float fTime)
+{
+	m_fTierGageCurTime_1 += fTime;
+
+	if (m_fTierGageCurTime_1 >= m_fTierGageTimeMax)
+	{
+		State.fTierGage_1 += iValue;
+
+		if (State.fTierGage_1 >= State.fTierGageMax_1)
+		{
+			State.fTierGage_1 = State.fTierGageMax_1;
+		}
+		 
+		m_fTierGageCurTime_1 = 0.f;
+	}
+}
+
+void AGuardian::FillUpTierGage_2(float iValue, float fTime)
+{
+	m_fTierGageCurTime_2 += fTime;
+
+	if (m_fTierGageCurTime_2 >= m_fTierGageTimeMax)
+	{
+		State.fTierGage_2 += iValue;
+
+		if (State.fTierGage_2 >= State.fTierGageMax_2)
+		{
+			State.fTierGage_2 = State.fTierGageMax_2;
+		}
+
+		m_fTierGageCurTime_2 = 0.f;
+	}
+}
+
+void AGuardian::FillUpTierGage_3(float iValue, float fTime)
+{
+	m_fTierGageCurTime_3 += fTime;
+
+	if (m_fTierGageCurTime_3 >= m_fTierGageTimeMax)
+	{
+		State.fTierGage_3 += iValue;
+
+		if (State.fTierGage_3 >= State.fTierGageMax_3)
+		{
+			State.fTierGage_3 = State.fTierGageMax_3;
+		}
+
+		m_fTierGageCurTime_3 = 0.f;
+	}
+}
+
 void AGuardian::Groggy()
 {
 }
@@ -222,25 +342,17 @@ void AGuardian::Victory()
 {
 }
 
-
-void AGuardian::LevelUP(ELevelUpType eType)
+void AGuardian::LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType)
 {
-
-}
-
-void AGuardian::NormalLevelUp()
-{
-	
-}
-
-void AGuardian::FireLevelUp()
-{
-	
-}
-
-void AGuardian::IceLevelUp()
-{
-	
+	switch (eLevel)
+	{
+	case EGUARDIANLEVEL::GL_LEVEL1:
+		break;
+	case EGUARDIANLEVEL::GL_LEVEL2:
+		break;
+	case EGUARDIANLEVEL::GL_LEVEL3:
+		break;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -262,7 +374,7 @@ void AGuardian::Tick(float DeltaTime)
 
 	if (!m_bDead)
 	{
-		FillUpMP(FillMP, DeltaTime);
+		//FillUpTierGage_1(m_fFillTierGage_1, DeltaTime);
 	}
 	else
 	{

@@ -29,7 +29,7 @@ AMonster_DeathKnight::AMonster_DeathKnight()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
-	SetMonsterState(5, 5, 5, 100, 1.3);
+	SetMonsterState(5, 5, 5, 100, 1);
 
 }
 

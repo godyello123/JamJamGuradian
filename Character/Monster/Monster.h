@@ -72,7 +72,6 @@ protected:
 
 protected:
 	class UMaterialInstance* MaterialDynamicInst;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float m_fBurn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -81,11 +80,26 @@ protected:
 		float m_fTemperature;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float m_fBurnTime;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		float m_fGroggyTime;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 	float m_fCurGroggyTime;
+
+protected:
+	float m_fCurMoveSpeed;
+	float m_fSlowEventTime;
+	float m_fCurSlowEventTime;
+	bool m_bSlow;
+
+public:
+	void SetCurMoveSpeed();
+
+public:
+	void SlowEvent(float fTime, float fSpeedRate);
+	void SetMoveSpeed(float fSpeedRate);
+	void SetSlowEventTime(float fTime);
+	void SlowEventEnd();
+
 public:
 	void SetGroggyTime(float fTime);
 	void AddCurGroggyTime(float fTime);

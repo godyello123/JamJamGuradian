@@ -30,7 +30,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EGUARDIAN_AI		eAI;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<ASpell_MagicMissile> MagicMissile;
+		TSubclassOf<ASpell_MagicMissile> Bolt_Red;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_MagicMissile> Bolt_Yellow;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_MagicMissile> Bolt_Blue;
 
 public:
 	void SetAI(EGUARDIAN_AI eAI);
@@ -56,16 +60,18 @@ public:
 public:
 	virtual void Groggy();
 	virtual void Victory();
-	virtual void NormalLevelUp();
-	virtual void FireLevelUp();
-	virtual void IceLevelUp();
-	virtual void Dead();
-	virtual void Skill();
+	virtual void LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType);
 
-protected:
+public:
+	virtual void Dead();
 	virtual void Motion();
 	virtual void Attack();
+	virtual void Skill();
 	virtual void SearchTarget();
+
+private:
+	void Mage_Tier2(EElementalType eType);
+	void Mage_Tier3(EElementalType eType);
 
 public:
 	bool CheckDistance();

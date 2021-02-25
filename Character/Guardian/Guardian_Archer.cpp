@@ -2,7 +2,6 @@
 
 
 #include "Guardian_Archer.h"
-#include "Guardian_Hunter.h"
 #include "Summoner.h"
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
@@ -17,7 +16,7 @@ AGuardian_Archer::AGuardian_Archer()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/ApprenticeSK.ApprenticeSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/CountSK.CountSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
@@ -27,12 +26,43 @@ AGuardian_Archer::AGuardian_Archer()
 	if (AnimData.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimData.Class);
 
-	GetClassAsset(ASpell_MultiShot, ArrowAsset, "Blueprint'/Game/05Spell/Multishot_BP.Multishot_BP_C'");
+	GetClassAsset(ASpell_MultiShot, ArrowAssetred, "Blueprint'/Game/05Spell/Multishot_BP_Red.Multishot_BP_Red_C'");
 
-	if (ArrowAsset.Succeeded())
-		Arrow = ArrowAsset.Class;
+	if (ArrowAssetred.Succeeded())
+		Arrow_Red = ArrowAssetred.Class;
 
-	SetState(2, 10, 1.5, 1.f);
+	GetClassAsset(ASpell_MultiShot, ArrowAssetblue, "Blueprint'/Game/05Spell/Multishot_BP1_Blue.Multishot_BP1_Blue_C'");
+
+	if (ArrowAssetblue.Succeeded())
+		Arrow_Blue = ArrowAssetblue.Class;
+
+	GetClassAsset(ASpell_MultiShot, ArrowAssetYellow, "Blueprint'/Game/05Spell/Multishot_BP2_Yellow.Multishot_BP2_Yellow_C'");
+
+	if (ArrowAssetYellow.Succeeded())
+		Arrow_Yellow = ArrowAssetYellow.Class;
+
+	GetClassAsset(ASpell_ArcherBuff, buff, "Blueprint'/Game/05Spell/BP_ArcherBuff.BP_ArcherBuff_C'");
+
+	if (buff.Succeeded())
+		Archer_Buff = buff.Class;
+
+
+	GetClassAsset(ASpell_ExplosionArrow, ExArrowAsset, "Blueprint'/Game/05Spell/ExplosionArrow_BP.ExplosionArrow_BP_C'");
+
+	if (ExArrowAsset.Succeeded())
+		ExplosionArrow = ExArrowAsset.Class;
+
+	GetClassAsset(ASpell_IceArrow, IceArrowAsset, "Blueprint'/Game/05Spell/IceArrow_BP.IceArrow_BP_C'");
+
+	if (IceArrowAsset.Succeeded())
+		IceArrow = IceArrowAsset.Class;
+
+	GetClassAsset(ASpell_StaticArrow, StaticArrowAsset, "Blueprint'/Game/05Spell/StaticArrow_BP.StaticArrow_BP_C'");
+
+	if (StaticArrowAsset.Succeeded())
+		StaticArrow = StaticArrowAsset.Class;
+
+	/*SetState(2, 10, 2, 1.f);*/
 
 	//fAttackDist = 400.f;
 	bCritical = false;
@@ -53,27 +83,32 @@ void AGuardian_Archer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetState(5, 1.f, 6.f, 10.f, 1.f);
+	SetFillTierGage_1(0.5f);
+	SetFillTierGage_2(0.f);
+	SetFillTierGage_3(0.f);
+
+	ASummonerController* pController = Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
+	ADefenstPlayerState* pState = pController->GetPlayerState<ADefenstPlayerState>();
+
 	Animation = Cast<UAnim_Archer>(GetMesh()->GetAnimInstance());
 
 	LoadBow(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Bow01SM.Bow01SM'"));
-	
-	SetFillMP(0.3);
 
-	ASummonerController* pController =Cast<ASummonerController>(GetWorld()->GetFirstPlayerController());
-	ADefenstPlayerState* pState = pController->GetPlayerState<ADefenstPlayerState>();
-	
 	m_iDmgLevel = pState->GetNormalDmg();
 
-	//State.AttackSpeed = m_iDmgLevel + (m_iDmgLevel * 1);
-	State.Damage = State.Damage + (m_iDmgLevel * 5);
-
-
-	//SpawnUI->SetOwner(this);
+	State.iDamage = State.iDamage + (m_iDmgLevel * 5);
 }
 
 void AGuardian_Archer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	FillUpTierGage_1(m_fFillTierGage_1, DeltaTime);
+	FillUpTierGage_2(m_fFillTierGage_2, DeltaTime);
+	
+	if (!m_bBuff)
+		FillUpTierGage_3(m_fFillTierGage_3, DeltaTime);
 
 	if (!m_bDead)
 	{
@@ -108,40 +143,26 @@ void AGuardian_Archer::Victory()
 	ChangeAnimation(EGuardianAnimType::GAT_Victory);
 }
 
-void AGuardian_Archer::LevelUP(ELevelUpType eType)
+void AGuardian_Archer::LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType)
 {
-}
+	switch (eLevel)
+	{
+	case EGUARDIANLEVEL::GL_LEVEL1:
+	{
+		Archer_Tier2(eType);
+	}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL2:
+	{
+		Archer_Tier3(eType);
+	}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL3:
+	{
 
-void AGuardian_Archer::NormalLevelUp()
-{
-	Dead();
-	//이펙트 넣어주
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
-	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
-}
-
-void AGuardian_Archer::FireLevelUp()
-{
-	Dead();
-	//이펙트 넣어주기
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
-	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
-}
-
-void AGuardian_Archer::IceLevelUp()
-{
-	Dead();
-	//이펙트 넣어주기
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
-	AGuardian_Hunter* pHunter = GetWorld()->SpawnActor<AGuardian_Hunter>(vLoc, vRot);
+	}
+	break;
+	}
 }
 
 void AGuardian_Archer::Dead()
@@ -171,32 +192,29 @@ void AGuardian_Archer::Motion()
 
 void AGuardian_Archer::Attack()
 {
-	if (State.iMP >= State.iMPMax)
+	if (State.fTierGage_1 >= State.fTierGageMax_1 ||
+		State.fTierGage_2 >= State.fTierGageMax_2 ||
+		State.fTierGage_3 >= State.fTierGageMax_3)
 		ChangeAnimation(EGuardianAnimType::GAT_Skill);
 }
 
 void AGuardian_Archer::Skill()
 {
-	for (int32 i = -1; i < 2; ++i)
+	if (State.fTierGage_3 >= State.fTierGageMax_3)
 	{
-		FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
-
-		FRotator vRot = GetActorRotation();
-
-		vRot.Yaw += i * 30.f;
-
-		FActorSpawnParameters tParams;
-
-		tParams.SpawnCollisionHandlingOverride =
-			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		tParams.Owner = this;
-
-		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
-			tParams);
+		ArcherBuff();
 	}
 
-	State.iMP = 0;
+	else if (State.fTierGage_2 >= State.fTierGageMax_2)
+	{
+		Tier2Skill();
+		State.fTierGage_2 = 0.f;
+	}
+
+	else if (State.fTierGage_1 >= State.fTierGageMax_1)
+	{
+		Shot();
+	}
 }
 
 void AGuardian_Archer::SearchTarget()
@@ -239,10 +257,38 @@ void AGuardian_Archer::SearchTarget()
 	}
 }
 
+void AGuardian_Archer::Archer_Tier2(EElementalType eType)
+{
+	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/EngineerSK1.EngineerSK1'"));
+	GetMesh()->SetSkeletalMesh(pMesh);
+	GetMesh()->SetWorldScale3D(FVector(1.1f, 1.1f, 1.1f));
+	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL2);
+	SetElementalType(eType);
+	SetFillTierGage_2(0.5f);
+}
+
+void AGuardian_Archer::Archer_Tier3(EElementalType eType)
+{
+	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/ImmortalSK.ImmortalSK'"));
+	GetMesh()->SetSkeletalMesh(pMesh);
+	GetMesh()->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
+	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
+	SetElementalType(eType);
+	SetFillTierGage_3(0.5f);
+}
+
 bool AGuardian_Archer::CheckDistance()
 {
 	if (Target && bTarget)
 	{
+		AMonster* pMon = Cast<AMonster>(Target);
+
+		if (pMon->GetMonsterState().iHP <= 0)
+		{
+			Target = nullptr;
+			bTarget = false;
+			return false;
+		}
 		FVector TargetLoc = Target->GetActorLocation();
 		TargetLoc.Z = 0.f;
 		FVector MyLoc = GetActorLocation();
@@ -250,7 +296,7 @@ bool AGuardian_Archer::CheckDistance()
 
 		FVector vDir = TargetLoc - MyLoc;
 		vDir.Normalize();
-		
+
 		SetActorRotation(FRotator(0.f, vDir.Rotation().Yaw, 0.f));
 
 		Attack();
@@ -272,7 +318,7 @@ void AGuardian_Archer::AttackToTarget()
 
 		FDamageEvent DmgEvent;
 
-		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
+		float fHp = Target->TakeDamage(State.iDamage, DmgEvent, AI, this);
 
 		if (fHp <= 0.f)
 		{
@@ -290,7 +336,7 @@ void AGuardian_Archer::MultiShot()
 
 		FRotator vRot = GetActorRotation();
 
-		vRot.Yaw += i * 30.f;
+		vRot.Yaw += i * 5.f;
 
 		FActorSpawnParameters tParams;
 
@@ -299,18 +345,180 @@ void AGuardian_Archer::MultiShot()
 
 		tParams.Owner = this;
 
-		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow, vPos, vRot,
-			tParams);
+		switch (m_eElementalType)
+		{
+		case EElementalType::ET_Normal:
+		{
+			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Yellow, vPos, vRot,
+				tParams);
+		}
+			break;
+		case EElementalType::ET_Fire:
+		{
+			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Red, vPos, vRot,
+				tParams);
+		}
+			break;
+		case EElementalType::ET_Ice:
+		{
+			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Yellow, vPos, vRot,
+				tParams);
+		}
+			break;
+		}
+	}
 
+	if (!m_bBuff)
+		State.fTierGage_2 = 0.f;
+}
+
+void AGuardian_Archer::Shot()
+{
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Yellow, vPos, vRot,
+			tParams);
+	}
+		break;
+	case EElementalType::ET_Fire:
+	{
+		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Red, vPos, vRot,
+			tParams);
+	}
+		break;
+	case EElementalType::ET_Ice:
+	{
+		ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Blue, vPos, vRot,
+			tParams);
+	}
+		break;
 	}
 	
-	State.iMP = 0;
+	if(!m_bBuff)
+		State.fTierGage_1 = 0.f;
+}
+
+void AGuardian_Archer::ArcherBuff()
+{
+	State.fTierGage_3 = 0.f;
+
+	FVector vLoc = GetActorLocation();
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_ArcherBuff* pArrow = GetWorld()->SpawnActor<ASpell_ArcherBuff>(Archer_Buff, vLoc, vRot,
+		tParams);
+
+	BuffOn();
+
+}
+
+void AGuardian_Archer::ExplosionShot()
+{
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_ExplosionArrow* pArrow = GetWorld()->SpawnActor<ASpell_ExplosionArrow>(ExplosionArrow, vPos, vRot,
+		tParams);
+}
+
+void AGuardian_Archer::IceArrowShow()
+{
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_IceArrow* pArrow = GetWorld()->SpawnActor<ASpell_IceArrow>(IceArrow, vPos, vRot,
+		tParams);
+}
+
+void AGuardian_Archer::StaticArrowShot()
+{
+	FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
+
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_StaticArrow* pArrow = GetWorld()->SpawnActor<ASpell_StaticArrow>(StaticArrow, vPos, vRot,
+		tParams);
+}
+
+void AGuardian_Archer::Tier2Skill()
+{
+	if (m_eElementalType == EElementalType::ET_Normal)
+	{
+		StaticArrowShot();
+	}
+	else if (m_eElementalType == EElementalType::ET_Fire)
+	{
+		ExplosionShot();
+	}
+	else if (m_eElementalType == EElementalType::ET_Ice)
+	{
+		IceArrowShow();
+	}
 }
 
 void AGuardian_Archer::EraseTarget()
 {
 	Target = nullptr;
 	bTarget = false;
+}
+
+void AGuardian_Archer::BuffOn()
+{
+	m_bBuff = true;
+
+	m_iOriginDamage = State.iDamage;
+
+	State.iDamage *= 2;
+}
+
+void AGuardian_Archer::BuffOff()
+{
+	m_bBuff = false;
+
+	State.iDamage = m_iOriginDamage;
 }
 
 void AGuardian_Archer::SetAI(EGUARDIAN_AI _eAI)

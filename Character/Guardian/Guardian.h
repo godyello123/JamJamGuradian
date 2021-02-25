@@ -26,25 +26,31 @@ struct FGuardianState
 
 public:
 	FGuardianState()	:
-		Damage(0),iHP(0),iHPMax(0),iMP(0),
-		iMPMax(0),AttackSpeed(0.f)
+		iDamage(0), 
+		fTierGage_1(0),fTierGage_2(0),fTierGage_3(0),
+		fTierGageMax_1(0),fTierGageMax_2(0),fTierGageMax_3(0),
+		fAttackSpeed(0.f)
 	{
 
 	}
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		int32 Damage;
+		int32 iDamage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		int32 iHP;
+		float fTierGage_1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		int32 iHPMax;
+		float fTierGage_2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		float iMP;
+		float fTierGage_3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		int32 iMPMax;
+		float fTierGageMax_1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-		float AttackSpeed;
+		float fTierGageMax_2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float fTierGageMax_3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		float fAttackSpeed;
 };
 
 UCLASS()
@@ -81,6 +87,10 @@ protected:
 		EElementalType m_eElementalType;
 	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* UIComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+		EGUARDIANLEVEL m_eLevel;
+
+
 	class UGuardianUI* SpawnUI;
 	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AEffect_LevelUp> LightningLevelUp_EffectAsset;
@@ -93,25 +103,40 @@ protected:
 	bool m_bDead;
 	float m_fDeadTime;
 
+
 public:
-	virtual void Dead();
+	EGUARDIANLEVEL GetGuardianLevel() const;
+	void SetGuardianLevel(EGUARDIANLEVEL eLevel);
+
+public:
+	void SetElementalType(EElementalType eType);
+	EElementalType GetElementalType() const;
+	void RandElementalType();
 
 public:
 	AActor* GetTarget() const;
 
 protected:
-	float MPFillTime;
-	float MPFillTimeMax;
-	float FillMP;
+	float m_fFillTierGage_1;
+	float m_fFillTierGage_2;
+	float m_fFillTierGage_3;
+
+public:
+	void SetFillTierGage_1(float fTime);
+	void SetFillTierGage_2(float fTime);
+	void SetFillTierGage_3(float fTime);
+
+protected:
+	float m_fTierGageCurTime_1;
+	float m_fTierGageCurTime_2;
+	float m_fTierGageCurTime_3;
+	float m_fTierGageTimeMax;
 
 protected:
 	class ASummoner* Summoner;
 
 public:
-	void SetFillMP(float iFill);
-
-public:
-	void SetState(int32 iDmg, int32 HP, int32 MP, float Speed);
+	void SetState(int32 iDmg, float fTier1, float fTier2, float Tier3, float fSpeed);
 	FGuardianState GetState() const;
 
 public:
@@ -119,6 +144,10 @@ public:
 	void SetCriticalRatio(float fRatio);
 	int32 GetCriticalChance() const;
 	float GetCriticalRatio() const;
+
+public:
+	void SetMeshMaterial(EElementalType eType);
+	void SetMeshMaterialColor(FVector4& vColor);
 
 public:
 	void AddCriticalChance();
@@ -133,8 +162,9 @@ public:
 	bool IsAttack() const;
 
 protected:
-	void FillUpMP(float iValue,float fTime);
-
+	void FillUpTierGage_1(float iValue, float fTime);
+	void FillUpTierGage_2(float iValue, float fTime);
+	void FillUpTierGage_3(float iValue, float fTime);
 
 protected:
 	// Called when the game starts or when spawned
@@ -151,12 +181,10 @@ public:
 public:
 	virtual void Groggy();
 	virtual void Victory();
-	virtual void LevelUP(ELevelUpType eType);
-	virtual void NormalLevelUp();
-	virtual void FireLevelUp();
-	virtual void IceLevelUp();
+	virtual void LevelUp(EGUARDIANLEVEL eLevel,EElementalType eType);
 
 public:
+	virtual void Dead();
 	virtual void Motion();
 	virtual void Attack();
 	virtual void Skill();
@@ -165,6 +193,8 @@ public:
 public:
 	void ShowUI();
 	void CreateEffectLevelUp(EElementalType eType);
+
+
 	
 
 

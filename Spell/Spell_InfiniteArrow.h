@@ -3,37 +3,32 @@
 #pragma once
 
 #include "Spell.h"
-#include "../Effect/Effect_Multishot.h"
-#include "Spell_MultiShot.generated.h"
+#include "Spell_InfiniteArrow.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MPSG_API ASpell_MultiShot : public ASpell
+class MPSG_API ASpell_InfiniteArrow : public ASpell
 {
 	GENERATED_BODY()
 
 public:
-	ASpell_MultiShot();
+	ASpell_InfiniteArrow();
 
 protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Yellow;
-	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Red;
-	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AEffect_Multishot> Effect_Blue;
+		TSubclassOf<AEffect> Effect;
 
-private:
-	class AGuardian_Archer* Archer;
+	//private:
+		//class AGuardian_Mage* Mage;
+
+public:
+	void SetMage(class AGuardian_Mage* pMage);
 
 protected:
 	float fLifeTime;
 	float fLifeTimeMax;
-
-public:
-	void SetArcher(class AGuardian_Archer* pArcher);
 
 
 protected:
@@ -45,7 +40,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void CreateEffect(EElementalType eType);
+	void CreateEffect();
 
 public:
 	UFUNCTION()
@@ -56,4 +51,7 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
+
+
+
 };

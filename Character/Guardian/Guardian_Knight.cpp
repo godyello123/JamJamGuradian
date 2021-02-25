@@ -13,7 +13,7 @@ AGuardian_Knight::AGuardian_Knight()
 {
 	TICKON;
 
-	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/TemplarSK.TemplarSK'");
+	GetObjectAsset(USkeletalMesh, AssetData, "SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/FootmanSK.FootmanSK'");
 
 	if (AssetData.Succeeded())
 		GetMesh()->SetSkeletalMesh(AssetData.Object);
@@ -28,7 +28,7 @@ AGuardian_Knight::AGuardian_Knight()
 	if (EffectAsset.Succeeded())
 		Effect = EffectAsset.Class;
 
-	SetState(5, 10, 2, 1.f);
+	//SetState(5, 10, 2, 1.f);
 
 	//fAttackDist = 10000.f;
 	bCritical = false;
@@ -37,11 +37,11 @@ AGuardian_Knight::AGuardian_Knight()
 
 	bAttack = false;
 
-	SetFillMP(0.44);
+	//SetFillMP(0.44);
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-	GetMesh()->SetRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
+	GetMesh()->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 	Sword = nullptr;
 	Shield = nullptr;
 	
@@ -62,49 +62,26 @@ void AGuardian_Knight::ChangeAnimation(EGuardianAnimType eType)
 		Animation->ChangeAnimType(eType);
 }
 
-void AGuardian_Knight::LevelUP(ELevelUpType eType)
+void AGuardian_Knight::LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType)
 {
-	switch (eType)
+	switch (eLevel)
 	{
-	case ELevelUpType::TYPE1:
-		break;
-	case ELevelUpType::TYPE2:
-		break;
-	case ELevelUpType::TYPE3:
-		break;
-	case ELevelUpType::TYPE4:
-		break;
+	case EGUARDIANLEVEL::GL_LEVEL1:
+	{
+		Knight_Tier2(eType);
 	}
-}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL2:
+	{
+		Knight_Tier3(eType);
+	}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL3:
+	{
 
-void AGuardian_Knight::NormalLevelUp()
-{
-	Dead();
-	//이펙트 넣어주기
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(LightningLevelUp_EffectAsset, vLoc, vRot);
-}
-
-void AGuardian_Knight::FireLevelUp()
-{
-	Dead();
-	//이펙트 넣어주기
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(FireLevelUp_EffectAsset, vLoc, vRot);
-}
-
-void AGuardian_Knight::IceLevelUp()
-{
-	Dead();
-	//이펙트 넣어주기
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-	AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(IceLevelUp_EffectAsset, vLoc, vRot);
+	}
+	break;
+	}
 }
 
 void AGuardian_Knight::Dead()
@@ -123,17 +100,12 @@ void AGuardian_Knight::BeginPlay()
 	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
 	LoadShield(TEXT("weaponShield_l"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Shield01SM.Shield01SM'"));
 	Shield->SetActorRotation(FRotator(0.f, -20.f, 0.f));
-	Sword->SetActorRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
-	Shield->SetActorRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
+	Sword->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
+	Shield->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
 	FString Name = GetDebugName(this);
 
 	
-	SetFillMP(0.5);
-
-	for (int32 i = 0; i < Tags.Num(); ++i)
-	{
-		PrintViewport(10.f, FColor::Black, Tags[i].ToString());
-	}
+	//SetFillMP(0.5);
 }
 
 void AGuardian_Knight::LoadSword(const FString& strSocket, const FString& strMeshPath)
@@ -215,12 +187,10 @@ void AGuardian_Knight::Motion()
 
 void AGuardian_Knight::Attack()
 {
-	if (State.iMP >= State.iMPMax)
-		ChangeAnimation(EGuardianAnimType::GAT_Skill);
+	//if (State.iMP >= State.iMPMax)
+	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
 	//else
 	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
-
-	//ChangeAnimation(EGuardianAnimType::GAT_Attack);
 }
 
 void AGuardian_Knight::Skill()
@@ -266,6 +236,24 @@ void AGuardian_Knight::SearchTarget()
 			}
 		}
 	}
+}
+
+void AGuardian_Knight::Knight_Tier2(EElementalType eType)
+{
+	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/WarriorSK.WarriorSK'"));
+	GetMesh()->SetSkeletalMesh(pMesh);
+	GetMesh()->SetWorldScale3D(FVector(1.1f, 1.1f, 1.1f));
+	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL2);
+	SetElementalType(eType);
+}
+
+void AGuardian_Knight::Knight_Tier3(EElementalType eType)
+{
+	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/KnightSK.KnightSK'"));
+	GetMesh()->SetSkeletalMesh(pMesh);
+	GetMesh()->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
+	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
+	SetElementalType(eType);
 }
 
 void AGuardian_Knight::CreateEffect()
@@ -327,7 +315,7 @@ void AGuardian_Knight::AttackToTarget()
 
 		FDamageEvent DmgEvent;
 
-		float fHp = Target->TakeDamage(State.Damage, DmgEvent, AI, this);
+		float fHp = Target->TakeDamage(State.iDamage, DmgEvent, AI, this);
 
 		if (fHp <= 0.f)
 		{
@@ -352,7 +340,7 @@ void AGuardian_Knight::PowerStrike()
 
 		FDamageEvent DmgEvent;
 
-		float fDmg = State.Damage * 1.5;
+		float fDmg = State.iDamage * 1.5;
 
 		float fHp = Target->TakeDamage(fDmg, DmgEvent, AI, this);
 		
@@ -362,20 +350,14 @@ void AGuardian_Knight::PowerStrike()
 			bTarget = false;
 		}
 
-		State.iMP = 0;
+		//State.iMP = 0;
 
 	}
 
 }
 
-void AGuardian_Knight::ShowUI(bool bShow)
+void AGuardian_Knight::EraseTarget()
 {
-	if (bShow)
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("SHOW UI : Knight"));
-	}
-	else
-	{
-		PrintViewport(2.f, FColor::Magenta, TEXT("HIDE UI : Knight"));
-	}
+	Target = nullptr;
+	bTarget = false;
 }

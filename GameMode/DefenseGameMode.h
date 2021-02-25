@@ -26,6 +26,8 @@ private:
 		TSubclassOf<UUserWidget>	MainUIClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UMainUI* MainUI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class ASummonerController* m_pController;
 
 public:
 	class UMainUI* GetMainUI() const;

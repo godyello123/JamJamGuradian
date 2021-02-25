@@ -41,6 +41,36 @@ AMonster::AMonster()
 	bBurn = false;
 }
 
+void AMonster::SetCurMoveSpeed()
+{
+	m_fCurMoveSpeed = State.MoveSpeed;
+}
+
+void AMonster::SlowEvent(float fTime, float fSpeedRate)
+{
+	m_bSlow = true;
+	SetMoveSpeed(fSpeedRate);
+	SetSlowEventTime(fSpeedRate);
+}
+
+void AMonster::SetMoveSpeed(float fSpeedRate)
+{
+	SetCurMoveSpeed();
+	State.MoveSpeed = State.MoveSpeed*fSpeedRate;
+}
+
+void AMonster::SetSlowEventTime(float fTime)
+{
+	m_fSlowEventTime = fTime;
+}
+
+void AMonster::SlowEventEnd()
+{
+	m_bSlow = false;
+	m_fCurSlowEventTime = 0.f;
+	m_fSlowEventTime = 0.f;
+}
+
 void AMonster::SetGroggyTime(float fTime)
 {
 	m_fGroggyTime = fTime;
@@ -144,6 +174,16 @@ void AMonster::BeginPlay()
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (m_bSlow)
+	{
+		m_fCurSlowEventTime += DeltaTime;
+
+		if (m_fCurSlowEventTime >= m_fSlowEventTime)
+		{
+			SlowEventEnd();
+		}
+	}
 
 	if (bGroggy)
 	{
@@ -268,6 +308,7 @@ void AMonster::SetFilter(float fFilter)
 void AMonster::SetTemperature(float fTemperature)
 {
 	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Temperature"), fTemperature);
+	//GetMesh()->SetVectorParameterValueOnMaterials(TEXT(""))
 }
 
 void AMonster::Skill()

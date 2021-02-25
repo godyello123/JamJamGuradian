@@ -30,7 +30,7 @@ AMonster_ChestImp::AMonster_ChestImp()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(5, 5, 5, 100, 1.2);
+	SetMonsterState(5, 5, 5, 100, 1);
 
 }
 

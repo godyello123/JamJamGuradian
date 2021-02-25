@@ -22,12 +22,11 @@
 
 
 UENUM(BlueprintType, Meta = (Bitflags))
-enum class ELevelUpType : uint8
+enum class EGUARDIANLEVEL : uint8
 {
-	TYPE1,
-	TYPE2,
-	TYPE3,
-	TYPE4
+	GL_LEVEL1,
+	GL_LEVEL2,
+	GL_LEVEL3
 };
 
 UENUM(BlueprintType, Meta = (Bitflags))

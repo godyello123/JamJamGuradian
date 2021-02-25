@@ -2,13 +2,11 @@
 
 
 #include "Tile_SpawnGuardian.h"
-#include "../UI/SpawnGuardianTileUI.h"
 #include "Components/WidgetComponent.h"
 #include "../Character/Guardian/Guardian_Archer.h"
 #include "../Character/Guardian/Guardian_Knight.h"
 #include "../Character/Guardian/Guardian_Mage.h"
-#include "../Character/Guardian/Guardian_Magician.h"
-#include "../Character/Guardian/Guardian_Warrior.h"
+
 
 
 
@@ -66,23 +64,24 @@ void ATile_SpawnGuardian::SpawnGuardian(int32 iType)
 		FVector vLoc = GetActorLocation();
 		vLoc.Z += 100.f;
 		FRotator vRot = GetActorRotation();
-		AGuardian_Archer* Knight = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
+		AGuardian_Archer* pGuardian = GetWorld()->SpawnActor<AGuardian_Archer>(vLoc, vRot);
+		pGuardian->RandElementalType();
 	}
 	else if (iType == 1)
 	{
 		FVector vLoc = GetActorLocation();
 		vLoc.Z += 100.f;
 		FRotator vRot = GetActorRotation();
-		AGuardian_Magician* Knight = GetWorld()->SpawnActor<AGuardian_Magician>(vLoc, vRot);
-
+		AGuardian_Mage* pGuardian = GetWorld()->SpawnActor<AGuardian_Mage>(vLoc, vRot);
+		pGuardian->RandElementalType();
 	}
 	else if (iType == 2)
 	{
 		FVector vLoc = GetActorLocation();
 		vLoc.Z += 100.f;
 		FRotator vRot = GetActorRotation();
-		AGuardian_Warrior* Knight = GetWorld()->SpawnActor<AGuardian_Warrior>(vLoc, vRot);
-
+		AGuardian_Knight* pGuardian = GetWorld()->SpawnActor<AGuardian_Knight>(vLoc, vRot);
+		pGuardian->RandElementalType();
 	}
 	else
 		return;

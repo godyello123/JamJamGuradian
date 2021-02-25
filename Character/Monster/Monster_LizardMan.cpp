@@ -28,7 +28,7 @@ AMonster_LizardMan::AMonster_LizardMan()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	SetMonsterState(5, 5, 5, 100, 1.1f);
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_LizardMan::BeginPlay()

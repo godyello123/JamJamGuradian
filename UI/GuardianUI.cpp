@@ -38,15 +38,15 @@ void UGuardianUI::SetOwner(AGuardian * pOnwer)
 
 void UGuardianUI::NormalLevelUpButtonCallback()
 {
-	m_pOwner->NormalLevelUp();
+	m_pOwner->LevelUp(m_pOwner->GetGuardianLevel(), EElementalType::ET_Normal);
 }
 
 void UGuardianUI::FireLevelUpButtonCallback()
 {
-	m_pOwner->FireLevelUp();
+	m_pOwner->LevelUp(m_pOwner->GetGuardianLevel(), EElementalType::ET_Fire);
 }
 
 void UGuardianUI::IceLevelUpButtonCallback()
 {
-	m_pOwner->IceLevelUp();
+	m_pOwner->LevelUp(m_pOwner->GetGuardianLevel(), EElementalType::ET_Ice);
 }

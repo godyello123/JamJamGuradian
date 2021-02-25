@@ -33,4 +33,7 @@ public:
 public:
 	void SetScale(FVector& vScale);
 
+public:
+	UStaticMeshComponent* GetWeaponMesh();
+
 };

@@ -27,5 +27,12 @@ void AEffect::BeginPlay()
 void AEffect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	m_fLifeTime += DeltaTime;
+
+	if (m_fLifeTime >= 2.f)
+	{
+		Destroy();
+	}
 }
 

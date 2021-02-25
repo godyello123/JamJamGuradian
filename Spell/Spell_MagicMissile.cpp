@@ -2,22 +2,30 @@
 
 
 #include "Spell_MagicMissile.h"
-#include "../Character/Guardian/Guardian_Magician.h"
+#include "../Character/Guardian/Guardian_Mage.h"
 
 ASpell_MagicMissile::ASpell_MagicMissile()
 {
-	SetDamage(30.f);
-
 	Mesh->SetEnableGravity(false);
 
 
-	GetClassAsset(AEffect_MagicMissile, EffectAsset, "Blueprint'/Game/06Effect/Effect_MM.Effect_MM_C'");
+	GetClassAsset(AEffect_MagicMissile, EffectAsset, "Blueprint'/Game/06Effect/BoltEffect_Yellow.BoltEffect_Yellow_C'");
 
 	if (EffectAsset.Succeeded())
-		Effect = EffectAsset.Class;
+		Effect_Yellow = EffectAsset.Class;
+
+	GetClassAsset(AEffect_MagicMissile, EffectAsset1, "Blueprint'/Game/06Effect/BoltEffect_REd.BoltEffect_REd_C'");
+
+	if (EffectAsset1.Succeeded())
+		Effect_Red = EffectAsset1.Class;
+
+	GetClassAsset(AEffect_MagicMissile, EffectAsset2, "Blueprint'/Game/06Effect/BoltEffect_Blue.BoltEffect_Blue_C'");
+
+	if (EffectAsset2.Succeeded())
+		Effect_Blue = EffectAsset2.Class;
 
 	fLifeTime = 0;
-	fLifeTimeMax = 3.f;
+	fLifeTimeMax = 1.5f;
 }
 
 
@@ -33,6 +41,8 @@ void ASpell_MagicMissile::BeginPlay()
 	Mesh->SetEnableGravity(false);
 
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &ASpell_MagicMissile::CollisionBeginOverlap);
+
+	SetSpellDmgRate(2.f);
 
 }
 
@@ -57,9 +67,8 @@ void ASpell_MagicMissile::Tick(float DeltaTime)
 	}
 }
 
-void ASpell_MagicMissile::CreateEffect()
+void ASpell_MagicMissile::CreateEffect(EElementalType eType)
 {
-	//매직미사일 이펙트 처리
 	FVector vPos = GetActorLocation();
 
 	FActorSpawnParameters tParams;
@@ -67,28 +76,46 @@ void ASpell_MagicMissile::CreateEffect()
 	tParams.SpawnCollisionHandlingOverride =
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AEffect_MagicMissile* pEffect = GetWorld()->SpawnActor<AEffect_MagicMissile>(Effect, vPos, GetActorRotation(),
-		tParams);
-
+	switch (eType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		AEffect_MagicMissile* pEffect = GetWorld()->SpawnActor<AEffect_MagicMissile>(Effect_Yellow, vPos, GetActorRotation(),
+			tParams);
+	}
+		break;
+	case EElementalType::ET_Fire:
+	{
+		AEffect_MagicMissile* pEffect = GetWorld()->SpawnActor<AEffect_MagicMissile>(Effect_Red, vPos, GetActorRotation(),
+			tParams);
+	}
+		break;
+	case EElementalType::ET_Ice:
+	{
+		AEffect_MagicMissile* pEffect = GetWorld()->SpawnActor<AEffect_MagicMissile>(Effect_Blue, vPos, GetActorRotation(),
+			tParams);
+	}
+		break;
+	}
 }
 
 void ASpell_MagicMissile::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//몬스터 데미지 주기
+	////몬스터 데미지 주기
 	FDamageEvent DmgEvent;
 
-	AGuardian_Magician* pOwner = Cast<AGuardian_Magician>(GetOwner());
-
-	float fDmg = pOwner->GetState().Damage * 2.5;
+	AGuardian_Mage* pOwner = Cast<AGuardian_Mage>(GetOwner());
 
 	if (pOwner)
 	{
-		float fHP=OtherActor->TakeDamage(fDmg, DmgEvent, pOwner->GetController(), this);
-		CreateEffect();
+		float fHP=OtherActor->TakeDamage(pOwner->GetState().iDamage*GetSpellDmgRate(), DmgEvent, pOwner->GetController(), this);
+		
 		if (fHP <= 0.f)
 		{
 			pOwner->EraseTarget();
 		}
+
+		CreateEffect(pOwner->GetElementalType());
 	}
 	Destroy();
 }

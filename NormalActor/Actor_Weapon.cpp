@@ -48,3 +48,8 @@ void AActor_Weapon::SetScale(FVector & vScale)
 	Mesh->SetRelativeScale3D(vScale);
 }
 
+UStaticMeshComponent * AActor_Weapon::GetWeaponMesh()
+{
+	return Mesh;
+}
+

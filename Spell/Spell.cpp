@@ -19,19 +19,18 @@ ASpell::ASpell()
 	
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 
-	iDamage = 0;
+	m_fSpellDmgRate = 0.f;
 }
 
-void ASpell::SetDamage(int32 iDmg)
+void ASpell::SetSpellDmgRate(float fDmg)
 {
-	iDamage = iDmg;
+	m_fSpellDmgRate = fDmg;
 }
 
-int32 ASpell::GetDamage() const
+float ASpell::GetSpellDmgRate() const
 {
-	return iDamage;
+	return m_fSpellDmgRate;
 }
-
 // Called when the game starts or when spawned
 void ASpell::BeginPlay()
 {
@@ -43,6 +42,5 @@ void ASpell::BeginPlay()
 void ASpell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

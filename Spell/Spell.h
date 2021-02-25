@@ -26,11 +26,11 @@ protected:
 		UProjectileMovementComponent* Movement;
 
 protected:
-	int32 iDamage;
+	float m_fSpellDmgRate;
 
 public:
-	void SetDamage(int32 iDmg);
-	int32 GetDamage() const;
+	void SetSpellDmgRate(float fDmg);
+	float GetSpellDmgRate() const;
 
 
 protected:

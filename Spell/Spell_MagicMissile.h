@@ -19,7 +19,11 @@ public:
 
 protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AEffect_MagicMissile> Effect;
+	TSubclassOf<AEffect_MagicMissile> Effect_Yellow;
+	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AEffect_MagicMissile> Effect_Red;
+	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AEffect_MagicMissile> Effect_Blue;
 
 //private:
 	//class AGuardian_Mage* Mage;
@@ -41,7 +45,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void CreateEffect();
+	void CreateEffect(EElementalType eType);
 
 public:
 	UFUNCTION()

@@ -19,7 +19,6 @@ public:
 public:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
-
 	UPROPERTY(Category = Type, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		EElementalType Elemental;
 	UPROPERTY(Category=Effect,VisibleAnywhere,BlueprintReadOnly,meta=(AllowPrivateAccess="true"))

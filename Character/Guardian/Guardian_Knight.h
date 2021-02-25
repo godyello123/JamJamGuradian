@@ -56,24 +56,23 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
 public:
-	virtual void LevelUP(ELevelUpType eType);
-	virtual void NormalLevelUp();
-	virtual void FireLevelUp();
-	virtual void IceLevelUp();
-	virtual void Dead();
-	virtual void Skill();
+	virtual void Groggy();
+	virtual void Victory();
+	virtual void LevelUp(EGUARDIANLEVEL eLevel, EElementalType eType);
 
-protected:
+public:
+	virtual void Dead();
 	virtual void Motion();
 	virtual void Attack();
+	virtual void Skill();
 	virtual void SearchTarget();
 
 private:
-	void CreateEffect();
+	void Knight_Tier2(EElementalType eType);
+	void Knight_Tier3(EElementalType eType);
 
-public:
-	virtual void Groggy();
-	virtual void Victory();
+private:
+	void CreateEffect();
 
 public:
 	bool CheckDistance();
@@ -81,8 +80,7 @@ public:
 	void PowerStrike();
 
 public:
-	virtual void ShowUI(bool bShow);
-
+	void EraseTarget();
 
 	
 };
