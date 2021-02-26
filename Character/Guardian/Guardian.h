@@ -100,8 +100,15 @@ protected:
 	TSubclassOf<AEffect_LevelUp> IceLevelUp_EffectAsset;
 
 protected:
+	class ASpell* m_pTier3Skill;
+
+protected:
 	bool m_bDead;
 	float m_fDeadTime;
+
+public:
+	void SetTier3Skill(class ASpell* pSpell);
+	class ASpell* GetTier3Skill() const;
 
 
 public:
@@ -189,9 +196,11 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+	virtual void Targeting();
 
 public:
 	void ShowUI();
+	void HideUI();
 	void CreateEffectLevelUp(EElementalType eType);
 
 

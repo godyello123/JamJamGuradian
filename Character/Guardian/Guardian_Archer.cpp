@@ -41,12 +41,6 @@ AGuardian_Archer::AGuardian_Archer()
 	if (ArrowAssetYellow.Succeeded())
 		Arrow_Yellow = ArrowAssetYellow.Class;
 
-	GetClassAsset(ASpell_ArcherBuff, buff, "Blueprint'/Game/05Spell/BP_ArcherBuff.BP_ArcherBuff_C'");
-
-	if (buff.Succeeded())
-		Archer_Buff = buff.Class;
-
-
 	GetClassAsset(ASpell_ExplosionArrow, ExArrowAsset, "Blueprint'/Game/05Spell/ExplosionArrow_BP.ExplosionArrow_BP_C'");
 
 	if (ExArrowAsset.Succeeded())
@@ -61,6 +55,11 @@ AGuardian_Archer::AGuardian_Archer()
 
 	if (StaticArrowAsset.Succeeded())
 		StaticArrow = StaticArrowAsset.Class;
+
+	GetClassAsset(ASpell_RainofArrow, Rain, "Blueprint'/Game/05Spell/RainofArrow_BP.RainofArrow_BP_C'");
+
+	if (Rain.Succeeded())
+		RainOfArrow = Rain.Class;
 
 	/*SetState(2, 10, 2, 1.f);*/
 
@@ -98,6 +97,8 @@ void AGuardian_Archer::BeginPlay()
 	m_iDmgLevel = pState->GetNormalDmg();
 
 	State.iDamage = State.iDamage + (m_iDmgLevel * 5);
+
+	m_bTire3Skill = false;
 }
 
 void AGuardian_Archer::Tick(float DeltaTime)
@@ -106,9 +107,7 @@ void AGuardian_Archer::Tick(float DeltaTime)
 	
 	FillUpTierGage_1(m_fFillTierGage_1, DeltaTime);
 	FillUpTierGage_2(m_fFillTierGage_2, DeltaTime);
-	
-	if (!m_bBuff)
-		FillUpTierGage_3(m_fFillTierGage_3, DeltaTime);
+	FillUpTierGage_3(m_fFillTierGage_3, DeltaTime);
 
 	if (!m_bDead)
 	{
@@ -202,7 +201,8 @@ void AGuardian_Archer::Skill()
 {
 	if (State.fTierGage_3 >= State.fTierGageMax_3)
 	{
-		ArcherBuff();
+		Tier3Skill();
+		State.fTierGage_3 = 0.f;
 	}
 
 	else if (State.fTierGage_2 >= State.fTierGageMax_2)
@@ -257,6 +257,28 @@ void AGuardian_Archer::SearchTarget()
 	}
 }
 
+void AGuardian_Archer::Targeting()
+{
+	PrintViewport(1.f, FColor::Yellow, TEXT("Archer tier3 skill"));
+
+	if (m_bTire3Skill)
+	{
+		switch (m_eElementalType)
+		{
+		case EElementalType::ET_Normal:
+			break;
+		case EElementalType::ET_Fire:
+			RainOfArrowSkill();
+			break;
+		case EElementalType::ET_Ice:
+			break;
+		}
+
+		m_bTire3Skill = false;
+		State.fTierGage_3 = 0.f;
+	}
+}
+
 void AGuardian_Archer::Archer_Tier2(EElementalType eType)
 {
 	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/EngineerSK1.EngineerSK1'"));
@@ -275,6 +297,7 @@ void AGuardian_Archer::Archer_Tier3(EElementalType eType)
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
 	SetElementalType(eType);
 	SetFillTierGage_3(0.5f);
+	HideUI();
 }
 
 bool AGuardian_Archer::CheckDistance()
@@ -367,9 +390,7 @@ void AGuardian_Archer::MultiShot()
 			break;
 		}
 	}
-
-	if (!m_bBuff)
-		State.fTierGage_2 = 0.f;
+	State.fTierGage_2 = 0.f;
 }
 
 void AGuardian_Archer::Shot()
@@ -406,30 +427,7 @@ void AGuardian_Archer::Shot()
 	}
 		break;
 	}
-	
-	if(!m_bBuff)
-		State.fTierGage_1 = 0.f;
-}
-
-void AGuardian_Archer::ArcherBuff()
-{
-	State.fTierGage_3 = 0.f;
-
-	FVector vLoc = GetActorLocation();
-	FRotator vRot = GetActorRotation();
-
-	FActorSpawnParameters tParams;
-
-	tParams.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	tParams.Owner = this;
-
-	ASpell_ArcherBuff* pArrow = GetWorld()->SpawnActor<ASpell_ArcherBuff>(Archer_Buff, vLoc, vRot,
-		tParams);
-
-	BuffOn();
-
+	State.fTierGage_1 = 0.f;
 }
 
 void AGuardian_Archer::ExplosionShot()
@@ -499,27 +497,23 @@ void AGuardian_Archer::Tier2Skill()
 	}
 }
 
+void AGuardian_Archer::Tier3Skill()
+{
+	m_bTire3Skill = true;
+}
+
+void AGuardian_Archer::RainOfArrowSkill()
+{
+	//ºÒÈ­»ì ±× ¶¥ ÀÌÆåÆ® »ý¼º
+
+}
+
 void AGuardian_Archer::EraseTarget()
 {
 	Target = nullptr;
 	bTarget = false;
 }
 
-void AGuardian_Archer::BuffOn()
-{
-	m_bBuff = true;
-
-	m_iOriginDamage = State.iDamage;
-
-	State.iDamage *= 2;
-}
-
-void AGuardian_Archer::BuffOff()
-{
-	m_bBuff = false;
-
-	State.iDamage = m_iOriginDamage;
-}
 
 void AGuardian_Archer::SetAI(EGUARDIAN_AI _eAI)
 {

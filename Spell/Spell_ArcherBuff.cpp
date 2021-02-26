@@ -33,7 +33,6 @@ void ASpell_ArcherBuff::Tick(float DeltaTime)
 	if (fLifeTime >= fLifeTimeMax)
 	{
 		AGuardian_Archer* pArcher = Cast<AGuardian_Archer>(GetOwner());
-		pArcher->BuffOff();
 		Destroy();
 	}
 }

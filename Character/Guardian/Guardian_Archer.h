@@ -8,6 +8,7 @@
 #include "../../Spell/Spell_ExplosionArrow.h"
 #include "../../Spell/Spell_IceArrow.h"
 #include "../../Spell/Spell_StaticArrow.h"
+#include "../../Spell/Spell_RainofArrow.h"
 #include "Guardian_Archer.generated.h"
 
 /**
@@ -44,18 +45,14 @@ protected:
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_StaticArrow> StaticArrow;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<ASpell_ArcherBuff> Archer_Buff;
+		TSubclassOf<ASpell_RainofArrow> RainOfArrow;
 	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectile> ProjectileAsset;
 
 
 private:
-	bool m_bBuff;
+	bool m_bTire3Skill;
 	float m_iOriginDamage;
-
-public:
-	void BuffOn();
-	void BuffOff();
 
 public:
 	void SetAI(EGUARDIAN_AI _eAI);
@@ -89,6 +86,7 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+	virtual void Targeting();
 
 private:
 	void Archer_Tier2(EElementalType eType);
@@ -99,14 +97,16 @@ public:
 	void AttackToTarget();
 	void MultiShot();
 	void Shot();
-	void ArcherBuff();
-
-	void Tier2Skill();
 
 public:
+	void Tier2Skill();
 	void ExplosionShot();
 	void IceArrowShow();
 	void StaticArrowShot();
+
+public:
+	void Tier3Skill();
+	void RainOfArrowSkill();
 
 public:
 	void EraseTarget();

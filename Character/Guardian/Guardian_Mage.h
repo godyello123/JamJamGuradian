@@ -77,6 +77,7 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+	virtual void Targeting();
 
 private:
 	void Mage_Tier2(EElementalType eType);

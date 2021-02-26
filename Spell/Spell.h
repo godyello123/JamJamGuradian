@@ -27,6 +27,7 @@ protected:
 
 protected:
 	float m_fSpellDmgRate;
+	bool m_bEnable;
 
 public:
 	void SetSpellDmgRate(float fDmg);
@@ -40,5 +41,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	void EnableSkill(bool bEnable);
 
 };

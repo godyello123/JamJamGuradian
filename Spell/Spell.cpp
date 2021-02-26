@@ -20,6 +20,8 @@ ASpell::ASpell()
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 
 	m_fSpellDmgRate = 0.f;
+
+	m_bEnable = true;
 }
 
 void ASpell::SetSpellDmgRate(float fDmg)
@@ -42,5 +44,10 @@ void ASpell::BeginPlay()
 void ASpell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ASpell::EnableSkill(bool bEnable)
+{
+	m_bEnable = bEnable;
 }
 

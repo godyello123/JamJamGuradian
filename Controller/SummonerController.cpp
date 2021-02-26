@@ -7,6 +7,7 @@
 #include "../Character/Guardian/Guardian.h"
 #include "../Character/Monster/Monster.h"
 #include "../Tile/Tile_SpawnGuardian.h"
+#include "../Spell/Spell.h"
 
 ASummonerController::ASummonerController()
 {
@@ -16,15 +17,17 @@ ASummonerController::ASummonerController()
 void ASummonerController::BeginPlay()
 {
 	ClickedActor = nullptr;
+
+	bGuardianSkill = false;
 }
 
 void ASummonerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bRButtonDown)
+	if (bGuardianSkill)
 	{
-		MoveSummoner(DeltaTime);
+
 	}
 }
 
@@ -62,8 +65,8 @@ void ASummonerController::PastProcess()
 		{
 			if (ClickedActor->Tags[0] == "Guardian")
 			{
-				//기존에 켜져있던 ui 안보이기
 				AGuardian* pGuardian = Cast<AGuardian>(ClickedActor);
+				
 				pGuardian->ShowUI();
 			}
 			else if (ClickedActor->Tags[0] == "Monster")
@@ -89,7 +92,9 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 			if (ClickedActor->Tags[0] == "Guardian")
 			{
 				AGuardian* pGuardian = Cast<AGuardian>(ClickedActor);
+
 				pGuardian->ShowUI();
+			
 			}
 			else if (ClickedActor->Tags[0] == "Monster")
 			{
@@ -104,6 +109,31 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 			}
 		}
 	}
+}
+
+void ASummonerController::SkillLocation(FVector & vLoc)
+{
+	FHitResult	result;
+
+	bool	bHit = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility,
+		false, result);
+
+	if (bHit)
+	{
+		AGuardian* pGuardian = Cast<AGuardian>(RClickedActor);
+		if (pGuardian)
+		{
+			ASpell* pSpell = pGuardian->GetTier3Skill();
+			if (pSpell)
+			{
+				pSpell->SetActorLocation(result.ImpactPoint);
+			}
+		}
+	}
+}
+
+void ASummonerController::SkillOn()
+{
 }
 
 void ASummonerController::LButtonClick()
@@ -127,6 +157,8 @@ void ASummonerController::LButtonRelease()
 void ASummonerController::RButtonClick()
 {
 	bRButtonDown = true;
+	bGuardianSkill = true;
+	//해당 티어 가디언 스킬 만들어주기
 }
 
 void ASummonerController::RButtonRelease()

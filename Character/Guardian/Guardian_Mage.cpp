@@ -258,6 +258,11 @@ void AGuardian_Mage::SearchTarget()
 	}
 }
 
+void AGuardian_Mage::Targeting()
+{
+	PrintViewport(1.f, FColor::Yellow, TEXT("MAGE 3"));
+}
+
 void AGuardian_Mage::Mage_Tier2(EElementalType eType)
 {
 	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/PrinceSK.PrinceSK'"));
@@ -276,6 +281,7 @@ void AGuardian_Mage::Mage_Tier3(EElementalType eType)
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
 	SetElementalType(eType);
 	SetFillTierGage_2(0.7f);
+	HideUI();
 }
 
 void AGuardian_Mage::MageTier2Skill()

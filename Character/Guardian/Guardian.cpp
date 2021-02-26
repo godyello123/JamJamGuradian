@@ -5,7 +5,7 @@
 #include "Summoner.h"
 #include "Components/WidgetComponent.h"
 #include "../../UI/GuardianUI.h"
-
+#include "../../Spell/Spell.h"
 
 
 // Sets default values
@@ -66,6 +66,16 @@ AGuardian::AGuardian()
 		IceLevelUp_EffectAsset = EffectAsset3.Class;
 
 	m_fTierGageTimeMax = 0.5f;
+}
+
+void AGuardian::SetTier3Skill(ASpell * pSpell)
+{
+	m_pTier3Skill = pSpell;
+}
+
+ASpell * AGuardian::GetTier3Skill() const
+{
+	return m_pTier3Skill;
 }
 
 EGUARDIANLEVEL AGuardian::GetGuardianLevel() const
@@ -237,16 +247,28 @@ void AGuardian::SearchTarget()
 {
 }
 
+void AGuardian::Targeting()
+{
+}
+
 void AGuardian::ShowUI()
 {
-	switch (SpawnUI->GetVisibility())
+	if (m_eLevel != EGUARDIANLEVEL::GL_LEVEL3)
 	{
-	case ESlateVisibility::Visible:
-		SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
-		break;
-	case ESlateVisibility::Collapsed:
-		SpawnUI->SetVisibility(ESlateVisibility::Visible);
+		switch (SpawnUI->GetVisibility())
+		{
+		case ESlateVisibility::Visible:
+			SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+			break;
+		case ESlateVisibility::Collapsed:
+			SpawnUI->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
+}
+
+void AGuardian::HideUI()
+{
+	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void AGuardian::CreateEffectLevelUp(EElementalType eType)
