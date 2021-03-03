@@ -238,6 +238,10 @@ void AGuardian_Knight::SearchTarget()
 	}
 }
 
+void AGuardian_Knight::Targeting(const FVector & vLoc)
+{
+}
+
 void AGuardian_Knight::Knight_Tier2(EElementalType eType)
 {
 	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/WarriorSK.WarriorSK'"));

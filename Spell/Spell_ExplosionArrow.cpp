@@ -16,7 +16,7 @@ ASpell_ExplosionArrow::ASpell_ExplosionArrow()
 
 
 	m_fLifeTime = 0;
-	m_fLifeTimeMax = 3.f;
+	m_fLifeTimeMax = 7.f;
 }
 
 AGuardian_Archer * ASpell_ExplosionArrow::GetArcher() const
@@ -47,7 +47,7 @@ void ASpell_ExplosionArrow::Tick(float DeltaTime)
 
 	FVector vForward = GetActorForwardVector();
 
-	vPos = vPos + (vForward * 800 * DeltaTime);
+	vPos = vPos + (vForward * 1000 * DeltaTime);
 
 	SetActorLocation(vPos);
 

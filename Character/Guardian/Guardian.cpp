@@ -65,17 +65,28 @@ AGuardian::AGuardian()
 	if (EffectAsset1.Succeeded())
 		IceLevelUp_EffectAsset = EffectAsset3.Class;
 
+	GetClassAsset(AActor_Decal, DecalRed, "Blueprint'/Game/03Decal/RedCircleDecal_BP.RedCircleDecal_BP_C'");
+
+	if (DecalRed.Succeeded())
+		RedDecal = DecalRed.Class;
+
+	GetClassAsset(AActor_Decal, DecalBlue, "Blueprint'/Game/03Decal/BlueCircleDecal_BP.BlueCircleDecal_BP_C'");
+
+	if (DecalBlue.Succeeded())
+		BlueDecal = DecalBlue.Class;
+
+	GetClassAsset(AActor_Decal, DecalYellow, "Blueprint'/Game/03Decal/YellowCircleDecal_BP.YellowCircleDecal_BP_C'");
+
+	if (DecalYellow.Succeeded())
+		YellowDecal = DecalYellow.Class;
+
 	m_fTierGageTimeMax = 0.5f;
 }
 
-void AGuardian::SetTier3Skill(ASpell * pSpell)
-{
-	m_pTier3Skill = pSpell;
-}
 
-ASpell * AGuardian::GetTier3Skill() const
+AActor_Decal * AGuardian::GetDecal() const
 {
-	return m_pTier3Skill;
+	return m_pDecal;
 }
 
 EGUARDIANLEVEL AGuardian::GetGuardianLevel() const
@@ -247,7 +258,11 @@ void AGuardian::SearchTarget()
 {
 }
 
-void AGuardian::Targeting()
+void AGuardian::Targeting(const FVector& vLoc)
+{
+}
+
+void AGuardian::Ultimate()
 {
 }
 

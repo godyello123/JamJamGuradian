@@ -23,6 +23,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		AActor* RClickedActor;
 
+
 private:
 	bool bLButtonDown;
 	bool bRButtonDown; 
@@ -55,7 +56,8 @@ private:
 	void CurrentProcess(AActor* _Actor);
 
 protected:
-	void SkillLocation(FVector& vLoc);
+	void SkillLocation(float fDeltaTime);
 	void SkillOn();
+	void SkillforActor(AActor* pActor,const  FVector& vLoc);
 	
 };

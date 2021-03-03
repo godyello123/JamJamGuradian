@@ -9,6 +9,8 @@
 #include "../../Spell/Spell_IceArrow.h"
 #include "../../Spell/Spell_StaticArrow.h"
 #include "../../Spell/Spell_RainofArrow.h"
+#include "../../Spell/Spell_CrystalArrow.h"
+#include "../../NormalActor/Actor_Decal.h"
 #include "Guardian_Archer.generated.h"
 
 /**
@@ -46,8 +48,13 @@ protected:
 		TSubclassOf<ASpell_StaticArrow> StaticArrow;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_RainofArrow> RainOfArrow;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_CrystalArrow> CrystalArrow;
 	UPROPERTY(Category = Projectile, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectile> ProjectileAsset;
+
+
+
 
 
 private:
@@ -56,6 +63,9 @@ private:
 
 public:
 	void SetAI(EGUARDIAN_AI _eAI);
+
+private:
+	void CreateDecal();
 
 protected:
 	void LoadBow(const FString& strSocket, const FString& strMeshPath);
@@ -86,7 +96,8 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
-	virtual void Targeting();
+	virtual void Targeting(const FVector& vLoc);
+	virtual void Ultimate();
 
 private:
 	void Archer_Tier2(EElementalType eType);
@@ -107,7 +118,11 @@ public:
 public:
 	void Tier3Skill();
 	void RainOfArrowSkill();
+	void CrystalArrowSkill();
+
 
 public:
 	void EraseTarget();
+
+
 };

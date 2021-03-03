@@ -61,6 +61,14 @@ AGuardian_Archer::AGuardian_Archer()
 	if (Rain.Succeeded())
 		RainOfArrow = Rain.Class;
 
+	GetClassAsset(ASpell_CrystalArrow, Crystal, "Blueprint'/Game/05Spell/CrystalArrow_BP.CrystalArrow_BP_C'");
+
+	if (Crystal.Succeeded())
+		CrystalArrow = Crystal.Class;
+
+
+
+
 	/*SetState(2, 10, 2, 1.f);*/
 
 	//fAttackDist = 400.f;
@@ -202,10 +210,10 @@ void AGuardian_Archer::Skill()
 	if (State.fTierGage_3 >= State.fTierGageMax_3)
 	{
 		Tier3Skill();
-		State.fTierGage_3 = 0.f;
+		//State.fTierGage_3 = 0.f;
 	}
 
-	else if (State.fTierGage_2 >= State.fTierGageMax_2)
+	if (State.fTierGage_2 >= State.fTierGageMax_2)
 	{
 		Tier2Skill();
 		State.fTierGage_2 = 0.f;
@@ -257,7 +265,7 @@ void AGuardian_Archer::SearchTarget()
 	}
 }
 
-void AGuardian_Archer::Targeting()
+void AGuardian_Archer::Targeting(const FVector& vLoc)
 {
 	PrintViewport(1.f, FColor::Yellow, TEXT("Archer tier3 skill"));
 
@@ -279,6 +287,27 @@ void AGuardian_Archer::Targeting()
 	}
 }
 
+void AGuardian_Archer::Ultimate()
+{
+
+	State.fTierGage_3 = 0.f;
+
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+		MultiShot();
+		break;
+	case EElementalType::ET_Fire:
+		RainOfArrowSkill();
+		break;
+	case EElementalType::ET_Ice:
+		CrystalArrowSkill();
+		break;
+	}
+
+
+}
+
 void AGuardian_Archer::Archer_Tier2(EElementalType eType)
 {
 	USkeletalMesh* pMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("SkeletalMesh'/Game/ModularRPGHeroesPBR/Meshes/OneMeshCharacters/EngineerSK1.EngineerSK1'"));
@@ -298,6 +327,7 @@ void AGuardian_Archer::Archer_Tier3(EElementalType eType)
 	SetElementalType(eType);
 	SetFillTierGage_3(0.5f);
 	HideUI();
+	CreateDecal();
 }
 
 bool AGuardian_Archer::CheckDistance()
@@ -353,13 +383,23 @@ void AGuardian_Archer::AttackToTarget()
 
 void AGuardian_Archer::MultiShot()
 {
-	for (int32 i = -1; i < 2; ++i)
+	FVector TargetLoc = m_pDecal->GetActorLocation();
+	TargetLoc.Z = 0.f;
+	FVector MyLoc = GetActorLocation();
+	MyLoc.Z = 0.f;
+
+	FVector vDir = TargetLoc - MyLoc;
+	vDir.Normalize();
+
+	FRotator vRot = FRotator(0.f, vDir.Rotation().Yaw, 0.f);
+
+	SetActorRotation(vRot);
+
+	for (int32 i = -2; i < 3; ++i)
 	{
 		FVector vPos = GetActorLocation() + GetActorForwardVector() * 200.f;
 
-		FRotator vRot = GetActorRotation();
-
-		vRot.Yaw += i * 5.f;
+		vRot.Yaw += i * 3.f;
 
 		FActorSpawnParameters tParams;
 
@@ -368,29 +408,9 @@ void AGuardian_Archer::MultiShot()
 
 		tParams.Owner = this;
 
-		switch (m_eElementalType)
-		{
-		case EElementalType::ET_Normal:
-		{
-			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Yellow, vPos, vRot,
-				tParams);
-		}
-			break;
-		case EElementalType::ET_Fire:
-		{
-			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Red, vPos, vRot,
-				tParams);
-		}
-			break;
-		case EElementalType::ET_Ice:
-		{
-			ASpell_MultiShot* pArrow = GetWorld()->SpawnActor<ASpell_MultiShot>(Arrow_Yellow, vPos, vRot,
-				tParams);
-		}
-			break;
-		}
+		ASpell_StaticArrow* pArrow = GetWorld()->SpawnActor<ASpell_StaticArrow>(StaticArrow, vPos, vRot,
+			tParams);
 	}
-	State.fTierGage_2 = 0.f;
 }
 
 void AGuardian_Archer::Shot()
@@ -499,13 +519,56 @@ void AGuardian_Archer::Tier2Skill()
 
 void AGuardian_Archer::Tier3Skill()
 {
-	m_bTire3Skill = true;
+	if (m_pDecal)
+	{
+		if (m_pDecal->GetDecalSkillOn())
+		{
+			Ultimate();
+		}
+	}
 }
 
 void AGuardian_Archer::RainOfArrowSkill()
 {
 	//ºÒÈ­»ì ±× ¶¥ ÀÌÆåÆ® »ý¼º
 
+	FRotator vRot = GetActorRotation();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+
+	ASpell_RainofArrow* pArrow = GetWorld()->SpawnActor<ASpell_RainofArrow>(RainOfArrow, FVector::ZeroVector, vRot,
+		tParams);
+}
+
+void AGuardian_Archer::CrystalArrowSkill()
+{
+	FVector TargetLoc = m_pDecal->GetActorLocation();
+	TargetLoc.Z = 0.f;
+	FVector MyLoc = GetActorLocation();
+	MyLoc.Z = 0.f;
+
+	FVector vDir = TargetLoc - MyLoc;
+	vDir.Normalize();
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+	
+	FRotator vRot= FRotator(0.f, vDir.Rotation().Yaw, 0.f);
+
+	SetActorRotation(vRot);
+
+	ASpell_CrystalArrow* pArrow = GetWorld()->SpawnActor<ASpell_CrystalArrow>(CrystalArrow,GetActorLocation(), vRot,
+		tParams);
 }
 
 void AGuardian_Archer::EraseTarget()
@@ -514,10 +577,37 @@ void AGuardian_Archer::EraseTarget()
 	bTarget = false;
 }
 
-
 void AGuardian_Archer::SetAI(EGUARDIAN_AI _eAI)
 {
 	eAI = _eAI;
+}
+
+void AGuardian_Archer::CreateDecal()
+{
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		m_pDecal= GetWorld()->SpawnActor<AActor_Decal>(YellowDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+		break;
+	case EElementalType::ET_Fire:
+	{
+		m_pDecal = GetWorld()->SpawnActor<AActor_Decal>(RedDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+		break;
+	case EElementalType::ET_Ice:
+	{
+		m_pDecal = GetWorld()->SpawnActor<AActor_Decal>(BlueDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+		break;
+	}
 }
 
 void AGuardian_Archer::LoadBow(const FString& strSocket, const FString& strMeshPath)

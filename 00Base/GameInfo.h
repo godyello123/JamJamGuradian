@@ -64,7 +64,7 @@ enum class EGuardianAnimType : uint8
 {
 	GAT_Idle,
 	GAT_Move,
-	GAT_Attack,
+	GAT_Ultimate,
 	GAT_Skill,
 	GAT_Groggy,
 	GAT_Victory,

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Spell.h"
+#include "Spell_ExplosionArrow.h"
 #include "Spell_RainofArrow.generated.h"
 
 /**
@@ -16,11 +17,16 @@ class MPSG_API ASpell_RainofArrow : public ASpell
 public:
 	ASpell_RainofArrow();
 
+	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_ExplosionArrow> Arrow;
+
 protected:
 	float m_fLifeTime;
 	float m_fLIfeTimeMax;
 	float m_fSpawnArrowTime;
 	float m_fSpawnArrowTimeMax;
+	int32 m_iArrowCount;
+	bool m_bDestroy;
 
 protected:
 	// Called when the game starts or when spawned

@@ -66,6 +66,7 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
+	virtual void Targeting(const FVector& vLoc);
 
 private:
 	void Knight_Tier2(EElementalType eType);

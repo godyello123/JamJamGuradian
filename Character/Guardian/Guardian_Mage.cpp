@@ -258,9 +258,14 @@ void AGuardian_Mage::SearchTarget()
 	}
 }
 
-void AGuardian_Mage::Targeting()
+void AGuardian_Mage::Targeting(const FVector& vLoc)
 {
 	PrintViewport(1.f, FColor::Yellow, TEXT("MAGE 3"));
+}
+
+void AGuardian_Mage::Ultimate()
+{
+	ChangeAnimation(EGuardianAnimType::GAT_Ultimate);
 }
 
 void AGuardian_Mage::Mage_Tier2(EElementalType eType)

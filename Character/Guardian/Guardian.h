@@ -5,6 +5,7 @@
 #include "../../00Base/MasterActor.h"
 #include "../../Projectile/Projectile.h"
 #include "../../Effect/Effect_LevelUp.h"
+#include "../../NormalActor/Actor_Decal.h"
 #include "GameFramework/Character.h"
 #include "Guardian.generated.h"
 
@@ -100,15 +101,23 @@ protected:
 	TSubclassOf<AEffect_LevelUp> IceLevelUp_EffectAsset;
 
 protected:
-	class ASpell* m_pTier3Skill;
+	UPROPERTY(Category = Decal, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor_Decal> RedDecal;
+	UPROPERTY(Category = Decal, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor_Decal> BlueDecal;
+	UPROPERTY(Category = Decal, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor_Decal> YellowDecal;
+
+protected:
+	AActor_Decal* m_pDecal;
+
+public:
+	AActor_Decal* GetDecal() const;
 
 protected:
 	bool m_bDead;
 	float m_fDeadTime;
 
-public:
-	void SetTier3Skill(class ASpell* pSpell);
-	class ASpell* GetTier3Skill() const;
 
 
 public:
@@ -196,7 +205,8 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
-	virtual void Targeting();
+	virtual void Targeting(const FVector& vLoc);
+	virtual void Ultimate();
 
 public:
 	void ShowUI();

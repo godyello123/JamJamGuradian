@@ -77,7 +77,8 @@ public:
 	virtual void Attack();
 	virtual void Skill();
 	virtual void SearchTarget();
-	virtual void Targeting();
+	virtual void Targeting(const FVector& vLoc);
+	virtual void Ultimate();
 
 private:
 	void Mage_Tier2(EElementalType eType);

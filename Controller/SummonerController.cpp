@@ -7,6 +7,7 @@
 #include "../Character/Guardian/Guardian.h"
 #include "../Character/Monster/Monster.h"
 #include "../Tile/Tile_SpawnGuardian.h"
+#include "../NormalActor/Actor_Decal.h"
 #include "../Spell/Spell.h"
 
 ASummonerController::ASummonerController()
@@ -27,7 +28,7 @@ void ASummonerController::Tick(float DeltaTime)
 
 	if (bGuardianSkill)
 	{
-
+		SkillLocation(DeltaTime);
 	}
 }
 
@@ -111,7 +112,7 @@ void ASummonerController::CurrentProcess(AActor* _Actor)
 	}
 }
 
-void ASummonerController::SkillLocation(FVector & vLoc)
+void ASummonerController::SkillLocation(float fDeltaTime)
 {
 	FHitResult	result;
 
@@ -123,10 +124,11 @@ void ASummonerController::SkillLocation(FVector & vLoc)
 		AGuardian* pGuardian = Cast<AGuardian>(RClickedActor);
 		if (pGuardian)
 		{
-			ASpell* pSpell = pGuardian->GetTier3Skill();
-			if (pSpell)
+			AActor_Decal* pDecal = pGuardian->GetDecal();
+			if (pDecal)
 			{
-				pSpell->SetActorLocation(result.ImpactPoint);
+				if(pDecal->IsEnableDecal())
+					pDecal->SetActorLocation(result.ImpactPoint);
 			}
 		}
 	}
@@ -134,6 +136,36 @@ void ASummonerController::SkillLocation(FVector & vLoc)
 
 void ASummonerController::SkillOn()
 {
+}
+
+void ASummonerController::SkillforActor(AActor * pActor,const  FVector& vLoc)
+{
+	RClickedActor = pActor;
+
+	if (IsValid(RClickedActor))
+	{
+		if (RClickedActor->Tags.Num() > 0)
+		{
+			if (RClickedActor->Tags[0] == "Guardian")
+			{
+				AGuardian* pGuardian = Cast<AGuardian>(RClickedActor);
+
+				if (pGuardian)
+				{
+					if (pGuardian->GetState().fTierGageMax_3 <= pGuardian->GetState().fTierGage_3)
+					{
+						AActor_Decal* pDecal = pGuardian->GetDecal();
+
+						if (pDecal)
+						{
+							pDecal->EnableDecal(true);
+							pDecal->SetActorLocation(vLoc);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void ASummonerController::LButtonClick()
@@ -159,11 +191,33 @@ void ASummonerController::RButtonClick()
 	bRButtonDown = true;
 	bGuardianSkill = true;
 	//해당 티어 가디언 스킬 만들어주기
+	FHitResult result;
+
+	bool bHit = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility,
+		false, result);
+
+	SkillforActor(result.GetActor(), result.ImpactPoint);
 }
 
 void ASummonerController::RButtonRelease()
 {
 	bRButtonDown = false;
+	bGuardianSkill = false;
+
+	AGuardian* pGuardian = Cast<AGuardian>(RClickedActor);
+
+	if (pGuardian)
+	{
+		if (pGuardian->GetDecal())
+		{
+			AActor_Decal* pDecal = pGuardian->GetDecal();
+
+			if (pDecal)
+			{
+				pDecal->SetDecalSkillOn(true);
+			}
+		}
+	}
 }
 
 bool ASummonerController::IsLButton() const
