@@ -304,8 +304,6 @@ void AGuardian_Archer::Ultimate()
 		CrystalArrowSkill();
 		break;
 	}
-
-
 }
 
 void AGuardian_Archer::Archer_Tier2(EElementalType eType)

@@ -19,8 +19,6 @@ AEffect::AEffect()
 void AEffect::BeginPlay()
 {
 	Super::BeginPlay();
-
-
 }
 
 // Called every frame

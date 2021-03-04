@@ -2,6 +2,8 @@
 
 
 #include "Spell_FireField.h"
+#include "../Character/Guardian/Guardian_Mage.h"
+#include "../Character/Monster/Monster.h"
 
 ASpell_FireField::ASpell_FireField()
 {
@@ -26,6 +28,10 @@ void ASpell_FireField::BeginPlay()
 
 	Collision->SetEnableGravity(false);
 	Mesh->SetEnableGravity(false);
+
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &ASpell_FireField::CollisionBeginOverlap);
+
+	SetSpellDmgRate(0.5);
 }
 
 void ASpell_FireField::Tick(float DeltaTime)
@@ -38,13 +44,6 @@ void ASpell_FireField::Tick(float DeltaTime)
 	{
 		Destroy();
 	}
-
-	//m_fDamageTime += DeltaTime;
-
-	//if (m_fDamageTime >= m_fDamageMaxTime)
-	//{
-
-	//}
 }
 
 void ASpell_FireField::CollisionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -56,6 +55,23 @@ void ASpell_FireField::CollisionBeginOverlap(UPrimitiveComponent * OverlappedCom
 	if (m_fDamageTime >= m_fDamageMaxTime)
 	{
 		//데미지 주기
+		FDamageEvent DmgEvent;
+
+		AGuardian_Mage* pArcher = Cast<AGuardian_Mage>(GetOwner());
+
+		float fDmg = pArcher->GetState().iDamage*GetSpellDmgRate();
+
+		if (IsValid(pArcher))
+		{
+			AMonster* pMon = Cast<AMonster>(OtherActor);
+
+			float fHp = OtherActor->TakeDamage(fDmg, DmgEvent, pArcher->GetController(), this);
+
+			if (fHp <= 0.f)
+			{
+				pArcher->EraseTarget();
+			}
+		}
 
 		m_fDamageTime = 0.f;
 	}

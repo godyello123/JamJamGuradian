@@ -54,9 +54,6 @@ protected:
 		TSubclassOf<AProjectile> ProjectileAsset;
 
 
-
-
-
 private:
 	bool m_bTire3Skill;
 	float m_iOriginDamage;

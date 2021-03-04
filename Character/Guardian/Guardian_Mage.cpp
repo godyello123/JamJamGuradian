@@ -54,6 +54,22 @@ AGuardian_Mage::AGuardian_Mage()
 	if (SpellAsset6.Succeeded())
 		Thunder = SpellAsset6.Class;
 
+	GetClassAsset(ASpell_Meteor, SpellAsset7, "Blueprint'/Game/05Spell/Meteor_BP.Meteor_BP_C'");
+
+	if (SpellAsset7.Succeeded())
+		Meteor = SpellAsset7.Class;
+
+	GetClassAsset(ASpell_Blizzard, SpellAsset8, "Blueprint'/Game/05Spell/Blizzard_BP.Blizzard_BP_C'");
+
+	if (SpellAsset8.Succeeded())
+		Blizzard = SpellAsset8.Class;
+
+	GetClassAsset(ASpell_EletricField, SpellAsset9, "Blueprint'/Game/05Spell/EletricField_BP.EletricField_BP_C'");
+
+	if (SpellAsset9.Succeeded())
+		EletricField = SpellAsset9.Class;
+
+
 	//SetState(5, 10, 1, 1.f);
 
 	//fAttackDist = 300.f;
@@ -103,6 +119,34 @@ void AGuardian_Mage::BeginPlay()
 	SetFillTierGage_1(0.7f);
 	SetFillTierGage_2(0.f);
 	SetFillTierGage_3(0.f);
+}
+
+void AGuardian_Mage::CreateDecal()
+{
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+	{
+		m_pDecal = GetWorld()->SpawnActor<AActor_Decal>(YellowDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+	break;
+	case EElementalType::ET_Fire:
+	{
+		m_pDecal = GetWorld()->SpawnActor<AActor_Decal>(RedDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+	break;
+	case EElementalType::ET_Ice:
+	{
+		m_pDecal = GetWorld()->SpawnActor<AActor_Decal>(BlueDecal,
+			FVector::ZeroVector, FRotator(0.f, 0.f, 0.f));
+		m_pDecal->EnableDecal(false);
+	}
+	break;
+	}
 }
 
 void AGuardian_Mage::SetAI(EGUARDIAN_AI _eAI)
@@ -175,7 +219,7 @@ void AGuardian_Mage::Skill()
 {
 	if (State.fTierGage_3 >= State.fTierGageMax_3)
 	{
-		
+		Tier3Skill();
 	}
 
 	if (State.fTierGage_2 >= State.fTierGageMax_2)
@@ -184,7 +228,7 @@ void AGuardian_Mage::Skill()
 		State.fTierGage_2 = 0.f;
 	}
 
-	if (State.fTierGage_1 >= State.fTierGageMax_1)
+	else if (State.fTierGage_1 >= State.fTierGageMax_1)
 	{
 		MagicMissaile();
 	}
@@ -265,7 +309,18 @@ void AGuardian_Mage::Targeting(const FVector& vLoc)
 
 void AGuardian_Mage::Ultimate()
 {
-	ChangeAnimation(EGuardianAnimType::GAT_Ultimate);
+	State.fTierGage_3 = 0.f;
+
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+		break;
+	case EElementalType::ET_Fire:
+		MeteorSkill();
+		break;
+	case EElementalType::ET_Ice:
+		break;
+	}
 }
 
 void AGuardian_Mage::Mage_Tier2(EElementalType eType)
@@ -287,6 +342,7 @@ void AGuardian_Mage::Mage_Tier3(EElementalType eType)
 	SetElementalType(eType);
 	SetFillTierGage_2(0.7f);
 	HideUI();
+	CreateDecal();
 }
 
 void AGuardian_Mage::MageTier2Skill()
@@ -447,6 +503,63 @@ void AGuardian_Mage::MagicMissaile()
 	}
 
 	State.fTierGage_1 = 0.f;
+}
+
+void AGuardian_Mage::Tier3Skill()
+{
+	if (m_pDecal)
+	{
+		if (m_pDecal->GetDecalSkillOn())
+		{
+			Ultimate();
+		}
+	}
+}
+
+void AGuardian_Mage::MeteorSkill()
+{
+	FVector vDecalLoc = m_pDecal->GetActorLocation();
+
+	FVector vLoc = vDecalLoc;
+	vLoc.Z = 1000.f;
+	float fX = FMath::FRandRange(-100.f, 100.f);
+	float fY = FMath::FRandRange(-100.f, 100.f);
+
+	vLoc.X += fX;
+	vLoc.Y += fY;
+
+	FVector vDir = vDecalLoc - vLoc;
+
+	vDir.Normalize();
+
+	FRotator vRot = FRotator(vDir.Rotation().Pitch,0.f,0.f);
+
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_Meteor* pArrow = GetWorld()->SpawnActor<ASpell_Meteor>(Meteor, vLoc, vRot,
+		tParams);
+}
+
+void AGuardian_Mage::BlizzardSkill()
+{
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_Blizzard* pArrow = GetWorld()->SpawnActor<ASpell_Blizzard>(Blizzard, m_pDecal->GetActorLocation(), GetActorRotation(),
+		tParams);
+}
+
+void AGuardian_Mage::EletricFieldSkill()
+{
 }
 
 void AGuardian_Mage::EraseTarget()

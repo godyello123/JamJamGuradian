@@ -8,6 +8,9 @@
 #include "../../Spell/Spell_FireField.h"
 #include "../../Spell/Spell_Crystalize.h"
 #include "../../Spell/Spell_Thunder.h"
+#include "../../Spell/Spell_Meteor.h"
+#include "../../Spell/Spell_Blizzard.h"
+#include "../../Spell/Spell_EletricField.h"
 #include "Guardian_Mage.generated.h"
 
 
@@ -44,6 +47,16 @@ protected:
 		TSubclassOf<ASpell_Crystalize> Crystalize;
 	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<ASpell_Thunder> Thunder;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_Meteor> Meteor;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_Blizzard> Blizzard;
+	UPROPERTY(Category = Spell, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<ASpell_EletricField> EletricField;
+
+private:
+	void CreateDecal();
+
 
 public:
 	void SetAI(EGUARDIAN_AI eAI);
@@ -96,6 +109,12 @@ public:
 
 public:
 	void MagicMissaile();
+
+private:
+	void Tier3Skill();
+	void MeteorSkill();
+	void BlizzardSkill();
+	void EletricFieldSkill();
 
 public:
 	void EraseTarget();
