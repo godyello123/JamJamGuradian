@@ -21,6 +21,9 @@ public:
 private:
 	int32 m_iWaveNumer;
 	EGameLevel m_eGameLevel;
+	int32 m_iFieldMonsterCount;
+	int32 m_iMaxFieldMonsterCount;
+
 
 public:
 	void SetGameLevel(EGameLevel eLevel);
@@ -30,6 +33,10 @@ public:
 	void SetWaveNumber(int32 iWave);
 	int32 GetWaveNumber() const;
 	void AddWaveNumber();
-	
+
+	void SetFieldMonsterCount(int32 iCount);
+	void AddFieldMonsterCount();
+	void EraseMonsterCount();
+
 	
 };

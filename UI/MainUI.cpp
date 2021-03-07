@@ -18,6 +18,10 @@ void UMainUI::NativePreConstruct()
 
 	WaveNumberText = Cast<UTextBlock>(GetWidgetFromName(TEXT("WaveNumber")));
 
+	CountText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MonsterCountText")));
+
+	ClockText = Cast<UTextBlock>(GetWidgetFromName(TEXT("TimeText")));
+
 	GoldGemCountText = Cast<UTextBlock>(GetWidgetFromName(TEXT("GoldGemCount")));
 
 	FireGemCountText = Cast<UTextBlock>(GetWidgetFromName(TEXT("FireGemCount")));
@@ -31,7 +35,12 @@ void UMainUI::NativePreConstruct()
 	DamageUpButton = Cast<UButton>(GetWidgetFromName(TEXT("DamageUp")));
 	UtilityUpButton = Cast<UButton>(GetWidgetFromName(TEXT("UtilityUp")));
 
+	SkipTimeButton = Cast<UButton>(GetWidgetFromName(TEXT("SkipButton")));
+
 	DamageUpButton->OnClicked.AddDynamic(this, &UMainUI::DamageUpCallback);
+	SkipTimeButton->OnClicked.AddDynamic(this, &UMainUI::SkipButtonCallback);
+	UtilityUpButton->OnClicked.AddDynamic(this, &UMainUI::SkipButtonCallback);
+
 	DamageUpUI = Cast<UDamageUpUI>(GetWidgetFromName(TEXT("DmgUI")));
 
 
@@ -89,6 +98,19 @@ void UMainUI::DamageUpCallback()
 	}
 }
 
+void UMainUI::SkipButtonCallback()
+{
+	if (SkipTimeButton)
+	{
+		ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+		if (pMode)
+		{
+			pMode->SkipTime();
+		}
+	}
+}
+
 void UMainUI::SetFireDmgLevel(int32 iLevel)
 {
 	if (DamageUpUI->GetVisibility() == ESlateVisibility::Visible)
@@ -105,4 +127,30 @@ void UMainUI::SetNormalDmgLevel(int32 iLevel)
 {
 	if (DamageUpUI->GetVisibility() == ESlateVisibility::Visible)
 		DamageUpUI->SetNormalDmgLevelText(iLevel);
+}
+
+void UMainUI::SetMonsterCountText(int32 iCount)
+{
+	FString strText = FString::Printf(TEXT("%d / 100"), iCount);
+
+	if (CountText)
+		CountText->SetText(FText::FromString(strText));
+}
+
+void UMainUI::SetClock(int32 iMinute, int32 iSecond)
+{
+	FString strText = FString::Printf(TEXT("%d : %d"), iMinute, iSecond);
+
+	if (ClockText)
+		ClockText->SetText(FText::FromString(strText));
+}
+
+void UMainUI::SpawnTile()
+{
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (pMode)
+	{
+		pMode->SpawnTile();
+	}
 }

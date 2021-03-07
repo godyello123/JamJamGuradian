@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include "../../NormalActor/DemonGate.h"
 #include "AIController.h"
+#include "../../GameMode/DefenseGameInstance.h"
 
 
 // Sets default values
@@ -136,6 +137,13 @@ void AMonster::Dead()
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	GetMesh()->SetCollisionProfileName(TEXT("Pawn"));
+
+	UDefenseGameInstance* pInst = Cast<UDefenseGameInstance>(GetGameInstance());
+
+	if (pInst)
+	{
+		pInst->EraseMonsterCount();
+	}
 }
 
 void AMonster::Burn()
@@ -216,6 +224,7 @@ void AMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 float AMonster::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+
 	return 0.0f;
 }
 
@@ -226,8 +235,21 @@ void AMonster::ChangeAnim(EMonsterAnimType eType)
 
 void AMonster::SetMonsterState(int32 iDamage, int32 iHP, int32 iMP, float fATSpeed, float fMoveSpeed)
 {
+	UDefenseGameInstance* pInst = Cast<UDefenseGameInstance>(GetGameInstance());
+
+	int32 iValue;
+
+	if (pInst)
+	{
+		iValue = pInst->GetWaveNumber();
+	}
+	else
+	{
+		iValue = 1;
+	}
+
 	State.Damage = iDamage;
-	State.iHPMax = iHP;
+	State.iHPMax = iHP* iValue;
 	State.iHP = State.iHPMax;
 	State.iMPMax = iMP;
 	State.iMP = 0;

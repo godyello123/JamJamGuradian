@@ -20,6 +20,10 @@ private:
 	UPROPERTY(Category = Mesh, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<ATile_SpawnGuardian*> TileArray;
 
+public:
+	ATile_SpawnGuardian* GetTile(int32 iKey);
+	int32 GetTileArraySize() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,6 +35,7 @@ public:
 public:
 	void CreateTile();
 	void ShowTileCount(int32 iCount);
+	void CheckNearTile();
 
 
 

@@ -2,17 +2,20 @@
 
 
 #include "DefenseGameInstance.h"
+#include "DefenseGameMode.h"
+
 
 UDefenseGameInstance::UDefenseGameInstance()
 {
-
+	m_iWaveNumer = 0;
+	m_iFieldMonsterCount = 0;
+	m_iMaxFieldMonsterCount = 100;
 }
 
 UDefenseGameInstance::~UDefenseGameInstance()
 {
 
 }
-
 
 void UDefenseGameInstance::SetGameLevel(EGameLevel eLevel)
 {
@@ -27,6 +30,13 @@ EGameLevel UDefenseGameInstance::GetGameLevel() const
 void UDefenseGameInstance::SetWaveNumber(int32 iWave)
 {
 	m_iWaveNumer = iWave;
+
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (pMode)
+	{
+		pMode->GameWave(iWave);
+	}
 }
 
 int32 UDefenseGameInstance::GetWaveNumber() const
@@ -36,5 +46,43 @@ int32 UDefenseGameInstance::GetWaveNumber() const
 
 void UDefenseGameInstance::AddWaveNumber()
 {
-	m_iWaveNumer++;
+	++m_iWaveNumer;
+
+	SetWaveNumber(m_iWaveNumer);
+}
+
+void UDefenseGameInstance::SetFieldMonsterCount(int32 iCount)
+{
+	m_iFieldMonsterCount = iCount;
+}
+
+void UDefenseGameInstance::AddFieldMonsterCount()
+{
+	++m_iFieldMonsterCount;
+
+	//여기에 ui  나와야함
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (pMode)
+	{
+		pMode->MonsterCount(m_iFieldMonsterCount);
+	}
+
+}
+
+void UDefenseGameInstance::EraseMonsterCount()
+{
+	--m_iFieldMonsterCount;
+
+	if (m_iFieldMonsterCount <= 0)
+	{
+		m_iFieldMonsterCount = 0;
+	}
+	//여기에 ui  나와야함
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (pMode)
+	{
+		pMode->MonsterCount(m_iFieldMonsterCount);
+	}
 }

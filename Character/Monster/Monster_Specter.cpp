@@ -29,7 +29,7 @@ AMonster_Specter::AMonster_Specter()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(5, 5, 5, 100, 1.f);
+
 }
 
 void AMonster_Specter::BeginPlay()
@@ -37,6 +37,8 @@ void AMonster_Specter::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Specter>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_Specter::Tick(float DeltaTime)

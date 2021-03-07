@@ -31,7 +31,7 @@ AMonster_Beholder::AMonster_Beholder()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(5, 5, 5, 100, 1);
+	
 }
 
 void AMonster_Beholder::BeginPlay()
@@ -39,6 +39,8 @@ void AMonster_Beholder::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Beholder>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1);
 }
 
 void AMonster_Beholder::Tick(float DeltaTime)

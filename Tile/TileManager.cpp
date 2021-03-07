@@ -14,20 +14,29 @@ ATileManager::ATileManager()
 	this->SetActorEnableCollision(false);
 }
 
+ATile_SpawnGuardian * ATileManager::GetTile(int32 iKey)
+{
+	return TileArray[iKey];
+}
+
+int32 ATileManager::GetTileArraySize() const
+{
+	return TileArray.Num();
+}
+
 // Called when the game starts or when spawned
 void ATileManager::BeginPlay()
 {
 	Super::BeginPlay();
 	CreateTile();
 	ShowTileCount(5);
-
+	CheckNearTile();
 }
 
 // Called every frame
 void ATileManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATileManager::CreateTile()
@@ -40,7 +49,10 @@ void ATileManager::CreateTile()
 			FRotator vRot = FRotator::ZeroRotator;
 			ATile_SpawnGuardian* pTile = GetWorld()->SpawnActor< ATile_SpawnGuardian>(vLoc, vRot);
 			pTile->EnableTile(false);
+			pTile->SetTileManager(this);
 			int32 iRand = FMath::RandRange(0, 2);
+			int32 iNum = i * 4 + j;
+			pTile->SetTileNumber(iNum);
 			TileArray.Add(pTile);
 		}
 	}
@@ -59,6 +71,17 @@ void ATileManager::ShowTileCount(int32 iCount)
 				TileArray[iKey]->EnableTile(true);
 				++i;
 			}
+		}
+	}
+}
+
+void ATileManager::CheckNearTile()
+{
+	if (TileArray.Num()>0)
+	{
+		for (int32 i = 0; i < TileArray.Num(); ++i)
+		{
+			TileArray[i]->CheckNearTile();
 		}
 	}
 }

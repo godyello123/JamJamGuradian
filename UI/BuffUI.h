@@ -2,31 +2,27 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GuardianUI.generated.h"
+#include "BuffUI.generated.h"
 
 /**
  *
  */
 UCLASS()
-class MPSG_API UGuardianUI : public UUserWidget
+class MPSG_API UBuffUI : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UButton* NormalLevelUpButton;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UButton* FireLevelUpButton;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UButton* IceLevelUpButton;
-
-
+private:
 	class AGuardian* m_pOwner;
 
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UImage* DmgBuff;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UImage* GageBuff;
 
+	
 protected:
 	virtual void NativePreConstruct();
 	virtual void NativeConstruct();
@@ -35,12 +31,8 @@ protected:
 public:
 	void SetOwner(class AGuardian* pOnwer);
 
-
 public:
-	UFUNCTION(BlueprintCallable)
-	void NormalLevelUpButtonCallback();
-	UFUNCTION(BlueprintCallable)
-	void FireLevelUpButtonCallback();
-	UFUNCTION(BlueprintCallable)
-	void IceLevelUpButtonCallback();
+	void DmgBuffEnable(bool bEnable);
+	void GageBuffEnabld(bool bEnable);
+
 };

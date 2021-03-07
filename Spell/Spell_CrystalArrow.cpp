@@ -19,7 +19,7 @@ ASpell_CrystalArrow::ASpell_CrystalArrow()
 
 
 	m_fLifeTime = 0;
-	m_fLifeTimeMax = 7.f;
+	m_fLifeTimeMax = 20.f;
 
 
 }

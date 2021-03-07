@@ -6,6 +6,8 @@
 #include "../Monster/Monster.h"
 #include "../../NormalActor/Actor_Weapon.h"
 #include "../../Animation/Guardian/Anim_Knight.h"
+#include "../../Tile/Tile_SpawnGuardian.h"
+#include "../../Tile/TileManager.h"
 
 
 
@@ -49,6 +51,17 @@ AGuardian_Knight::AGuardian_Knight()
 
 	//Tags.Add("kngiht");
 
+	m_fBuffDmgRate = 1.2f;
+	m_fBuffGageRate = 1.2f;
+
+}
+
+void AGuardian_Knight::AddDmgBuffGuardian(AGuardian * pGuardian)
+{
+}
+
+void AGuardian_Knight::AddGageBuffGuardian(AGuardian * pGuardian)
+{
 }
 
 void AGuardian_Knight::SetAI(EGUARDIAN_AI _eAI)
@@ -95,6 +108,9 @@ void AGuardian_Knight::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetState(5, 10.f, 6.f, 10.f, 1.f);
+	SetFillTierGage_1(1.f);
+
 	Animation = Cast<UAnim_Knight>(GetMesh()->GetAnimInstance());
 
 	LoadSword(TEXT("weaponShield_r"), TEXT("StaticMesh'/Game/ModularRPGHeroesPBR/Meshes/Weapons/Sword01SM.Sword01SM'"));
@@ -104,7 +120,7 @@ void AGuardian_Knight::BeginPlay()
 	Shield->SetActorRelativeScale3D(FVector(1.f, 1.f, 1.f));
 	FString Name = GetDebugName(this);
 
-	
+	//BuffandDeBuff();
 	//SetFillMP(0.5);
 }
 
@@ -191,11 +207,24 @@ void AGuardian_Knight::Attack()
 	//	ChangeAnimation(EGuardianAnimType::GAT_Skill);
 	//else
 	//	ChangeAnimation(EGuardianAnimType::GAT_Attack);
+
+	ChangeAnimation(EGuardianAnimType::GAT_Skill);
 }
 
 void AGuardian_Knight::Skill()
 {
-	PowerStrike();
+	switch (m_eElementalType)
+	{
+	case EElementalType::ET_Normal:
+		Buff_Gage();
+		break;
+	case EElementalType::ET_Fire:
+		Buff_Dmg();
+		break;
+	case EElementalType::ET_Ice:
+		DeBuff_Armor();
+		break;
+	}
 }
 
 void AGuardian_Knight::SearchTarget()
@@ -249,6 +278,7 @@ void AGuardian_Knight::Knight_Tier2(EElementalType eType)
 	GetMesh()->SetWorldScale3D(FVector(1.1f, 1.1f, 1.1f));
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL2);
 	SetElementalType(eType);
+	//BuffDmg();
 }
 
 void AGuardian_Knight::Knight_Tier3(EElementalType eType)
@@ -258,6 +288,7 @@ void AGuardian_Knight::Knight_Tier3(EElementalType eType)
 	GetMesh()->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
 	SetElementalType(eType);
+	HideUI();
 }
 
 void AGuardian_Knight::CreateEffect()
@@ -329,39 +360,155 @@ void AGuardian_Knight::AttackToTarget()
 	}
 }
 
-void AGuardian_Knight::PowerStrike()
-{
-	//강하게 한대 때리기
-	if (bTarget && Target)
-	{
-		//이펙트 생성
-		CreateEffect();
-
-		AController* AI = GetController<AController>();
-
-		AMonster* pMonster = Cast<AMonster>(Target);
-		pMonster->SetGroggyTime(0.5f);
-
-		FDamageEvent DmgEvent;
-
-		float fDmg = State.iDamage * 1.5;
-
-		float fHp = Target->TakeDamage(fDmg, DmgEvent, AI, this);
-		
-		if (fHp <= 0.f)
-		{
-			Target = nullptr;
-			bTarget = false;
-		}
-
-		//State.iMP = 0;
-
-	}
-
-}
-
 void AGuardian_Knight::EraseTarget()
 {
-	Target = nullptr;
-	bTarget = false;
 }
+
+void AGuardian_Knight::Buff_Dmg()
+{
+	switch (m_eLevel)
+	{
+	case EGUARDIANLEVEL::GL_LEVEL1:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffDmg(m_fBuffDmgRate);
+					break;
+				}
+			}
+
+		}
+	}
+		break;
+	case EGUARDIANLEVEL::GL_LEVEL2:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffDmg(m_fBuffDmgRate);
+					if (i >= 1)
+					{
+						break;
+					}
+				}
+			}
+
+		}
+	}
+		break;
+	case EGUARDIANLEVEL::GL_LEVEL3:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffDmg(m_fBuffDmgRate);
+				}
+			}
+
+		}
+	}
+		break;
+	}
+}
+
+void AGuardian_Knight::Buff_Gage()
+{
+	switch (m_eLevel)
+	{
+	case EGUARDIANLEVEL::GL_LEVEL1:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffFillGage(m_fBuffGageRate);
+					break;
+				}
+			}
+
+		}
+	}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL2:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffFillGage(m_fBuffGageRate);
+					if (i >= 1)
+					{
+						break;
+					}
+				}
+			}
+
+		}
+	}
+	break;
+	case EGUARDIANLEVEL::GL_LEVEL3:
+	{
+		int32 iSize = m_pTile->GetNearTileArraySize();
+
+		for (int32 i = 0; i < iSize; ++i)
+		{
+			ATile_SpawnGuardian* pTile = m_pTile->GetNearTile(i);
+
+			if (pTile&&pTile->IsShow())
+			{
+				AGuardian* pGuardian = pTile->GetGuardian();
+				if (pGuardian)
+				{
+					pGuardian->SetBuffFillGage(m_fBuffGageRate);
+				}
+			}
+
+		}
+	}
+	break;
+	}
+}
+
+void AGuardian_Knight::DeBuff_Armor()
+{
+}
+

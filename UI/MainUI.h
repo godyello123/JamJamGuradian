@@ -20,6 +20,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTextBlock* WaveNumberText;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* CountText;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* ClockText;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTextBlock* GoldGemCountText;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTextBlock* FireGemCountText;
@@ -35,6 +39,8 @@ protected:
 	class UButton* DamageUpButton;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UButton* UtilityUpButton;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UButton* SkipTimeButton;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UDamageUpUI* DamageUpUI;
 
@@ -54,12 +60,18 @@ public:
 public:
 	UFUNCTION(BlueprintCallable)
 	void DamageUpCallback();
-
+	UFUNCTION(BlueprintCallable)
+	void SkipButtonCallback();
 
 public:
 	void SetFireDmgLevel(int32 iLevel);
 	void SetIceDmgLevel(int32 iLevel);
 	void SetNormalDmgLevel(int32 iLevel);
+
+public:
+	void SetMonsterCountText(int32 iCount);
+	void SetClock(int32 iMinute, int32 iSecond);
+	void SpawnTile();
 
 
 };

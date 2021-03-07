@@ -5,13 +5,15 @@
 #include "Summoner.h"
 #include "Components/WidgetComponent.h"
 #include "../../UI/GuardianUI.h"
+#include "../../UI/BuffUI.h"
+#include "../../Tile/Tile_SpawnGuardian.h"
 #include "../../Spell/Spell.h"
 
 
 // Sets default values
 AGuardian::AGuardian()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 
 	Summoner = nullptr;
@@ -40,11 +42,27 @@ AGuardian::AGuardian()
 	UIComponent->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
 	UIComponent->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 
+	UIComponent2 = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget2"));
+
+	UIComponent2->SetupAttachment(GetMesh());
+
+	UIComponent2->SetWidgetSpace(EWidgetSpace::Screen);
+	UIComponent2->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
+	UIComponent2->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
+
+
+
 
 	GetClassAsset(UUserWidget, WidgetClass, "WidgetBlueprint'/Game/10UI/BP_GuardianUI.BP_GuardianUI_C'");
 
 	if (WidgetClass.Succeeded())
 		UIComponent->SetWidgetClass(WidgetClass.Class);
+
+	GetClassAsset(UUserWidget, WidgetClass2, "WidgetBlueprint'/Game/10UI/BuffUI_BP.BuffUI_BP_C'");
+
+	if (WidgetClass2.Succeeded())
+		UIComponent2->SetWidgetClass(WidgetClass2.Class);
+
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Guardian"));
 
@@ -81,8 +99,78 @@ AGuardian::AGuardian()
 		YellowDecal = DecalYellow.Class;
 
 	m_fTierGageTimeMax = 0.5f;
+
+	m_fBuffDmg = 1.f;
+	m_fBuffFillGage = 1.f;
 }
 
+
+void AGuardian::DmgBuff(bool bBuff, float fDmg)
+{
+	if (bBuff)
+	{
+		m_bDmgBuff = true;
+		SetBuffDmg(fDmg);
+		BuffUI->DmgBuffEnable(true);
+	}
+	else
+	{
+		m_bDmgBuff = false;
+		SetBuffDmg(1.f);
+		BuffUI->DmgBuffEnable(false);
+	}
+}
+
+void AGuardian::GageBuff(bool bBuff, float fGage)
+{
+	if (bBuff)
+	{
+		m_bGageBuff = true;
+		SetBuffFillGage(fGage);
+		BuffUI->GageBuffEnabld(true);
+	}
+	else
+	{
+		m_bDmgBuff = false;
+		SetBuffFillGage(1.f);
+		BuffUI->GageBuffEnabld(false);
+	}
+}
+
+void AGuardian::SetBuffDmg(float fDmg)
+{
+	m_fBuffDmg = fDmg;
+	State.iDamage *= m_fBuffDmg;
+	if (fDmg > 1.f)
+	{
+		m_bGageBuff = true;
+		BuffUI->DmgBuffEnable(true);
+	}
+}
+
+void AGuardian::SetBuffFillGage(float fGage)
+{
+	m_fBuffFillGage = fGage;
+	State.fTierGage_1 *= fGage;
+	State.fTierGage_2 *= fGage;
+	State.fTierGage_3 *= fGage;
+
+	if (fGage > 1.f)
+	{
+		m_bGageBuff = true;
+		BuffUI->GageBuffEnabld(true);
+	}
+}
+
+void AGuardian::SetTile(ATile_SpawnGuardian * pTile)
+{
+	m_pTile = pTile;
+}
+
+ATile_SpawnGuardian * AGuardian::GetTile() const
+{
+	return m_pTile;
+}
 
 AActor_Decal * AGuardian::GetDecal() const
 {
@@ -116,7 +204,7 @@ void AGuardian::RandElementalType()
 
 	if (iType == 0)
 		SetElementalType(EElementalType::ET_Normal);
-	else if(iType==1)
+	else if (iType == 1)
 		SetElementalType(EElementalType::ET_Fire);
 	else
 		SetElementalType(EElementalType::ET_Ice);
@@ -129,23 +217,23 @@ AActor* AGuardian::GetTarget() const
 
 void AGuardian::SetFillTierGage_1(float fGage)
 {
-	m_fFillTierGage_1 = fGage;
+	m_fFillTierGage_1 = fGage * m_fBuffFillGage;
 }
 
 void AGuardian::SetFillTierGage_2(float fGage)
 {
-	m_fFillTierGage_2 = fGage;
+	m_fFillTierGage_2 = fGage * m_fBuffFillGage;
 }
 
 void AGuardian::SetFillTierGage_3(float fGage)
 {
-	m_fFillTierGage_3 = fGage;
+	m_fFillTierGage_3 = fGage * m_fBuffFillGage;
 }
 
 
 void AGuardian::SetState(int32 iDmg, float fTier1, float fTier2, float fTier3, float fSpeed)
 {
-	State.iDamage = iDmg;
+	State.iDamage = iDmg * m_fBuffDmg;
 	State.fTierGageMax_1 = fTier1;
 	State.fTierGageMax_2 = fTier2;
 	State.fTierGageMax_3 = fTier3;
@@ -197,19 +285,19 @@ void AGuardian::SetMeshMaterial(EElementalType eType)
 		FVector4 vColor = FVector4(1.f, 1.f, 0.f, 0.f);
 		SetMeshMaterialColor(vColor);
 	}
-		break;
+	break;
 	case EElementalType::ET_Fire:
 	{
 		FVector4 vColor = FVector4(1.f, 0.f, 0.f, 0.f);
 		SetMeshMaterialColor(vColor);
 	}
-		break;
+	break;
 	case EElementalType::ET_Ice:
 	{
 		FVector4 vColor = FVector4(0.f, 0.f, 1.f, 0.f);
 		SetMeshMaterialColor(vColor);
 	}
-		break;
+	break;
 	}
 }
 
@@ -238,7 +326,7 @@ bool AGuardian::IsSummoner()
 {
 	if (IsValid(Summoner))
 		return true;
-	
+
 	return false;
 }
 
@@ -296,17 +384,17 @@ void AGuardian::CreateEffectLevelUp(EElementalType eType)
 		FRotator vRot = this->GetActorRotation();
 		AEffect_LevelUp* pEffect = GetWorld()->SpawnActor<AEffect_LevelUp>(vPos, vRot);
 	}
-		break;
+	break;
 	case EElementalType::ET_Fire:
 	{
 
 	}
-		break;
+	break;
 	case EElementalType::ET_Ice:
 	{
 
 	}
-		break;
+	break;
 	}
 }
 
@@ -332,7 +420,7 @@ void AGuardian::FillUpTierGage_1(float iValue, float fTime)
 		{
 			State.fTierGage_1 = State.fTierGageMax_1;
 		}
-		 
+
 		m_fTierGageCurTime_1 = 0.f;
 	}
 }
@@ -401,6 +489,10 @@ void AGuardian::BeginPlay()
 	SpawnUI->SetOwner(this);
 	//SpawnUI->AddToViewport();
 	SpawnUI->SetVisibility(ESlateVisibility::Collapsed);
+
+	BuffUI = Cast<UBuffUI>(UIComponent2->GetUserWidgetObject());
+	BuffUI->SetOwner(this);
+	BuffUI->SetVisibility(ESlateVisibility::Collapsed);
 
 }
 

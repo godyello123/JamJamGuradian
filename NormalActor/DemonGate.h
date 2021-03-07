@@ -54,6 +54,9 @@ private:
 	UPROPERTY(Category = Monster, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AMonster> MonsterType;
 
+private:
+	float m_fMonsterTime;
+
 
 public:
 	void SetBossWave(bool bWave);
@@ -83,5 +86,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	void SetSpawnType();
 
 };

@@ -8,7 +8,7 @@
 ASpell_StaticArrow::ASpell_StaticArrow()
 {
 	fLifeTime = 0.f;
-	fLifeTimeMax = 4;
+	fLifeTimeMax = 10;
 
 	m_iTargetCount = 0;
 
@@ -89,7 +89,7 @@ bool ASpell_StaticArrow::Check()
 
 	TArray<FHitResult> HitRetArray;
 
-	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, 200, TEXT("BlockAll"), false, IgnoreActors,
+	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), StartLoc, StartLoc, 500, TEXT("BlockAll"), false, IgnoreActors,
 		EDrawDebugTrace::Type::None, HitRetArray, true);
 
 	if (isHit)
@@ -107,9 +107,17 @@ bool ASpell_StaticArrow::Check()
 				if (!Mon->IsDead())
 				{
 					AGuardian_Archer* pArcher = Cast<AGuardian_Archer>(GetOwner());
-					if (pTarget != pArcher->GetTarget())
+
+					AMonster* pMon2 = Cast<AMonster>(pArcher->GetTarget());
+
+					if (Mon->GetName() != pMon2->GetName())
 					{
-						if(pTarget!=Target)
+						if (Target)
+						{
+							if (Mon->GetName() != Target->GetName())
+								Target = pTarget;
+						}
+						else
 							Target = pTarget;
 
 						return true;

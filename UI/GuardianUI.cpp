@@ -5,6 +5,7 @@
 #include "../Character/Guardian/Guardian.h"
 #include "../Character/Guardian/Guardian_Archer.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 
 void UGuardianUI::NativePreConstruct()
 {

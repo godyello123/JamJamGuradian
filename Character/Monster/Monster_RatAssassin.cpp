@@ -28,7 +28,7 @@ AMonster_RatAssassin::AMonster_RatAssassin()
 
 	AIControllerClass = AAIController::StaticClass();
 
-	SetMonsterState(5, 5, 5, 100, 1.f);
+
 }
 
 
@@ -37,6 +37,8 @@ void AMonster_RatAssassin::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_RatAssassin>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_RatAssassin::Tick(float DeltaTime)

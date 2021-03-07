@@ -30,7 +30,7 @@ AMonster_HellCrab::AMonster_HellCrab()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
-	SetMonsterState(5, 5, 5, 100, 1.f);
+	
 
 }
 

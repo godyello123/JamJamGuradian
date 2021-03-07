@@ -30,7 +30,7 @@ AMonster_ChestImp::AMonster_ChestImp()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(5, 5, 5, 100, 1);
+	
 
 }
 
@@ -40,6 +40,8 @@ void AMonster_ChestImp::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_ChestImp>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1);
 }
 
 void AMonster_ChestImp::Tick(float DeltaTime)

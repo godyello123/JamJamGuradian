@@ -30,7 +30,6 @@ AMonster_WereWolf::AMonster_WereWolf()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 
-	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_WereWolf::BeginPlay()
@@ -38,6 +37,9 @@ void AMonster_WereWolf::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_WereWolf>(GetMesh()->GetAnimInstance());
+
+
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_WereWolf::Tick(float DeltaTime)

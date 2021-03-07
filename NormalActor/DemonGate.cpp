@@ -14,6 +14,7 @@
 #include "../Character/Monster/Monster_Specter.h"
 #include "../Character/Monster/Monster_WereWolf.h"
 #include "../GameMode/DefenseGameMode.h"
+#include "../GameMode/DefenseGameInstance.h"
 
 // Sets default values
 ADemonGate::ADemonGate()
@@ -21,9 +22,9 @@ ADemonGate::ADemonGate()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	TICKON;
 	SpawnType = ESpawnMonsterType::SMT_BEHOLDER;
-	SpawnTime = 5.f;
+	SpawnTime = 1.7f;
 	iMonsterCount = 0;
-	iMaxMonsterCount = 50;
+	iMaxMonsterCount = 30;
 	SpawnDuration = 0.f;
 
 	bSpawn = true;
@@ -31,6 +32,8 @@ ADemonGate::ADemonGate()
 
 	Spline = nullptr;
 	//GetClassAsset()
+
+	m_fMonsterTime = 0.f;
 }
 
 void ADemonGate::SetBossWave(bool bWave)
@@ -75,8 +78,113 @@ void ADemonGate::SetSpawnDurationTime(float fTime)
 
 void ADemonGate::StartWave()
 {
+	SetSpawnType();
+	SetSpawn(true);
+	m_fMonsterTime = 0.f;
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (pMode)
+	{
+		pMode->ClockTime(0, 0);
+	}
+
+	UDefenseGameInstance* pInst = Cast<UDefenseGameInstance>(GetGameInstance());
+
+	if (pInst)
+	{
+		pInst->AddWaveNumber();
+	}
+}
+
+void ADemonGate::SpawnMonster()
+{
+	SpawnDuration = 0.f;
+
+	FActorSpawnParameters params;
+
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FRotator Rot = FRotator(0.f, 0.f, 0.f);
+
+	AMonster* Monster= GetWorld()->SpawnActor<AMonster>(MonsterType,GetActorLocation(), Rot, params);
+
+	Monster->SetDemonGate(this);
+	Monster->SetSplice(Spline);
+
+	for (int32 i = 0; i < PathArray.Num(); ++i)
+	{
+		Monster->AddPathPoint(PathArray[i]);
+	}
+
+	UDefenseGameInstance* pInst=Cast<UDefenseGameInstance>(GetGameInstance());
+	++iMonsterCount;
+
+	if (pInst)
+	{
+		pInst->AddFieldMonsterCount();
+	}
+
+	if (iMonsterCount >= iMaxMonsterCount)
+	{
+		bSpawn = false;
+		iMonsterCount = 0;
+	}
+}
+
+// Called when the game starts or when spawned
+void ADemonGate::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(pMode))
+		pMode->SetDemonGate(this);
+
+	StartWave();
+}
+
+// Called every frame
+void ADemonGate::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bSpawn)
+	{
+		SpawnDuration += DeltaTime;
+
+		if (SpawnDuration >= SpawnTime)
+		{
+			SpawnMonster();
+		}
+	}
+	else
+	{
+		m_fMonsterTime += DeltaTime;
+
+		int32 iInt = m_fMonsterTime;
+
+		int32 iMin = iInt / 60;
+		int32 iSecond = iInt % 60;
+
+		ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
+
+		if (pMode)
+		{
+			pMode->ClockTime(iMin, iSecond);
+		}
+
+		if (iMin >= 3)
+		{
+			StartWave();
+		}
+	}
+}
+
+void ADemonGate::SetSpawnType()
+{
 	SpawnType = (ESpawnMonsterType)FMath::RandRange(0, 9);
-	
+
 	//스테이지 10 스테이지 넘어가면 랜덤 소환
 	switch (SpawnType)
 	{
@@ -130,61 +238,6 @@ void ADemonGate::StartWave()
 		MonsterType = LoadClass<AMonster_WereWolf>(nullptr, TEXT("Blueprint'/Game/02Monster/10WereWolf/WereWolf.WereWolf_C'"));
 	}
 	break;
-	}
-}
-
-void ADemonGate::SpawnMonster()
-{
-	if (iMonsterCount >= iMaxMonsterCount)
-		return;
-
-	SpawnDuration = 0.f;
-
-	FActorSpawnParameters params;
-
-	params.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	FRotator Rot = FRotator(0.f, 0.f, 0.f);
-
-	AMonster* Monster= GetWorld()->SpawnActor<AMonster>(MonsterType,GetActorLocation(), Rot, params);
-
-	Monster->SetDemonGate(this);
-	Monster->SetSplice(Spline);
-
-	for (int32 i = 0; i < PathArray.Num(); ++i)
-	{
-		Monster->AddPathPoint(PathArray[i]);
-	}
-
-	++iMonsterCount;
-}
-
-// Called when the game starts or when spawned
-void ADemonGate::BeginPlay()
-{
-	Super::BeginPlay();
-
-	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
-
-	if (IsValid(pMode))
-		pMode->SetDemonGate(this);
-
-	StartWave();
-}
-
-// Called every frame
-void ADemonGate::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (bSpawn)
-	{
-		SpawnDuration += DeltaTime;
-
-		if (SpawnDuration >= SpawnTime)
-		{
-			SpawnMonster();
-		}
 	}
 }
 

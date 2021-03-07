@@ -40,10 +40,6 @@ void ASpell_RainofArrow::Tick(float DeltaTime)
 		if (m_fLifeTime >= m_fLIfeTimeMax)
 		{
 			AGuardian_Archer* pOwner = Cast<AGuardian_Archer>(GetOwner());
-			
-			pOwner->GetDecal()->EnableDecal(false);
-			pOwner->GetDecal()->SetDecalSkillOn(false);
-			
 			Destroy();
 		}
 

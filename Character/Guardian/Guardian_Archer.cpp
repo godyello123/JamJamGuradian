@@ -522,6 +522,9 @@ void AGuardian_Archer::Tier3Skill()
 		if (m_pDecal->GetDecalSkillOn())
 		{
 			Ultimate();
+
+			m_pDecal->EnableDecal(false);
+			m_pDecal->SetDecalSkillOn(false);
 		}
 	}
 }

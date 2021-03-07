@@ -32,6 +32,17 @@ protected:
 	UPROPERTY(Category = Effect, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AEffect> Effect;
 
+private:
+	TArray<AGuardian*> m_DmgBuffGuardianArray;
+	TArray<AGuardian*> m_GageBuffGuardianArray;
+
+public:
+	float m_fBuffDmgRate;
+	float m_fBuffGageRate;
+
+public:
+	void AddDmgBuffGuardian(AGuardian* pGuardian);
+	void AddGageBuffGuardian(AGuardian* pGuardian);
 
 public:
 	void SetAI(EGUARDIAN_AI eAI);
@@ -78,10 +89,14 @@ private:
 public:
 	bool CheckDistance();
 	void AttackToTarget();
-	void PowerStrike();
 
 public:
 	void EraseTarget();
+
+private:
+	void Buff_Dmg();
+	void Buff_Gage();
+	void DeBuff_Armor();
 
 	
 };

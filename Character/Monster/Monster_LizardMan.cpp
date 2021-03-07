@@ -28,7 +28,7 @@ AMonster_LizardMan::AMonster_LizardMan()
 
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	SetMonsterState(5, 5, 5, 100, 1.f);
+	
 }
 
 void AMonster_LizardMan::BeginPlay()
@@ -36,6 +36,8 @@ void AMonster_LizardMan::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Lizardman>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1.f);
 }
 
 void AMonster_LizardMan::Tick(float DeltaTime)

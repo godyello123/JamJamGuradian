@@ -25,6 +25,29 @@ public:
 		TSubclassOf<AEffect_LevelUp> Spawn_EffectAsset;
 
 private:
+	class AGuardian* m_pGuardian;
+	class ATileManager* m_pTileManager;
+	int32 m_iTileNumber;
+	TArray<ATile_SpawnGuardian*> m_NearTileArray;
+
+public:
+	void SetTileManager(class ATileManager* pManager);
+	class ATileManager* GetTileManager() const;
+
+public:
+	void AddTile(ATile_SpawnGuardian* pTile);
+	ATile_SpawnGuardian* GetNearTile(int32 iKey);
+	int32 GetNearTileArraySize() const;
+
+public:
+	void SetTileNumber(int32 iNum);
+	int32 GetTileNumbet() const;
+
+public:
+	void SetGuardian(class AGuardian* pGuardian);
+	class AGuardian* GetGuardian() const;
+
+private:
 	bool bShowTile;
 
 public:
@@ -49,5 +72,6 @@ public:
 public:
 	void EnableTile(bool bEnable);
 
-
+public:
+	void CheckNearTile();
 };

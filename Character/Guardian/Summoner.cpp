@@ -70,7 +70,7 @@ void ASummoner::BeginPlay()
 
 	CreateCamera(v, r2);
 
-	TileManager = GetWorld()->SpawnActor<ATileManager>();
+	//TileManager = GetWorld()->SpawnActor<ATileManager>();
 
 	this->SetActorEnableCollision(false);
 

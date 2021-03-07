@@ -88,11 +88,14 @@ protected:
 		EElementalType m_eElementalType;
 	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* UIComponent;
+	UPROPERTY(Category = UI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UWidgetComponent* UIComponent2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
 		EGUARDIANLEVEL m_eLevel;
 
 
 	class UGuardianUI* SpawnUI;
+	class UBuffUI* BuffUI;
 	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AEffect_LevelUp> LightningLevelUp_EffectAsset;
 	UPROPERTY(Category = Particle, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -110,6 +113,29 @@ protected:
 
 protected:
 	AActor_Decal* m_pDecal;
+
+protected:
+	float m_fBuffDmg;
+	float m_fBuffFillGage;
+
+protected:
+	bool m_bDmgBuff;
+	bool m_bGageBuff;
+
+public:
+	void DmgBuff(bool bBuff,float fDmg);
+	void GageBuff(bool bBuff, float fGage);
+
+public:
+	void SetBuffDmg(float fDmg);
+	void SetBuffFillGage(float fGage);
+
+protected:
+	class ATile_SpawnGuardian* m_pTile;
+
+public:
+	void SetTile(class ATile_SpawnGuardian* pTile);
+	class ATile_SpawnGuardian* GetTile() const;
 
 public:
 	AActor_Decal* GetDecal() const;

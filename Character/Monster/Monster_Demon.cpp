@@ -30,7 +30,7 @@ AMonster_Demon::AMonster_Demon()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	SetMonsterState(10, 10, 10, 100, 1);
+	
 }
 
 void AMonster_Demon::BeginPlay()
@@ -38,6 +38,8 @@ void AMonster_Demon::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_Demon>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(10, 10, 10, 100, 1);
 
 }
 

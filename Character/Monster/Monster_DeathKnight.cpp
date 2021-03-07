@@ -29,7 +29,7 @@ AMonster_DeathKnight::AMonster_DeathKnight()
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
-	SetMonsterState(5, 5, 5, 100, 1);
+
 
 }
 
@@ -38,6 +38,8 @@ void AMonster_DeathKnight::BeginPlay()
 	Super::BeginPlay();
 
 	Animation = Cast<UAnim_DeathKnight>(GetMesh()->GetAnimInstance());
+
+	SetMonsterState(5, 5, 5, 100, 1);
 }
 
 void AMonster_DeathKnight::Tick(float DeltaTime)

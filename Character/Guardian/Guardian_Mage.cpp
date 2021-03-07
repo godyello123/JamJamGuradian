@@ -175,7 +175,7 @@ void AGuardian_Mage::Tick(float DeltaTime)
 
 	FillUpTierGage_1(m_fFillTierGage_1, DeltaTime);
 	FillUpTierGage_2(m_fFillTierGage_2, DeltaTime);
-
+	FillUpTierGage_3(m_fFillTierGage_3, DeltaTime);
 
 	if (!m_bDead)
 	{
@@ -314,11 +314,13 @@ void AGuardian_Mage::Ultimate()
 	switch (m_eElementalType)
 	{
 	case EElementalType::ET_Normal:
+		EletricFieldSkill();
 		break;
 	case EElementalType::ET_Fire:
 		MeteorSkill();
 		break;
 	case EElementalType::ET_Ice:
+		BlizzardSkill();
 		break;
 	}
 }
@@ -340,7 +342,7 @@ void AGuardian_Mage::Mage_Tier3(EElementalType eType)
 	GetMesh()->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
 	SetGuardianLevel(EGUARDIANLEVEL::GL_LEVEL3);
 	SetElementalType(eType);
-	SetFillTierGage_2(0.7f);
+	SetFillTierGage_3(0.7f);
 	HideUI();
 	CreateDecal();
 }
@@ -384,7 +386,7 @@ void AGuardian_Mage::CrytalizeSkill()
 	FVector vPos = Target->GetActorLocation();
 	FVector vFwd = Target->GetActorForwardVector();
 
-	vPos += vFwd * 30.f;
+	vPos += vFwd * 300.f;
 
 	FActorSpawnParameters tParams;
 
@@ -512,6 +514,9 @@ void AGuardian_Mage::Tier3Skill()
 		if (m_pDecal->GetDecalSkillOn())
 		{
 			Ultimate();
+
+			m_pDecal->EnableDecal(false);
+			m_pDecal->SetDecalSkillOn(false);
 		}
 	}
 }
@@ -560,6 +565,15 @@ void AGuardian_Mage::BlizzardSkill()
 
 void AGuardian_Mage::EletricFieldSkill()
 {
+	FActorSpawnParameters tParams;
+
+	tParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	tParams.Owner = this;
+
+	ASpell_EletricField* pArrow = GetWorld()->SpawnActor<ASpell_EletricField>(EletricField, m_pDecal->GetActorLocation(), GetActorRotation(),
+		tParams);
 }
 
 void AGuardian_Mage::EraseTarget()
