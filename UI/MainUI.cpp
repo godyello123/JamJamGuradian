@@ -39,7 +39,7 @@ void UMainUI::NativePreConstruct()
 
 	DamageUpButton->OnClicked.AddDynamic(this, &UMainUI::DamageUpCallback);
 	SkipTimeButton->OnClicked.AddDynamic(this, &UMainUI::SkipButtonCallback);
-	UtilityUpButton->OnClicked.AddDynamic(this, &UMainUI::SkipButtonCallback);
+	UtilityUpButton->OnClicked.AddDynamic(this, &UMainUI::SpawnTileCallback);
 
 	DamageUpUI = Cast<UDamageUpUI>(GetWidgetFromName(TEXT("DmgUI")));
 
@@ -145,7 +145,7 @@ void UMainUI::SetClock(int32 iMinute, int32 iSecond)
 		ClockText->SetText(FText::FromString(strText));
 }
 
-void UMainUI::SpawnTile()
+void UMainUI::SpawnTileCallback()
 {
 	ADefenseGameMode* pMode = Cast<ADefenseGameMode>(GetWorld()->GetAuthGameMode());
 

@@ -35,6 +35,7 @@ public:
 public:
 	void CreateTile();
 	void ShowTileCount(int32 iCount);
+	void ShowTile();
 	void CheckNearTile();
 
 

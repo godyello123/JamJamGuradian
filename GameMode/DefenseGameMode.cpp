@@ -126,6 +126,6 @@ void ADefenseGameMode::SkipTime()
 
 void ADefenseGameMode::SpawnTile()
 {
-	TileManager->ShowTileCount(1);
+	TileManager->ShowTile();
 }
 

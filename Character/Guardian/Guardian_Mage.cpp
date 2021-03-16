@@ -365,6 +365,9 @@ void AGuardian_Mage::MageTier2Skill()
 
 void AGuardian_Mage::FireFieldSkill()
 {
+	if (!Target)
+		return;
+
 	FVector vPos = Target->GetActorLocation();
 	FVector vFwd = Target->GetActorForwardVector();
 

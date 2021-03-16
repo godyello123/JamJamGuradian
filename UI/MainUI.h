@@ -62,6 +62,8 @@ public:
 	void DamageUpCallback();
 	UFUNCTION(BlueprintCallable)
 	void SkipButtonCallback();
+	UFUNCTION(BlueprintCallable)
+	void SpawnTileCallback();
 
 public:
 	void SetFireDmgLevel(int32 iLevel);
@@ -71,7 +73,7 @@ public:
 public:
 	void SetMonsterCountText(int32 iCount);
 	void SetClock(int32 iMinute, int32 iSecond);
-	void SpawnTile();
+
 
 
 };

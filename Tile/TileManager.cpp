@@ -75,6 +75,20 @@ void ATileManager::ShowTileCount(int32 iCount)
 	}
 }
 
+void ATileManager::ShowTile()
+{
+	int32 iKey = FMath::RandRange(0, 24);
+
+	if (!TileArray[iKey]->IsShow())
+	{
+		TileArray[iKey]->EnableTile(true);
+	}
+	else
+	{
+		ShowTile();
+	}
+}
+
 void ATileManager::CheckNearTile()
 {
 	if (TileArray.Num()>0)

@@ -249,7 +249,7 @@ void AMonster::SetMonsterState(int32 iDamage, int32 iHP, int32 iMP, float fATSpe
 	}
 
 	State.Damage = iDamage;
-	State.iHPMax = iHP* iValue;
+	State.iHPMax = iHP* iValue*10;
 	State.iHP = State.iHPMax;
 	State.iMPMax = iMP;
 	State.iMP = 0;
